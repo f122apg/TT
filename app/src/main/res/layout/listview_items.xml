@@ -4,15 +4,18 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/subjecttime_item_textview"
-        android:background="@drawable/border"
+        android:id="@+id/id_item_textview"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <TextView
+        android:id="@+id/time_item_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="HH:mm"
         android:textSize="20sp"/>
 
     <LinearLayout
-        android:background="@drawable/border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -20,12 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_horizontal">
+            android:layout_marginRight="5dp">
 
             <TextView
-                android:id="@+id/subjectname_item_textview"
-                android:layout_width="wrap_content"
+                android:id="@+id/name_item_textview"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="SubjectName"
                 android:textSize="20sp"/>

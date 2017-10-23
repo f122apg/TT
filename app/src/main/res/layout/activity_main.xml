@@ -65,7 +65,8 @@
             <ListView
                 android:id="@+id/timetable_listview"
                 android:layout_width="wrap_content"
-                android:layout_height="350dp" />
+                android:layout_height="350dp"
+                android:layout_marginTop="20dp"/>
 
             <!-- 下部 MEMO欄 -->
             <LinearLayout
@@ -83,7 +84,9 @@
                     android:id="@+id/memo_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="textMultiLine" />
+                    android:gravity="top|left"
+                    android:inputType="textMultiLine"
+                    android:minLines="5" />
 
             </LinearLayout>
         </LinearLayout>
