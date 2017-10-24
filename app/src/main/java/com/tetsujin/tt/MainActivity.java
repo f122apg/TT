@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
         findViewById(R.id.B1_button).setOnClickListener(new View.OnClickListener()
@@ -170,7 +169,7 @@ class Network_Async extends AsyncTask<String, Void, String[][]>
                             @Override
                             public int compare(String[] o1, String[] o2)
                             {
-                                //時間が同じだった場合、Idを基準としてソートする
+                                //StartDateTimeが同じだった場合、Idを基準としてソートする
                                 if(o1[2].compareTo(o2[2]) == 0)
                                 {
                                     //Stringで比較するとUnicodeでソートしてしまうため、Integerで比較する
@@ -213,6 +212,8 @@ class Network_Async extends AsyncTask<String, Void, String[][]>
         return retvalues;
     }
 
+    //doInBackgroundの処理が終わった後に実行される
+    //取得した時間割データを自作アダプタに渡し、ListViewで表示
     @Override
     protected void onPostExecute(String[][] values) {
         ListView timetable_lv = (ListView)this.mainActivity.findViewById(R.id.timetable_listview);

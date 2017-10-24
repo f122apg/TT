@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    android:id="@+id/Parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -61,10 +60,49 @@
                 android:text="MM/dd(E)"
                 android:textSize="30sp" />
 
+            <!-- ListViewのヘッダー部 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="開始時間"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="終了時間"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:textSize="25sp"
+                        android:text="授業名"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
             <!-- 時間割表示 -->
             <ListView
                 android:id="@+id/timetable_listview"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:layout_marginTop="20dp"/>
 
@@ -85,8 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top|left"
-                    android:inputType="textMultiLine"
-                    android:minLines="5" />
+                    android:inputType="textMultiLine"/>
 
             </LinearLayout>
         </LinearLayout>
