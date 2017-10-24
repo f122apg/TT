@@ -147,17 +147,19 @@ class Network_Async extends AsyncTask<String, Void, String[][]>
                     JSONObject json = new JSONObject(timetable_data);
                     //JSONの配列を取得
                     JSONArray datas = json.getJSONArray(JSON_arrayname);
-                    retvalues = new String[datas.length()][3];
+                    retvalues = new String[datas.length()][4];
                     //JSONの配列の中にある値を返り値に挿入
                     for (int i = 0; i < datas.length(); i ++)
                     {
                         //配列内の値を取得
                         json = datas.getJSONObject(i);
-                        //要素：StartDateTimeをStringで取得
-                        String time = json.getString("StartDateTime");
-                        //StartTimeのHH:mmだけ取得できるよう加工する
-                        String convert_time = time.substring(time.lastIndexOf('T') + 1, time.lastIndexOf('T') + 6);
-                        retvalues[i] = new String[]{ json.getString("Id"), json.getString("Title"), convert_time };
+                        //要素をStringで取得
+                        String starttime = json.getString("StartDateTime");
+                        String endtime = json.getString("EndDateTime");
+                        //HH:mmだけ取得できるよう加工する
+                        String convert_starttime = starttime.substring(starttime.lastIndexOf('T') + 1, starttime.lastIndexOf('T') + 6);
+                        String convert_endtime = endtime.substring(endtime.lastIndexOf('T') + 1, endtime.lastIndexOf('T') + 6);
+                        retvalues[i] = new String[]{ json.getString("Id"), json.getString("Title"), convert_starttime, convert_endtime };
                     }
 
                     //昇順でソートを行う

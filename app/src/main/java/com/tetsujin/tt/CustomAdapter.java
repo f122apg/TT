@@ -50,12 +50,15 @@ public class CustomAdapter extends BaseAdapter
         }
 
         TextView id = (TextView)convertView.findViewById(R.id.id_item_textview);
-        TextView time = (TextView)convertView.findViewById(R.id.time_item_textview);
+        TextView starttime = (TextView)convertView.findViewById(R.id.starttime_item_textview);
+        TextView endtime = (TextView)convertView.findViewById(R.id.endtime_item_textview);
         TextView name = (TextView)convertView.findViewById(R.id.name_item_textview);
 
         id.setText(item[0]);
-        time.setText(item[2]);
+        starttime.setText(item[2]);
+        endtime.setText(item[3]);
         name.setText(item[1]);
+
         return convertView;
     }
 }
