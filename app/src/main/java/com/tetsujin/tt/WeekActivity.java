@@ -1,20 +1,10 @@
 package com.tetsujin.tt;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 public class WeekActivity extends FragmentActivity implements TabHost.OnTabChangeListener{
 
@@ -27,20 +17,29 @@ public class WeekActivity extends FragmentActivity implements TabHost.OnTabChang
         FragmentTabHost tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.content);
 
-        TabHost.TabSpec tabSpec1, tabSpec2;
-        Bundle bundle1, bundle2;
+        TabHost.TabSpec[] tab = new TabHost.TabSpec[5];
+        Bundle[] bundle = new Bundle[5];
+        String[] weekname = new String[]
+                {
+                        getResources().getString(R.string.week_monday),
+                        getResources().getString(R.string.week_tuesday),
+                        getResources().getString(R.string.week_wednesday),
+                        getResources().getString(R.string.week_thursday),
+                        getResources().getString(R.string.week_friday)
+                };
 
-        tabSpec1 = tabHost.newTabSpec("tab1");
-        tabSpec1.setIndicator("tab1");
-        bundle1 = new Bundle();
-        bundle1.putString("name", "tab1");
-        tabHost.addTab(tabSpec1, Week_MondayFragment.class, bundle1);
-
-        tabSpec2 = tabHost.newTabSpec("tab2");
-        tabSpec2.setIndicator("tab2");
-        bundle2 = new Bundle();
-        bundle2.putString("name", "tab2");
-        tabHost.addTab(tabSpec2, Week_MondayFragment.class, bundle2);
+        //曜日ごとのタブを生成
+        for(int i = 0; i < tab.length; i ++)
+        {
+            //タブのインスタンス生成
+            tab[i] = tabHost.newTabSpec(weekname[i]);
+            //タブに識別子を付ける
+            tab[i].setIndicator(weekname[i]);
+            //タブ毎に値を渡す
+            bundle[i] = new Bundle();
+            bundle[i].putString("tab", weekname[i]);
+            tabHost.addTab(tab[i], Week_TabFragment.class, bundle[i]);
+        }
 
         tabHost.setOnTabChangedListener(this);
     }

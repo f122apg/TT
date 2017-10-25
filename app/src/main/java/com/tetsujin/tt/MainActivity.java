@@ -2,14 +2,17 @@ package com.tetsujin.tt;
 
 //Android imports
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 //Java imports
 import java.io.IOException;
@@ -52,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        String[][] testdata = new String[][]
+                {
+                        {"1", "卒業制作", "09:00", "10:30"},
+                        {"2", "クラウドコンピューティング", "10:40", "12:10"}
+                };
+        CustomAdapter ca = new CustomAdapter(this, testdata);
+        timetable_lv.setAdapter(ca);
+
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
         findViewById(R.id.B1_button).setOnClickListener(new View.OnClickListener()
@@ -84,12 +95,25 @@ public class MainActivity extends AppCompatActivity {
 class Network_Async extends AsyncTask<String, Void, String[][]>
 {
     private Activity mainActivity;
+    public ProgressDialog progressdialog;
 
     public Network_Async(Activity activity)
     {
         this.mainActivity = activity;
     }
 
+    //キャンセルできないプログレスダイアログを表示する
+    @Override
+    protected void onPreExecute()
+    {
+        this.progressdialog = new ProgressDialog(this.mainActivity);
+        this.progressdialog.setMessage("時間割のデータを取得しています...");
+        this.progressdialog.setCancelable(false);
+        this.progressdialog.show();
+        return;
+    }
+
+    //非同期処理
     //...は可変長引数の意味
     @Override
     protected String[][] doInBackground(String... urlstr)
@@ -220,5 +244,11 @@ class Network_Async extends AsyncTask<String, Void, String[][]>
 
         CustomAdapter adapter = new CustomAdapter(this.mainActivity, values);
         timetable_lv.setAdapter(adapter);
+
+        //プログレスダイアログを閉じる
+        if(this.progressdialog != null && this.progressdialog.isShowing())
+        {
+            this.progressdialog.dismiss();
+        }
     }
 }

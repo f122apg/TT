@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">TT</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- weeks -->
+    <string name="week_monday">月</string>
+    <string name="week_tuesday">火</string>
+    <string name="week_wednesday">水</string>
+    <string name="week_thursday">木</string>
+    <string name="week_friday">金</string>
 </resources>

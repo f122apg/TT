@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".MainActivity"
+            android:name=".mitame"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|stateAlwaysHidden|adjustResize">
             <intent-filter>
@@ -21,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WeekActivity"></activity>
+        <activity android:name=".WeekActivity" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

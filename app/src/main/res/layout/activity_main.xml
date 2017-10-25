@@ -25,28 +25,35 @@
                 android:layout_height="50dp"
                 android:layout_weight="1">
 
-                <Button
+                <ImageButton
                     android:id="@+id/B1_button"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:text="B1" />
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_week"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/B3_button"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:text="B3" />
+                    android:layout_marginLeft="5dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_month"/>
 
                 <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="right">
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/B2_button"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
-                        android:text="B2" />
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_notification"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -122,8 +129,10 @@
                     android:id="@+id/memo_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:height="100dp"
                     android:gravity="top|left"
-                    android:inputType="textMultiLine"/>
+                    android:inputType="textMultiLine"
+                    android:scrollbars="vertical"/>
 
             </LinearLayout>
         </LinearLayout>
