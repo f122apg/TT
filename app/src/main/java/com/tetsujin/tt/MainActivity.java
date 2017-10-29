@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.os.AsyncTask;
@@ -32,6 +34,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     String timetabledata_url = "http://tetsujin.azurewebsites.net/api/schedules";
+    String[][] testdata = new String[0][];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +58,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String[][] testdata = new String[][]
+        testdata = new String[][]
                 {
-                        {"1", "卒業制作", "09:00", "10:30"},
-                        {"2", "クラウドコンピューティング", "10:40", "12:10"}
+                        {"1", "卒業制作", "09:00", "10:30", "月"},
+                        {"2", "クラウドコンピューティング", "10:40", "12:10", "月"},
+                        {"3", "データベース応用", "09:00", "12:10", "火"},
+                        {"4", "Linux実習", "13:00", "16:10", "火"},
+                        {"5", "キャリアデザイン3", "09:00", "14:30", "水"},
+                        {"6", "オブジェクト指向プログラミング実習1 S1", "09:00", "12:10", "木"},
+                        {"7", "ソフトウェアデザイン S1", "13:00", "14:30", "木"},
+                        {"8", "合同資格対策講座", "09:00", "14:30", "金"},
                 };
         CustomAdapter ca = new CustomAdapter(this, testdata);
         timetable_lv.setAdapter(ca);
+
+        final LinearLayout mlayout = (LinearLayout)findViewById(R.id.linear);
 
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
@@ -71,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 Intent intent = new Intent(MainActivity.this, WeekActivity.class);
+
+                intent.putExtra("datalength", testdata.length);
+                for(int i = 0; i < testdata.length; i ++)
+                {
+                    intent.putExtra("data" + i, testdata[i]);
+                }
+
                 startActivity(intent);
             }
         });
@@ -81,6 +99,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 GetTimeTable();
+            }
+        });
+
+        //B3
+        findViewById(R.id.B3_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                System.out.println("Button3 Clicked!");
+                mlayout.removeAllViews();
+                getLayoutInflater().inflate(R.layout.listview_items, mlayout);
             }
         });
     }
