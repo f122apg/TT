@@ -6,10 +6,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,20 +25,98 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 
-//Other imports
+//JSON imports
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.microsoft.windowsazure.notifications.NotificationsManager;
+import com.tetsujin.tt.notification.MyHandler;
+import com.tetsujin.tt.notification.NotificationSettings;
+import com.tetsujin.tt.notification.RegistrationIntentService;
 
 public class MainActivity extends AppCompatActivity {
 
     String timetabledata_url = "http://tetsujin.azurewebsites.net/api/schedules";
     String[][] testdata = new String[0][];
 
+    public static MainActivity mainActivity;
+    public static Boolean isVisible = false;
+    private static final String TAG = "MainActivity";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported by Google Play Services.");
+                ToastNotify("This device is not supported by Google Play Services.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public void registerWithNotificationHubs()
+    {
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with FCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isVisible = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVisible = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isVisible = false;
+    }
+
+    public void ToastNotify(final String notificationMessage) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, notificationMessage, Toast.LENGTH_LONG).show();
+                TextView helloText = (TextView) findViewById(R.id.text_hello);
+                helloText.setText(notificationMessage);
+            }
+        });
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainActivity = this;
+        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
+        registerWithNotificationHubs();
 
         //日付取得と表示
         TextView date_tv = (TextView)findViewById(R.id.date_textview);

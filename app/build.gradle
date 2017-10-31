@@ -28,4 +28,19 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:24.2.1'
     testCompile 'junit:junit:4.12'
+
+    //FCM
+    compile 'com.google.android.gms:play-services-gcm:9.2.0'
+    //Azure Notification Hub
+    compile 'com.microsoft.azure:notification-hubs-android-sdk:0.4@aar'
+    compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@aar'
 }
+
+//Azure Notification Hub
+repositories {
+    maven {
+        url "http://dl.bintray.com/microsoftazuremobile/SDK"
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
