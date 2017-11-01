@@ -33,69 +33,20 @@ import org.json.JSONObject;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
-import com.tetsujin.tt.notification.MyHandler;
+import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
 
 public class MainActivity extends AppCompatActivity {
 
     String timetabledata_url = "http://tetsujin.azurewebsites.net/api/schedules";
-    String[][] testdata = new String[0][];
+    private static String[][] testdata = new String[0][];
 
     public static MainActivity mainActivity;
     public static Boolean isVisible = false;
     private static final String TAG = "MainActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i(TAG, "This device is not supported by Google Play Services.");
-                ToastNotify("This device is not supported by Google Play Services.");
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-    public void registerWithNotificationHubs()
-    {
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with FCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        isVisible = true;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        isVisible = false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        isVisible = true;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        isVisible = false;
-    }
 
     public void ToastNotify(final String notificationMessage) {
         runOnUiThread(new Runnable() {
@@ -115,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mainActivity = this;
-        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
+        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
         registerWithNotificationHubs();
 
         //日付取得と表示
@@ -149,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
         CustomAdapter ca = new CustomAdapter(this, testdata);
         timetable_lv.setAdapter(ca);
 
-        final LinearLayout mlayout = (LinearLayout)findViewById(R.id.linear);
-
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
         findViewById(R.id.B1_button).setOnClickListener(new View.OnClickListener()
@@ -178,26 +127,45 @@ public class MainActivity extends AppCompatActivity {
                 GetTimeTable();
             }
         });
-
-        //B3
-        findViewById(R.id.B3_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                System.out.println("Button3 Clicked!");
-                mlayout.removeAllViews();
-                getLayoutInflater().inflate(R.layout.listview_items, mlayout);
-            }
-        });
     }
 
+    //時間割データを取得する
     public void GetTimeTable()
     {
         Network_Async task = new Network_Async(this);
         task.execute(timetabledata_url);
     }
+
+    //Google Play Servicesが利用可能かどうか確認する
+    //利用可能ではないなら、finish()でアクティビティを終了させる
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported by Google Play Services.");
+                ToastNotify("This device is not supported by Google Play Services.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    //Google Play Servicesが利用可能ならば、FCMにこの端末を登録する処理を行うintentを開始
+    public void registerWithNotificationHubs()
+    {
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
 }
+
+
 
 class Network_Async extends AsyncTask<String, Void, String[][]>
 {

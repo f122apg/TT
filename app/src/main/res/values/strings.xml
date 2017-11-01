@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">TT</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- weeks -->
     <string name="week_monday">月</string>
@@ -8,4 +7,8 @@
     <string name="week_wednesday">水</string>
     <string name="week_thursday">木</string>
     <string name="week_friday">金</string>
+
+    <!-- notification title -->
+    <string name="notification_title">お知らせ</string>
+    <string name="notification_receive_num">件のお知らせが来ています</string>
 </resources>
