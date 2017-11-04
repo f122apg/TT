@@ -29,7 +29,7 @@
         </service>
         <service
             android:name=".notification.RegistrationIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
         <!-- Azure Notification Hub -->
         <receiver
             android:name="com.microsoft.windowsazure.notifications.NotificationsBroadcastReceiver"
@@ -51,13 +51,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WeekActivity"
+        <activity
+            android:name=".WeekActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".NotificationActivity"
-            android:screenOrientation="portrait" >
+        <activity
+            android:name=".NotificationActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity android:name=".LoginActivity"></activity>
     </application>
+
 </manifest>

@@ -7,8 +7,13 @@
     <string name="week_wednesday">水</string>
     <string name="week_thursday">木</string>
     <string name="week_friday">金</string>
+    <string name="week_saturday">土</string>
+    <string name="week_sunday">日</string>
 
     <!-- notification title -->
     <string name="notification_title">お知らせ</string>
     <string name="notification_receive_num">件のお知らせが来ています</string>
+
+    <!-- error -->
+    <string name="error">エラー</string>
 </resources>

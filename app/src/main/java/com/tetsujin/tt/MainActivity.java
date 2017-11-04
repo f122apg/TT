@@ -1,6 +1,6 @@
 package com.tetsujin.tt;
 
-//Android imports
+//Android
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,13 +9,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import android.text.format.DateFormat;
 
-//Java imports
+//Java
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,15 +24,18 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 
-//JSON imports
+//JSON
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//FCM & Azure Notification Hubs
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
+import com.tetsujin.tt.adapter.CustomListViewAdapter;
 import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
@@ -66,12 +69,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mainActivity = this;
+        //ハンドルをセット
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
+        //Notification Hubsにこの端末の登録作業を行う
         registerWithNotificationHubs();
 
         //日付取得と表示
         TextView date_tv = (TextView)findViewById(R.id.date_textview);
-        date_tv.setText(android.text.format.DateFormat. format("MM/dd(E)", Calendar.getInstance()));
+        //現在の日付を取得
+        Date nowdate = new Date();
+        //Calendarに現在の日付を設定
+        Calendar cal = Calendar.getInstance();
+        //現在の曜日のみを取得
+        CharSequence week = DateFormat.format("E", nowdate);
+        //現在の曜日が「土」か「日」だったら次週の月曜日にする
+        if(week.equals(getResources().getString(R.string.week_saturday))
+                || week.equals(getResources().getString(R.string.week_sunday)))
+        {
+            //現在の日付を２日足し、今週の月曜日にする
+            cal.add(Calendar.DAY_OF_MONTH, 2);
+            cal.set(Calendar.DAY_OF_WEEK, 2);
+        }
+
+        date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
 
         ListView timetable_lv = (ListView)findViewById(R.id.timetable_listview);
 
@@ -97,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         {"7", "ソフトウェアデザイン S1", "13:00", "14:30", "木"},
                         {"8", "合同資格対策講座", "09:00", "14:30", "金"},
                 };
-        CustomAdapter ca = new CustomAdapter(this, testdata);
+        CustomListViewAdapter ca = new CustomListViewAdapter(this, testdata);
         timetable_lv.setAdapter(ca);
 
         /* onClickListeners */
@@ -317,7 +337,7 @@ class Network_Async extends AsyncTask<String, Void, String[][]>
     protected void onPostExecute(String[][] values) {
         ListView timetable_lv = (ListView)this.mainActivity.findViewById(R.id.timetable_listview);
 
-        CustomAdapter adapter = new CustomAdapter(this.mainActivity, values);
+        CustomListViewAdapter adapter = new CustomListViewAdapter(this.mainActivity, values);
         timetable_lv.setAdapter(adapter);
 
         //プログレスダイアログを閉じる

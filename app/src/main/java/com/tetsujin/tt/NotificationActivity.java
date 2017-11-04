@@ -14,7 +14,7 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        ListView lv = (ListView)findViewById(R.id.notification_lv);
+        ListView lv = (ListView)findViewById(R.id.notificationAy_lv);
 
         String[] testdata = new String[]
                 {

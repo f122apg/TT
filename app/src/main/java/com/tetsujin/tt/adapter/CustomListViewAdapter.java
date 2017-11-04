@@ -1,4 +1,4 @@
-package com.tetsujin.tt;
+package com.tetsujin.tt.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,13 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class CustomAdapter extends BaseAdapter
+import com.tetsujin.tt.R;
+
+public class CustomListViewAdapter extends BaseAdapter
 {
     private Context context;
     private LayoutInflater inflater;
     private String[][] items;
 
-    public CustomAdapter(Context context, String[][] objects)
+    public CustomListViewAdapter(Context context, String[][] objects)
     {
         super();
         this.context = context;
@@ -21,12 +23,14 @@ public class CustomAdapter extends BaseAdapter
         this.items = objects;
     }
 
+    //アイテムの個数を返す
     @Override
     public int getCount()
     {
         return items.length;
     }
 
+    //アイテムを返す
     @Override
     public Object getItem(int position)
     {
@@ -39,6 +43,7 @@ public class CustomAdapter extends BaseAdapter
         return 0;
     }
 
+    //ListViewの構成を行う
     @Override
     public View getView(int postition, View convertView, ViewGroup parent)
     {
