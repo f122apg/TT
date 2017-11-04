@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.tetsujin.tt.R;
-import com.tetsujin.tt.Week_Fragment;
+import com.tetsujin.tt.WeekFragment;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
             bundle.putStringArray("data" + i, weekdata.get(i));
         }
 
-        Week_Fragment wtf = new Week_Fragment();
+        WeekFragment wtf = new WeekFragment();
         wtf.setArguments(bundle);
 
         return wtf;
