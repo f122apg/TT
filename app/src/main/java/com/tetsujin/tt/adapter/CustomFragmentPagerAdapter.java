@@ -16,6 +16,8 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
 
     //各曜日の時間割データを一元管理
     private ArrayList<ArrayList<String[]>> weekdatas = new ArrayList<>();
+    //日付データ
+    private ArrayList<String> datedatas = new ArrayList<>();
     private Context context;
 
     //コンストラクタ
@@ -56,26 +58,18 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
-        switch (position)
-        {
-            case 0:
-                return context.getResources().getString(R.string.week_monday);
-            case 1:
-                return context.getResources().getString(R.string.week_tuesday);
-            case 2:
-                return context.getResources().getString(R.string.week_wednesday);
-            case 3:
-                return context.getResources().getString(R.string.week_thursday);
-            case 4:
-                return context.getResources().getString(R.string.week_friday);
-            default:
-                return context.getResources().getString(R.string.error);
-        }
+        return datedatas.get(position);
     }
 
     //時間割データをセット
-    public void setdata(ArrayList<ArrayList<String[]>> datas)
+    public void setdatas(ArrayList<ArrayList<String[]>> datas)
     {
         weekdatas.addAll(datas);
+    }
+
+    //日付データをセット
+    public void adddate(String date)
+    {
+        datedatas.add(date);
     }
 }

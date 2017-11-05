@@ -5,7 +5,7 @@
     tools:context="com.tetsujin.tt.WeekFragment">
 
     <ListView
-        android:id="@+id/weekfragmentAy_lv"
+        android:id="@+id/weekfragment_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
