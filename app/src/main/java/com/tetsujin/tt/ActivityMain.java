@@ -6,13 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.os.AsyncTask;
-import android.widget.Toast;
 import android.text.format.DateFormat;
 
 //Java
@@ -40,35 +38,20 @@ import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
 
-public class MainActivity extends AppCompatActivity {
+public class ActivityMain extends AppCompatActivity {
 
     String timetabledata_url = "http://tetsujin.azurewebsites.net/api/schedules";
     private static String[][] testdata = new String[0][];
 
-    public static MainActivity mainActivity;
-    public static Boolean isVisible = false;
-    private static final String TAG = "MainActivity";
+    public static ActivityMain activityMain;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
-
-    public void ToastNotify(final String notificationMessage) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(MainActivity.this, notificationMessage, Toast.LENGTH_LONG).show();
-                TextView helloText = (TextView) findViewById(R.id.text_hello);
-                helloText.setText(notificationMessage);
-            }
-        });
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mainActivity = this;
+    
+        activityMain = this;
         //ハンドルをセット
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
         //Notification Hubsにこの端末の登録作業を行う
@@ -127,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(MainActivity.this, WeekActivity.class);
+                Intent intent = new Intent(ActivityMain.this, ActivityWeek.class);
 
                 intent.putExtra("datalength", testdata.length);
                 for(int i = 0; i < testdata.length; i ++)
@@ -158,16 +141,19 @@ public class MainActivity extends AppCompatActivity {
 
     //Google Play Servicesが利用可能かどうか確認する
     //利用可能ではないなら、finish()でアクティビティを終了させる
-    private boolean checkPlayServices() {
+    private boolean checkPlayServices()
+    {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
+        if (resultCode != ConnectionResult.SUCCESS)
+        {
+            if (apiAvailability.isUserResolvableError(resultCode))
+            {
                 apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
-            } else {
-                Log.i(TAG, "This device is not supported by Google Play Services.");
-                ToastNotify("This device is not supported by Google Play Services.");
+            }
+            else
+            {
                 finish();
             }
             return false;
@@ -178,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
     //Google Play Servicesが利用可能ならば、FCMにこの端末を登録する処理を行うintentを開始
     public void registerWithNotificationHubs()
     {
-        if (checkPlayServices()) {
+        if (checkPlayServices())
+        {
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }

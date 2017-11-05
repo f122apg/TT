@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tetsujin.tt.NotificationActivity">
+    tools:context="com.tetsujin.tt.ActivityNotification">
 
     <ListView
-        android:id="@+id/notificationAy_lv"
+        android:id="@+id/notificationAy_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

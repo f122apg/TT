@@ -9,8 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
-import com.tetsujin.tt.MainActivity;
-import com.tetsujin.tt.NotificationActivity;
+import com.tetsujin.tt.ActivityNotification;
 import com.tetsujin.tt.R;
 
 public class NotificationHandler extends NotificationsHandler {
@@ -25,9 +24,6 @@ public class NotificationHandler extends NotificationsHandler {
         ctx = context;
         String nhMessage = bundle.getString("message");
         sendNotification(nhMessage);
-        if (MainActivity.isVisible) {
-            MainActivity.mainActivity.ToastNotify(nhMessage);
-        }
     }
 
     //通知を送信する
@@ -35,7 +31,7 @@ public class NotificationHandler extends NotificationsHandler {
 
         //通知がタップされた時のintentを生成
         //第二引数には起動したいActivityを入れる
-        Intent intent = new Intent(ctx, NotificationActivity.class);
+        Intent intent = new Intent(ctx, ActivityNotification.class);
         //FLAG_ACTIVITY_CLEAR_TOP - 呼び出すActivity以外のActivityをクリアして起動させる
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

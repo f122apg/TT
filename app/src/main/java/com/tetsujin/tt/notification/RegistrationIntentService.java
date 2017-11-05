@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.microsoft.windowsazure.messaging.NotificationHub;
-import com.tetsujin.tt.MainActivity;
+import com.tetsujin.tt.ActivityMain;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -85,11 +85,6 @@ public class RegistrationIntentService extends IntentService {
             Log.e(TAG, resultString="Failed to complete registration", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-        }
-
-        // Notify UI that registration has completed.
-        if (MainActivity.isVisible) {
-            MainActivity.mainActivity.ToastNotify(resultString);
         }
     }
 }

@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/weekAy_vp"
+        android:id="@+id/AyWeek_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

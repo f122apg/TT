@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class WeekActivity extends FragmentActivity {
+public class ActivityWeek extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

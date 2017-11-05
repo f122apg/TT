@@ -6,8 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.tetsujin.tt.R;
-import com.tetsujin.tt.WeekFragment;
+import com.tetsujin.tt.FragmentWeek;
 
 import java.util.ArrayList;
 
@@ -41,10 +40,10 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
             bundle.putStringArray("data" + i, weekdata.get(i));
         }
 
-        WeekFragment wtf = new WeekFragment();
-        wtf.setArguments(bundle);
+        FragmentWeek fw = new FragmentWeek();
+        fw.setArguments(bundle);
 
-        return wtf;
+        return fw;
     }
 
     //タブの個数を返す

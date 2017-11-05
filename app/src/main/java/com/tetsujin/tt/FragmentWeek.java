@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
 
-public class WeekFragment extends Fragment {
+public class FragmentWeek extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState)

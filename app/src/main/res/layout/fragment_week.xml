@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tetsujin.tt.WeekFragment">
+    tools:context="com.tetsujin.tt.FragmentWeek">
 
     <ListView
-        android:id="@+id/weekfragment_lv"
+        android:id="@+id/FrgWeek_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
