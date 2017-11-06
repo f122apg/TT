@@ -44,7 +44,6 @@ public class ActivityMain extends AppCompatActivity {
     private static String[][] testdata = new String[0][];
 
     public static ActivityMain activityMain;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class ActivityMain extends AppCompatActivity {
         registerWithNotificationHubs();
 
         //日付取得と表示
-        TextView date_tv = (TextView)findViewById(R.id.date_textview);
+        TextView date_tv = (TextView)findViewById(R.id.AyMain_date_textview);
         //現在の日付を取得
         Date nowdate = new Date();
         //Calendarに現在の日付を設定
@@ -76,7 +75,7 @@ public class ActivityMain extends AppCompatActivity {
 
         date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
 
-        ListView timetable_lv = (ListView)findViewById(R.id.timetable_listview);
+        ListView timetable_lv = (ListView)findViewById(R.id.AyMain_timetable_listview);
 
         //ScrollView上に設置されたListViewをスクロールさせるようにする
         timetable_lv.setOnTouchListener(new View.OnTouchListener()
@@ -105,7 +104,7 @@ public class ActivityMain extends AppCompatActivity {
 
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
-        findViewById(R.id.B1_button).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.AyMain_B1_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -122,7 +121,7 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
         //B2 GetTimeTableの動作確認用 確認できたら削除する
-        findViewById(R.id.B2_button).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.AyMain_B2_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -143,6 +142,7 @@ public class ActivityMain extends AppCompatActivity {
     //利用可能ではないなら、finish()でアクティビティを終了させる
     private boolean checkPlayServices()
     {
+        final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS)
@@ -322,7 +322,7 @@ class Network_Async extends AsyncTask<String, Void, String[][]>
     //取得した時間割データを自作アダプタに渡し、ListViewで表示
     @Override
     protected void onPostExecute(String[][] values) {
-        ListView timetable_lv = (ListView)this.mainActivity.findViewById(R.id.timetable_listview);
+        ListView timetable_lv = (ListView)this.mainActivity.findViewById(R.id.AyMain_timetable_listview);
 
         CustomListViewAdapter adapter = new CustomListViewAdapter(this.mainActivity, values);
         timetable_lv.setAdapter(adapter);

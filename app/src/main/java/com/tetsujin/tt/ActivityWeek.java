@@ -60,7 +60,7 @@ public class ActivityWeek extends FragmentActivity {
         allweek_values.add(friday_value);
 
         //ViewPagerとFragmentを用いた、タブ形式の各曜日の授業を表示する画面を生成
-        ViewPager vp = (ViewPager) findViewById(R.id.weekAy_vp);
+        ViewPager vp = (ViewPager) findViewById(R.id.AyWeek_viewpager);
         FragmentManager fm = getSupportFragmentManager();
         CustomFragmentPagerAdapter cfpadapter = new CustomFragmentPagerAdapter(fm, this);
         //時間割データを渡す

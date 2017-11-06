@@ -61,6 +61,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ActivityMain" />
         </activity>
+        <activity android:name=".LoginActivity" />
     </application>
 
 </manifest>
