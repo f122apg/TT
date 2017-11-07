@@ -104,7 +104,7 @@ public class ActivityMain extends AppCompatActivity {
 
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
-        findViewById(R.id.AyMain_B1_button).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.Header_B1_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -118,10 +118,11 @@ public class ActivityMain extends AppCompatActivity {
                 }
 
                 startActivity(intent);
+                overridePendingTransition(R.anim.activity_inright, R.anim.activity_outleft);
             }
         });
         //B2 GetTimeTableの動作確認用 確認できたら削除する
-        findViewById(R.id.AyMain_B2_button).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.Header_B2_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

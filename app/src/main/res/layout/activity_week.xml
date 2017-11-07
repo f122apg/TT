@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include
+            layout="@layout/header_b1"
+            android:id="@+id/AyWeek_headerb1_button"/>
+        <include layout="@layout/header_b3"/>
+        <include layout="@layout/header_b2"/>
+    </LinearLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/AyWeek_viewpager"
         android:layout_width="match_parent"

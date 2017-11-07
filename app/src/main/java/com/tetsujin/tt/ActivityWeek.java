@@ -4,8 +4,14 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.text.format.DateFormat;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tetsujin.tt.adapter.CustomFragmentPagerAdapter;
@@ -20,7 +26,7 @@ public class ActivityWeek extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week);
-
+        
         Intent intent = getIntent();
         //FragmentPagerAdapterに渡すためのデータを一元管理するArrayList
         ArrayList<ArrayList<String[]>> allweek_values = new ArrayList<>();
@@ -90,5 +96,40 @@ public class ActivityWeek extends FragmentActivity {
         }
         //ViewPagerにCustomAdapterをセット
         vp.setAdapter(cfpadapter);
+    
+        //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている]
+        
+        final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
+        ViewCompat.animate(ib)
+                .rotationX(180)
+                .alpha(0f)
+                .setDuration(500)
+                .setListener(new ViewPropertyAnimatorListenerAdapter()
+                {
+                    @Override
+                    public void onAnimationEnd(View view)
+                    {
+                        ib.setImageResource(R.drawable.icon_arrow_back);
+                        ViewCompat.animate(view)
+                                .alpha(1f)
+                                .setDuration(250);
+                    }
+                });
+    
+        ib.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+    }
+    
+    @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.activity_inleft, R.anim.activity_outright);
     }
 }
