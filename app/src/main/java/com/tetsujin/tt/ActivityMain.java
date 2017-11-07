@@ -4,10 +4,13 @@ package com.tetsujin.tt;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Path;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.os.AsyncTask;
@@ -117,8 +120,12 @@ public class ActivityMain extends AppCompatActivity {
                     intent.putExtra("data" + i, testdata[i]);
                 }
 
+                overridePendingTransition(0, 0);
                 startActivity(intent);
-                overridePendingTransition(R.anim.activity_inright, R.anim.activity_outleft);
+                LinearLayout layout = (LinearLayout)findViewById(R.id.AyMain_parent_linearlayout);
+                Path path = new Path();
+                path.addRect(0, 50, layout.getWidth(), layout.getHeight(), Path.Direction.CW);
+                //overridePendingTransition(R.anim.activity_inright, R.anim.activity_outleft);
             }
         });
         //B2 GetTimeTableの動作確認用 確認できたら削除する

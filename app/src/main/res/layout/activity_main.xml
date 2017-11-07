@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.tetsujin.tt.ActivityMain">
+    tools:context="com.tetsujin.tt.ActivityMain"
+    android:id="@+id/AyMain_parent_linearlayout">
 
     <!-- ScrollViewで子要素をまとめて表示することによって、MEMO欄に -->
     <!-- focusを当て、キーボードが表示されても各要素が隠れないようにLayoutのリサイズができるようになる -->

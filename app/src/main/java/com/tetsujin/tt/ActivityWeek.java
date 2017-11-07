@@ -129,6 +129,7 @@ public class ActivityWeek extends FragmentActivity {
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.activity_inleft, R.anim.activity_outright);
+        //overridePendingTransition(R.anim.activity_inleft, R.anim.activity_outright);
+        overridePendingTransition(0, 0);
     }
 }
