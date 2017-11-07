@@ -9,9 +9,37 @@
             android:layout_height="50dp"
             android:layout_weight="1">
 
-            <include layout="@layout/header_b1"/>
-            <include layout="@layout/header_b3"/>
-            <include layout="@layout/header_b2"/>
+            <ImageButton
+                android:id="@+id/Header_B1_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_week"/>
+
+            <ImageButton
+                android:id="@+id/Header_B3_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_month"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="right">
+
+                <ImageButton
+                    android:id="@+id/Header_B2_button"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_notification"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 </LinearLayout>

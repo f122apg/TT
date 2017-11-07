@@ -97,8 +97,7 @@ public class ActivityWeek extends FragmentActivity {
         //ViewPagerにCustomAdapterをセット
         vp.setAdapter(cfpadapter);
     
-        //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている]
-        
+        //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている
         final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
         ViewCompat.animate(ib)
                 .rotationX(180)

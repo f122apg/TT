@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- -5%pから0(左から右へ)へ250msかけて移動 -->
     <translate android:fromXDelta="-5%p" android:toXDelta="0"
         android:duration="250"/>
+    <!-- 0.5から1.0まで500msかけて透明度を変化させる -->
     <alpha xmlns:android="http://schemas.android.com/apk/res/android"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:fromAlpha="0.5" android:toAlpha="1.0"
