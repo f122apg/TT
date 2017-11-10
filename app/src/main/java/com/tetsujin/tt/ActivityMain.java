@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -56,14 +57,15 @@ public class ActivityMain extends AppCompatActivity {
     public static ActivityMain activityMain;
     private boolean ischangeactivity = false;
     private View v2;
-    private LinearLayout childlayout;
+    private LinearLayout parentlayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    
+
         activityMain = this;
+        parentlayout = (LinearLayout)findViewById(R.id.AyMain_container_linearlayout);
         //ハンドルをセット
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
         //Notification Hubsにこの端末の登録作業を行う
@@ -71,7 +73,7 @@ public class ActivityMain extends AppCompatActivity {
 
         //ActivityMainに存在するcontainerにFragmentMainを表示する
         FragmentMain frgmain = new FragmentMain();
-        changeFragment(frgmain);
+        showFragment(frgmain, parentlayout);
 
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
@@ -80,132 +82,139 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                final LinearLayout parentlayout = (LinearLayout) findViewById(R.id.AyMain_parent_linearlayout);
+                //final LinearLayout parentlayout = (LinearLayout) findViewById(R.id.AyMain_parent_linearlayout);
                 //overridePendingTransition(R.anim.activity_inright, R.anim.activity_outleft);
 
                 if(!ischangeactivity) {
                     ischangeactivity = true;
+                    FragmentTest frgtest = new FragmentTest();
+                    showFragment(frgtest, parentlayout);
+                    Toast.makeText(activityMain, "true", Toast.LENGTH_SHORT).show();
 
-                    //inflateで動的にviewを生成するテスト
-                    parentlayout.setVisibility(LinearLayout.VISIBLE);
-
-                    Animation animation = AnimationUtils.loadAnimation(activityMain, R.anim.activity_outleft);
-                    animation.setDuration(250);
-                    parentlayout.setAnimation(animation);
-                    parentlayout.startAnimation(animation);
-
-                    animation.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            Toast.makeText(activityMain, "animation ended", Toast.LENGTH_SHORT).show();
-                            parentlayout.removeAllViews();
-                            v2 = getLayoutInflater().inflate(R.layout.fragment_week, parentlayout);
-                            childlayout = (LinearLayout) v2;
-
-                            ListView lv = (ListView)findViewById(R.id.FrgWeek_listview);
-
-                            String[][] value =
-                                    {
-                                            {"1", "卒業制作", "09:00", "10:30", "月"},
-                                            {"2", "クラウドコンピューティング", "10:40", "12:10", "月"},
-                                    };
-
-                            //ListViewに現在のデータを適用
-                            CustomListViewAdapter ca = new CustomListViewAdapter(v2.getContext(), value);
-                            lv.setAdapter(ca);
-
-                            ViewCompat.animate(v2)
-                                    .translationX(v2.getWidth())
-                                    .setDuration(1)
-                                    .start();
-
-                            ViewCompat.animate(v2)
-                                    .translationX(0)
-                                    .setDuration(3000)
-                                    .start();
-
-                            //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている
-                            final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
-                            ViewCompat.animate(ib)
-                                    .rotationX(180)
-                                    .alpha(0f)
-                                    .setDuration(150)
-                                    .setListener(new ViewPropertyAnimatorListenerAdapter()
-                                    {
-                                        @Override
-                                        public void onAnimationEnd(View view)
-                                        {
-                                            ib.setImageResource(R.drawable.icon_arrow_back);
-                                            ViewCompat.animate(view)
-                                                    .alpha(1f)
-                                                    .setDuration(150);
-                                        }
-                                    });
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
+//                    //inflateで動的にviewを生成するテスト
+//                    parentlayout.setVisibility(LinearLayout.VISIBLE);
+//
+//                    Animation animation = AnimationUtils.loadAnimation(activityMain, R.anim.activity_outleft);
+//                    animation.setDuration(250);
+//                    parentlayout.setAnimation(animation);
+//                    parentlayout.startAnimation(animation);
+//
+//                    animation.setAnimationListener(new Animation.AnimationListener() {
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+//                            Toast.makeText(activityMain, "animation ended", Toast.LENGTH_SHORT).show();
+//                            parentlayout.removeAllViews();
+//                            v2 = getLayoutInflater().inflate(R.layout.fragment_week, parentlayout);
+//                            childlayout = (LinearLayout) v2;
+//
+//                            ListView lv = (ListView)findViewById(R.id.FrgWeek_listview);
+//
+//                            String[][] value =
+//                                    {
+//                                            {"1", "卒業制作", "09:00", "10:30", "月"},
+//                                            {"2", "クラウドコンピューティング", "10:40", "12:10", "月"},
+//                                    };
+//
+//                            //ListViewに現在のデータを適用
+//                            CustomListViewAdapter ca = new CustomListViewAdapter(v2.getContext(), value);
+//                            lv.setAdapter(ca);
+//
+//                            ViewCompat.animate(v2)
+//                                    .translationX(v2.getWidth())
+//                                    .setDuration(1)
+//                                    .start();
+//
+//                            ViewCompat.animate(v2)
+//                                    .translationX(0)
+//                                    .setDuration(3000)
+//                                    .start();
+//
+//                            //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている
+//                            final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
+//                            ViewCompat.animate(ib)
+//                                    .rotationX(180)
+//                                    .alpha(0f)
+//                                    .setDuration(150)
+//                                    .setListener(new ViewPropertyAnimatorListenerAdapter()
+//                                    {
+//                                        @Override
+//                                        public void onAnimationEnd(View view)
+//                                        {
+//                                            ib.setImageResource(R.drawable.icon_arrow_back);
+//                                            ViewCompat.animate(view)
+//                                                    .alpha(1f)
+//                                                    .setDuration(150);
+//                                        }
+//                                    });
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//
+//                        }
+//                    });
                 }
                 else
                 {
                     ischangeactivity = false;
 
-                    childlayout.setVisibility(LinearLayout.VISIBLE);
+                    FragmentMain frgmain = new FragmentMain();
+                    showFragment(frgmain, parentlayout);
+                    Toast.makeText(activityMain, "false", Toast.LENGTH_SHORT).show();
 
-                    Animation animation2 = AnimationUtils.loadAnimation(v2.getContext(), R.anim.activity_outright);
-                    animation2.setDuration(250);
-                    childlayout.setAnimation(animation2);
-                    childlayout.startAnimation(animation2);
-                    animation2.setAnimationListener(new Animation.AnimationListener() {
-                                                        @Override
-                                                        public void onAnimationStart(Animation animation) {
-
-                                                        }
-
-                                                        @Override
-                                                        public void onAnimationEnd(Animation animation) {
-                                                            childlayout.removeAllViews();
-
-                                                            View v3 = getLayoutInflater().inflate(R.layout.activity_main, childlayout);
-
-                                                            ViewCompat.animate(v3)
-                                                                    .translationX(0)
-                                                                    .alpha(1)
-                                                                    .setDuration(250)
-                                                                    .start();
-
-                                                            //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている
-                                                            final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
-                                                            ViewCompat.animate(ib)
-                                                                    .rotationX(360)
-                                                                    .alpha(0f)
-                                                                    .setDuration(150)
-                                                                    .setListener(new ViewPropertyAnimatorListenerAdapter()
-                                                                    {
-                                                                        @Override
-                                                                        public void onAnimationEnd(View view)
-                                                                        {
-                                                                            ib.setImageResource(R.drawable.icon_week);
-                                                                            ViewCompat.animate(view)
-                                                                                    .alpha(1f)
-                                                                                    .setDuration(250);
-                                                                        }
-                                                                    });
-                                                        }
-
-                                                        @Override
-                                                        public void onAnimationRepeat(Animation animation) {
-
-                                                        }
-                                                    });
+//                    childlayout.setVisibility(LinearLayout.VISIBLE);
+//
+//                    Animation animation2 = AnimationUtils.loadAnimation(v2.getContext(), R.anim.activity_outright);
+//                    animation2.setDuration(250);
+//                    childlayout.setAnimation(animation2);
+//                    childlayout.startAnimation(animation2);
+//                    animation2.setAnimationListener(new Animation.AnimationListener() {
+//                                                        @Override
+//                                                        public void onAnimationStart(Animation animation) {
+//
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onAnimationEnd(Animation animation) {
+//                                                            childlayout.removeAllViews();
+//
+//                                                            View v3 = getLayoutInflater().inflate(R.layout.activity_main, childlayout);
+//
+//                                                            ViewCompat.animate(v3)
+//                                                                    .translationX(0)
+//                                                                    .alpha(1)
+//                                                                    .setDuration(250)
+//                                                                    .start();
+//
+//                                                            //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている
+//                                                            final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
+//                                                            ViewCompat.animate(ib)
+//                                                                    .rotationX(360)
+//                                                                    .alpha(0f)
+//                                                                    .setDuration(150)
+//                                                                    .setListener(new ViewPropertyAnimatorListenerAdapter()
+//                                                                    {
+//                                                                        @Override
+//                                                                        public void onAnimationEnd(View view)
+//                                                                        {
+//                                                                            ib.setImageResource(R.drawable.icon_week);
+//                                                                            ViewCompat.animate(view)
+//                                                                                    .alpha(1f)
+//                                                                                    .setDuration(250);
+//                                                                        }
+//                                                                    });
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onAnimationRepeat(Animation animation) {
+//
+//                                                        }
+//                                                    });
                 }
 
 //                Intent intent = new Intent(ActivityMain.this, ActivityWeek.class);
@@ -270,13 +279,16 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
-    public void changeFragment(Fragment frg)
+    public void showFragment(Fragment frg, LinearLayout layout)
     {
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.activity_inright, R.anim.activity_outleft, R.anim.activity_inleft, R.anim.activity_outright);
         transaction.replace(R.id.AyMain_container_linearlayout, frg);
+        layout.removeAllViews();
         transaction.commit();
     }
 }
+
 
 
 
