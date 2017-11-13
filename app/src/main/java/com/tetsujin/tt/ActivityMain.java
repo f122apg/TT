@@ -1,46 +1,21 @@
 package com.tetsujin.tt;
 
 //Android
+
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Path;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.os.AsyncTask;
-import android.text.format.DateFormat;
-import android.widget.Toast;
 
-//Java
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-
-//JSON
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-//FCM & Azure Notification Hubs
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
@@ -49,15 +24,29 @@ import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
+
+//Java
+//JSON
+//FCM & Azure Notification Hubs
+
 public class ActivityMain extends AppCompatActivity {
 
     String timetabledata_url = "http://tetsujin.azurewebsites.net/api/schedules";
     private static String[][] testdata = new String[0][];
 
     public static ActivityMain activityMain;
-    private boolean ischangeactivity = false;
-    private View v2;
-    private LinearLayout parentlayout;
+    private boolean isChangeFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +54,29 @@ public class ActivityMain extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         activityMain = this;
-        parentlayout = (LinearLayout)findViewById(R.id.AyMain_container_linearlayout);
         //ハンドルをセット
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
         //Notification Hubsにこの端末の登録作業を行う
         registerWithNotificationHubs();
+    
+        final String[][] testdata = new String[][]
+                {
+                        {"1", "卒業制作", "09:00", "10:30", "月"},
+                        {"2", "クラウドコンピューティング", "10:40", "12:10", "月"},
+                        {"3", "データベース応用", "09:00", "12:10", "火"},
+                        {"4", "Linux実習", "13:00", "16:10", "火"},
+                        {"5", "キャリアデザイン3", "09:00", "14:30", "水"},
+                        {"6", "オブジェクト指向プログラミング実習1 S1", "09:00", "12:10", "木"},
+                        {"7", "ソフトウェアデザイン S1", "13:00", "14:30", "木"},
+                        {"8", "合同資格対策講座", "09:00", "14:30", "金"},
+                };
 
         //ActivityMainに存在するcontainerにFragmentMainを表示する
+        //初回のみアニメーションをさせないようにshowFragmentメソッドを使わずに表示
         FragmentMain frgmain = new FragmentMain();
-        showFragment(frgmain, parentlayout);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.AyMain_container_linearlayout, frgmain);
+        ft.commit();
 
         /* onClickListeners */
         //B1 1週間の時間割に遷移する
@@ -82,150 +85,65 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                //final LinearLayout parentlayout = (LinearLayout) findViewById(R.id.AyMain_parent_linearlayout);
-                //overridePendingTransition(R.anim.activity_inright, R.anim.activity_outleft);
 
-                if(!ischangeactivity) {
-                    ischangeactivity = true;
-                    FragmentTest frgtest = new FragmentTest();
-                    showFragment(frgtest, parentlayout);
-                    Toast.makeText(activityMain, "true", Toast.LENGTH_SHORT).show();
-
-//                    //inflateで動的にviewを生成するテスト
-//                    parentlayout.setVisibility(LinearLayout.VISIBLE);
-//
-//                    Animation animation = AnimationUtils.loadAnimation(activityMain, R.anim.activity_outleft);
-//                    animation.setDuration(250);
-//                    parentlayout.setAnimation(animation);
-//                    parentlayout.startAnimation(animation);
-//
-//                    animation.setAnimationListener(new Animation.AnimationListener() {
-//                        @Override
-//                        public void onAnimationStart(Animation animation) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onAnimationEnd(Animation animation) {
-//                            Toast.makeText(activityMain, "animation ended", Toast.LENGTH_SHORT).show();
-//                            parentlayout.removeAllViews();
-//                            v2 = getLayoutInflater().inflate(R.layout.fragment_week, parentlayout);
-//                            childlayout = (LinearLayout) v2;
-//
-//                            ListView lv = (ListView)findViewById(R.id.FrgWeek_listview);
-//
-//                            String[][] value =
-//                                    {
-//                                            {"1", "卒業制作", "09:00", "10:30", "月"},
-//                                            {"2", "クラウドコンピューティング", "10:40", "12:10", "月"},
-//                                    };
-//
-//                            //ListViewに現在のデータを適用
-//                            CustomListViewAdapter ca = new CustomListViewAdapter(v2.getContext(), value);
-//                            lv.setAdapter(ca);
-//
-//                            ViewCompat.animate(v2)
-//                                    .translationX(v2.getWidth())
-//                                    .setDuration(1)
-//                                    .start();
-//
-//                            ViewCompat.animate(v2)
-//                                    .translationX(0)
-//                                    .setDuration(3000)
-//                                    .start();
-//
-//                            //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている
-//                            final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
-//                            ViewCompat.animate(ib)
-//                                    .rotationX(180)
-//                                    .alpha(0f)
-//                                    .setDuration(150)
-//                                    .setListener(new ViewPropertyAnimatorListenerAdapter()
-//                                    {
-//                                        @Override
-//                                        public void onAnimationEnd(View view)
-//                                        {
-//                                            ib.setImageResource(R.drawable.icon_arrow_back);
-//                                            ViewCompat.animate(view)
-//                                                    .alpha(1f)
-//                                                    .setDuration(150);
-//                                        }
-//                                    });
-//                        }
-//
-//                        @Override
-//                        public void onAnimationRepeat(Animation animation) {
-//
-//                        }
-//                    });
+                final int resourceid;
+                
+                //FragmentWeekContainerの表示
+                if(!isChangeFragment)
+                {
+                    resourceid = R.drawable.icon_arrow_back;
+                    
+                    //FragmentWeekContainerに時間割データを渡す
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("datalength", testdata.length);
+                    for (int i = 0; i < testdata.length; i++)
+                    {
+                        bundle.putStringArray("data" + i, testdata[i]);
+                    }
+                    
+                    //FragmentWeekContainerに値を渡し、表示する
+                    FragmentWeekContainer frgwc = new FragmentWeekContainer();
+                    frgwc.setArguments(bundle);
+                    showFragment(frgwc);
                 }
+                //FragmentMainの表示
                 else
                 {
-                    ischangeactivity = false;
-
+                    resourceid = R.drawable.icon_week;
                     FragmentMain frgmain = new FragmentMain();
-                    showFragment(frgmain, parentlayout);
-                    Toast.makeText(activityMain, "false", Toast.LENGTH_SHORT).show();
-
-//                    childlayout.setVisibility(LinearLayout.VISIBLE);
-//
-//                    Animation animation2 = AnimationUtils.loadAnimation(v2.getContext(), R.anim.activity_outright);
-//                    animation2.setDuration(250);
-//                    childlayout.setAnimation(animation2);
-//                    childlayout.startAnimation(animation2);
-//                    animation2.setAnimationListener(new Animation.AnimationListener() {
-//                                                        @Override
-//                                                        public void onAnimationStart(Animation animation) {
-//
-//                                                        }
-//
-//                                                        @Override
-//                                                        public void onAnimationEnd(Animation animation) {
-//                                                            childlayout.removeAllViews();
-//
-//                                                            View v3 = getLayoutInflater().inflate(R.layout.activity_main, childlayout);
-//
-//                                                            ViewCompat.animate(v3)
-//                                                                    .translationX(0)
-//                                                                    .alpha(1)
-//                                                                    .setDuration(250)
-//                                                                    .start();
-//
-//                                                            //animationのテスト ここでは一週間の時間割アイコンをバックアイコンに変化させている
-//                                                            final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
-//                                                            ViewCompat.animate(ib)
-//                                                                    .rotationX(360)
-//                                                                    .alpha(0f)
-//                                                                    .setDuration(150)
-//                                                                    .setListener(new ViewPropertyAnimatorListenerAdapter()
-//                                                                    {
-//                                                                        @Override
-//                                                                        public void onAnimationEnd(View view)
-//                                                                        {
-//                                                                            ib.setImageResource(R.drawable.icon_week);
-//                                                                            ViewCompat.animate(view)
-//                                                                                    .alpha(1f)
-//                                                                                    .setDuration(250);
-//                                                                        }
-//                                                                    });
-//                                                        }
-//
-//                                                        @Override
-//                                                        public void onAnimationRepeat(Animation animation) {
-//
-//                                                        }
-//                                                    });
+                    showFragment(frgmain);
                 }
-
-//                Intent intent = new Intent(ActivityMain.this, ActivityWeek.class);
-//
-//                intent.putExtra("datalength", testdata.length);
-//                for(int i = 0; i < testdata.length; i ++)
-//                {
-//                    intent.putExtra("data" + i, testdata[i]);
-//                }
-//
-//                startActivity(intent);
+    
+                /* アニメーション処理 */
+                //Fragmentの表示と共に、B1ボタンを矢印に変更するアニメーションを開始させる
+                final ImageButton ib = (ImageButton)findViewById(R.id.Header_B1_button);
+                //アニメーションの読み込みとアニメーションにかける時間を設定
+                Animation fadeout_anim = AnimationUtils.loadAnimation(activityMain, R.anim.icon_fadeout);
+                fadeout_anim.setDuration(250);
+                //リスナーを設定
+                fadeout_anim.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation){}
+        
+                    //アニメーション終了時、ボタンの画像を変更しアニメーションをかける
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        ib.setImageResource(resourceid);
+                        Animation fadein_anim = AnimationUtils.loadAnimation(activityMain, R.anim.icon_fadein);
+                        fadein_anim.setDuration(250);
+                        ib.startAnimation(fadein_anim);
+                    }
+        
+                    @Override
+                    public void onAnimationRepeat(Animation animation){}
+                });
+                //アニメーションを開始
+                ib.startAnimation(fadeout_anim);
+                
+                //フラグを反転
+                isChangeFragment = !isChangeFragment;
             }
         });
         //B2 GetTimeTableの動作確認用 確認できたら削除する
@@ -279,35 +197,36 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
-    public void showFragment(Fragment frg, LinearLayout layout)
+    //Fragmentを置き換えて表示する
+    public void showFragment(Fragment frg)
     {
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.activity_inright, R.anim.activity_outleft, R.anim.activity_inleft, R.anim.activity_outright);
         transaction.replace(R.id.AyMain_container_linearlayout, frg);
-        layout.removeAllViews();
         transaction.commit();
     }
 }
 
 
-
-
+/****************************************************/
+//時間割データを取得する非同期クラス
+//***************************************************/
 class Network_Async extends AsyncTask<String, Void, String[][]>
 {
-    private Activity mainActivity;
+    private Activity activityMain;
     public ProgressDialog progressdialog;
 
     public Network_Async(Activity activity)
     {
-        this.mainActivity = activity;
+        this.activityMain = activity;
     }
 
     //キャンセルできないプログレスダイアログを表示する
     @Override
     protected void onPreExecute()
     {
-        this.progressdialog = new ProgressDialog(this.mainActivity);
-        this.progressdialog.setMessage("時間割のデータを取得しています...");
+        this.progressdialog = new ProgressDialog(this.activityMain);
+        this.progressdialog.setMessage(activityMain.getResources().getString(R.string.getdata));
         this.progressdialog.setCancelable(false);
         this.progressdialog.show();
         return;
@@ -440,9 +359,9 @@ class Network_Async extends AsyncTask<String, Void, String[][]>
     //取得した時間割データを自作アダプタに渡し、ListViewで表示
     @Override
     protected void onPostExecute(String[][] values) {
-        ListView timetable_lv = (ListView)this.mainActivity.findViewById(R.id.AyMain_timetable_listview);
+        ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.AyMain_timetable_listview);
 
-        CustomListViewAdapter adapter = new CustomListViewAdapter(this.mainActivity, values);
+        CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values);
         timetable_lv.setAdapter(adapter);
 
         //プログレスダイアログを閉じる

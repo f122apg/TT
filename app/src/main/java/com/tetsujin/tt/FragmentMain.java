@@ -1,6 +1,5 @@
 package com.tetsujin.tt;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;

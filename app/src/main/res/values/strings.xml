@@ -17,5 +17,5 @@
     <!-- error -->
     <string name="error">エラー</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="getdata">時間割のデータを取得しています...</string>
 </resources>

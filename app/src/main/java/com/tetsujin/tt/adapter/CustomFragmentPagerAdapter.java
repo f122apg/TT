@@ -1,6 +1,5 @@
 package com.tetsujin.tt.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,13 +16,11 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
     private ArrayList<ArrayList<String[]>> weekdatas = new ArrayList<>();
     //日付データ
     private ArrayList<String> datedatas = new ArrayList<>();
-    private Context context;
 
     //コンストラクタ
-    public CustomFragmentPagerAdapter(FragmentManager fm, Context c)
+    public CustomFragmentPagerAdapter(FragmentManager fm)
     {
         super(fm);
-        context = c;
     }
 
     //時間割データを各曜日のタブへ送る
