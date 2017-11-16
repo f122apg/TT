@@ -7,102 +7,90 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.tetsujin.tt.FragmentMain">
-
-    <!-- ScrollViewで子要素をまとめて表示することによって、MEMO欄に -->
-    <!-- focusを当て、キーボードが表示されても各要素が隠れないようにLayoutのリサイズができるようになる -->
-    <ScrollView
+    
+    <LinearLayout
+        android:id="@+id/AyMain_parent_linearlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    
+        <!-- 日付(曜日)表示 -->
+        <TextView
+            android:id="@+id/AyMain_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="MM/dd(E)"
+            android:textSize="30sp" />
+    
+        <!-- ListViewのヘッダー部 -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_height="wrap_content">
+    
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/AyMain_parent_linearlayout">
-
-                <!-- 日付(曜日)表示 -->
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+        
                 <TextView
-                    android:id="@+id/AyMain_date_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="MM/dd(E)"
-                    android:textSize="30sp"/>
-
-                <!-- ListViewのヘッダー部 -->
-                <LinearLayout
+                    android:text="開始時間"
+                    android:textSize="15sp" />
+        
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="終了時間"
+                    android:textSize="15sp" />
+    
+            </LinearLayout>
+    
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+        
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:text="開始時間"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:text="終了時間"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:textSize="25sp"
-                            android:text="授業名"
-                            android:gravity="center"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- 時間割表示 -->
-                <ListView
-                    android:id="@+id/AyMain_timetable_listview"
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:layout_marginTop="20dp"/>
-
-                <!-- 下部 MEMO欄 -->
-                <LinearLayout
-                    android:background="@drawable/border"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="MEMO欄" />
-
-                    <EditText
-                        android:id="@+id/AyMain_memo_edittext"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:height="90dp"
-                        android:gravity="top|left"
-                        android:inputType="textMultiLine"
-                        android:scrollbars="vertical"/>
-
-                </LinearLayout>
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="授業名"
+                    android:textSize="25sp" />
+    
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    
+        <!-- 時間割表示 -->
+        <ListView
+            android:id="@+id/AyMain_timetable_listview"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp" />
+    
+        <!-- 下部 MEMO欄 -->
+        <LinearLayout
+            android:id="@+id/bottomLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/border"
+            android:orientation="vertical">
+    
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MEMO欄" />
+    
+            <EditText
+                android:id="@+id/AyMain_memo_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:height="90dp"
+                android:gravity="top|left"
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical" />
+
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,18 +41,11 @@ public class FragmentMain extends Fragment {
 
         date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
 
-        ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
+        EditText memo_et = (EditText)v.findViewById(R.id.AyMain_memo_edittext);
+        memo_et.setFocusable(false);
+        memo_et.setFocusableInTouchMode(false);
 
-        //ScrollView上に設置されたListViewをスクロールさせるようにする
-        timetable_lv.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
+        ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
 
         String[][] testdata = new String[][]
                 {
