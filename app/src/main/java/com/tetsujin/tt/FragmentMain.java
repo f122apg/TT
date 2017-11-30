@@ -6,7 +6,6 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,10 +40,6 @@ public class FragmentMain extends Fragment {
 
         date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
 
-        EditText memo_et = (EditText)v.findViewById(R.id.AyMain_memo_edittext);
-        memo_et.setFocusable(false);
-        memo_et.setFocusableInTouchMode(false);
-
         ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
 
         String[][] testdata = new String[][]
@@ -58,10 +53,10 @@ public class FragmentMain extends Fragment {
                         {"7", "ソフトウェアデザイン S1", "13:00", "14:30", "木"},
                         {"8", "合同資格対策講座", "09:00", "14:30", "金"},
                 };
+
         CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), testdata);
         timetable_lv.setAdapter(ca);
 
         return v;
     }
-
 }

@@ -19,15 +19,25 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
 
-/****************************************************/
-//時間割データをネットワーク経由で取得する非同期のクラス
-/****************************************************/
-public class NetWorkTask extends AsyncTask<String, Void, String[][]>
+/***********************************************************************/
+//時間割データをネットワーク経由で取得し、ListViewアダプタにセットする非同期のクラス
+/***********************************************************************/
+
+//引数の意味
+//String = Activityからスレッドへ渡す変数の型
+//    Activityからスレッドを呼び出すexecuteの引数
+//    doInBackgroundの引数
+//Void = 進捗度合を表示するときに利用する型
+//    onProgressUpdateの引数
+//String[][] = バックグラウンド処理完了時に受け取る型
+//    doInBackgroundの戻り値
+//    onPostExecuteの引数
+public class TaskGetTimeTable extends AsyncTask<String, Void, String[][]>
 {
     private Activity activityMain;
     public ProgressDialog progressdialog;
 
-    public NetWorkTask(Activity activity)
+    public TaskGetTimeTable(Activity activity)
     {
         this.activityMain = activity;
     }

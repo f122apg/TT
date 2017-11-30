@@ -1,6 +1,7 @@
 package com.tetsujin.tt;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,18 +10,18 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+
 import java.net.MalformedURLException;
+import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
-import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
 import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
-
 
 import com.microsoft.windowsazure.mobileservices.*;
 
@@ -48,18 +49,44 @@ public class ActivityMain extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        TodoItem item = new TodoItem();
-        item.Text = "Awesome Text";
-        mClient.getTable(TodoItem.class).insert(item, new TableOperationCallback<TodoItem>() {
+//        Student st = new Student("K016C1369", "小濵大地", 2016, 2, "CD", 4);
+//        mClient.getTable(Student.class).insert(st, new TableOperationCallback<Student>() {
+//            @Override
+//            public void onCompleted(Student entity, Exception exception, ServiceFilterResponse response) {
+//                System.out.println("Completed");
+//                if(exception == null)
+//                    System.out.println("sucessfully");
+//                else
+//                {
+//                    System.out.println("failed");
+//                    exception.printStackTrace();
+//                }
+//            }
+//        });
+
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
-            public void onCompleted(TodoItem entity, Exception exception, ServiceFilterResponse response) {
-                System.out.println("Completed");
-                if(exception == null)
-                    System.out.println("sucessfully");
-                else
-                    exception.printStackTrace();
+            protected Void doInBackground(Void... voids) {
+                try {
+                    MobileServiceTable<test> s = mClient.getTable(test.class);
+                    System.out.println("GetTable");
+                    final List<test> a = s.execute().get();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println(a.get(0).gettext());
+                        }
+                    });
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                return null;
             }
-        });
+        };
+
+        task.execute();
 
         //ハンドルをセット
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
@@ -166,7 +193,7 @@ public class ActivityMain extends AppCompatActivity {
     //時間割データを取得する
     public void GetTimeTable()
     {
-        NetWorkTask task = new NetWorkTask(this);
+        TaskGetTimeTable task = new TaskGetTimeTable(this);
         task.execute(timetabledata_url);
     }
 

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="MM/dd(E)"
-            android:textSize="30sp" />
+            android:textSize="30sp"/>
     
         <!-- ListViewのヘッダー部 -->
         <LinearLayout
@@ -66,7 +66,7 @@
         <ListView
             android:id="@+id/AyMain_timetable_listview"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="375dp"
             android:layout_marginTop="20dp" />
     
         <!-- 下部 MEMO欄 -->
@@ -75,7 +75,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/border"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
     
             <TextView
                 android:layout_width="wrap_content"
@@ -83,13 +85,13 @@
                 android:text="MEMO欄" />
     
             <EditText
-                android:id="@+id/AyMain_memo_edittext"
+                android:id="@+id/FrgMain_memo_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:height="90dp"
                 android:gravity="top|left"
                 android:inputType="textMultiLine"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"/>
 
         </LinearLayout>
     </LinearLayout>
