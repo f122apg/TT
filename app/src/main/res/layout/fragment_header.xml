@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_weight="1"
+    android:orientation="horizontal"
+    tools:context="com.tetsujin.tt.FragmentHeader">
+    
+    <!-- 上部 Button群 -->
+    <ImageButton
+        android:id="@+id/Header_B1_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_week"/>
+        
+    <ImageButton
+        android:id="@+id/Header_B3_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_month"/>
+        
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="right">
+        
+        <ImageButton
+            android:id="@+id/Header_B2_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_notification"/>
+        
+        </LinearLayout>
+</LinearLayout>

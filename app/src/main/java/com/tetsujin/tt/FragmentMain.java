@@ -19,7 +19,7 @@ public class FragmentMain extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_main, container, false);
+        final View v = inflater.inflate(R.layout.fragment_main, container, false);
 
         //日付取得と表示
         TextView date_tv = (TextView)v.findViewById(R.id.AyMain_date_textview);
