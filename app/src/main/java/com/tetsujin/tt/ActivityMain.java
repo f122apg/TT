@@ -1,25 +1,38 @@
 package com.tetsujin.tt;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
+import com.tetsujin.tt.database.DBInfo;
+import com.tetsujin.tt.database.MemoDBHelper;
 import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
 
+import java.io.File;
+
 public class ActivityMain extends AppCompatActivity {
 
+    //TODO:時間割データの一時的な保存場所
     String timetabledata_url = "http://tetsujin.azurewebsites.net/api/schedules";
 
     public static ActivityMain activityMain;
+
+    public static MemoDBHelper dbHelper;
+    public static SQLiteDatabase db;
     private FragmentManager fm;
     private MobileServiceClient mClient;
 
@@ -31,8 +44,11 @@ public class ActivityMain extends AppCompatActivity {
         //アプリ実行時１度だけ実行
         if(savedInstanceState == null)
         {
-            fm = getSupportFragmentManager();
             activityMain = this;
+            dbHelper = new MemoDBHelper(activityMain);
+            //DBが存在していなかったらDBの作成がされる
+            db = dbHelper.getWritableDatabase();
+            fm = getSupportFragmentManager();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
             //初回のみアニメーションをさせないようにshowFragmentメソッドを使わずに表示
@@ -44,6 +60,7 @@ public class ActivityMain extends AppCompatActivity {
             ft.commit();
         }
 
+        //Notification Hubの設定処理 この設定が完了するとプッシュ通知を受け取れるようになる
         //ハンドルをセット
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
         //Notification Hubsにこの端末の登録作業を行う
@@ -51,7 +68,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     //時間割データを取得する
-    public void GetTimeTable()
+    public void getTimeTable()
     {
         TaskGetTimeTable task = new TaskGetTimeTable(this);
         task.execute(timetabledata_url);

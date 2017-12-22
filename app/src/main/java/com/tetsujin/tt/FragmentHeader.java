@@ -103,6 +103,15 @@ public class FragmentHeader extends Fragment
             }
         });
 
+        v.findViewById(R.id.debug_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                activityMain.getTimeTable();
+            }
+        });
+
         return v;
     }
 

@@ -29,6 +29,12 @@
         android:layout_height="50dp"
         android:gravity="right">
         
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="データ取得"
+            android:id="@+id/debug_button"/>
+        
         <ImageButton
             android:id="@+id/Header_B2_button"
             android:layout_width="50dp"
