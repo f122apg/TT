@@ -1,8 +1,5 @@
 package com.tetsujin.tt;
 
-import android.content.ContentValues;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
@@ -15,17 +12,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
-import com.tetsujin.tt.database.DBInfo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import static com.tetsujin.tt.ActivityMain.db;
+import static com.tetsujin.tt.ActivityMain.memoDBHelper;
 
 public class FragmentMain extends Fragment {
 
+    public static Calendar cal;
+    public static String todaydate;
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -36,17 +36,19 @@ public class FragmentMain extends Fragment {
         //現在の日付を取得
         Date nowdate = new Date();
         //Calendarに現在の日付を設定
-        final Calendar cal = Calendar.getInstance();
+        cal = Calendar.getInstance();
         //現在の曜日のみを取得
         CharSequence week = DateFormat.format("E", nowdate);
         //現在の曜日が「土」か「日」だったら次週の月曜日にする
         if(week.equals(getResources().getString(R.string.week_saturday))
                 || week.equals(getResources().getString(R.string.week_sunday)))
         {
-            //現在の日付を２日足し、今週の月曜日にする
+            //現在の日付を２日足し、次週の月曜日にする
             cal.add(Calendar.DAY_OF_MONTH, 2);
             cal.set(Calendar.DAY_OF_WEEK, 2);
         }
+        todaydate = (String)DateFormat.format("yyyy-MM-dd", cal.getTime());
+        
         //日付を表示
         date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
 
@@ -76,59 +78,61 @@ public class FragmentMain extends Fragment {
         String[][] oneday = new String[onedaylist.size()][4];
         onedaylist.toArray(oneday);
 
+        //１日の時間割を表示
         CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), oneday);
         timetable_lv.setAdapter(ca);
 
         final EditText memo_ed = (EditText)v.findViewById(R.id.FrgMain_memo_edittext);
+        
+        //今日のメモがすでに存在している場合、メモ内容を取得する
+        if(memoDBHelper.HasDate(todaydate))
+        {
+            System.out.println("メモが存在しています。");
+            memo_ed.setText(memoDBHelper.GetRecord(todaydate));
+        }
+        
+        //メモ欄のフォーカスを感知
         memo_ed.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
             @Override
             public void onFocusChange(View view, boolean hasFocus)
             {
-                //フォーカスが外れた時、メモ欄が空白ではなかったら保存をかける
-                if(!hasFocus && !memo_ed.getText().toString().isEmpty())
+                //フォーカスが外れた時、EditTextが空欄だった場合、データベース内の列が存在していたら削除する
+                if(!hasFocus && memo_ed.getText().toString().isEmpty())
                 {
-                    Toast.makeText(v.getContext(), "フォーカスが外れ、かつ空白ではない", Toast.LENGTH_SHORT);
-                    String datenow = (String)DateFormat.format("yyyy-MM-dd", cal.getTime());
-
-                    if(datenow.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+                    //今日の日付が存在していたら削除する
+                    if (memoDBHelper.HasDate(todaydate))
                     {
-                        //今日の日付がもうDBに追加されているかどうかチェックする
-                        String query = "SELECT COUNT(*) FROM " + DBInfo.DBMEMO_TABLENAME + " WHERE " +
-                                "MemoAt = " + DatabaseUtils.sqlEscapeString(datenow) + ";";
-
-                        String[] result = new String[1];
-                        db.rawQuery(query, result);
-                        Toast.makeText(v.getContext(), result[0], Toast.LENGTH_SHORT);
-
-                        //追加されていなかったらそのままインサート処理をする
-                        if (result[0].equals("0"))
-                        {
-                            query = "INSERT INTO ? VALUES(?, ?);";
-                            SQLiteStatement sqst = db.compileStatement(query);
-                            sqst.bindString(1, DBInfo.DBMEMO_TABLENAME);
-                            sqst.bindString(2, DatabaseUtils.sqlEscapeString(datenow));
-                            sqst.bindString(3, DatabaseUtils.sqlEscapeString(memo_ed.getText().toString()));
-                            sqst.executeInsert();
-                            Toast.makeText(v.getContext(), "インサート", Toast.LENGTH_SHORT);
-                        }
-                        //追加されていたらアップデートする
-                        else
-                        {
-                            query = "UPDATE ? SET ? = ? WHERE ? = ?;";
-                            SQLiteStatement sqst = db.compileStatement(query);
-                            sqst.bindString(1, DBInfo.DBMEMO_TABLENAME);
-                            sqst.bindString(2, DBInfo.DBMEMO_COLUMN[1]);
-                            sqst.bindString(3, DatabaseUtils.sqlEscapeString(memo_ed.getText().toString()));
-                            sqst.bindString(4, DBInfo.DBMEMO_COLUMN[0]);
-                            sqst.bindString(5, DatabaseUtils.sqlEscapeString(datenow));
-                            sqst.executeUpdateDelete();
-                            Toast.makeText(v.getContext(), "アップデート", Toast.LENGTH_SHORT);
-                        }
+                        memoDBHelper.Delete(todaydate);
+                        Toast.makeText(v.getContext(), "メモを削除しました。", Toast.LENGTH_SHORT).show();
                     }
+                }
+                //フォーカスが外れた時、メモ欄の保存を行う
+                else if(!hasFocus)
+                {
+                    //追加されていたらアップデート処理をする
+                    if (memoDBHelper.HasDate(todaydate))
+                    {
+                        Map<Integer, Object> data = new TreeMap<>();
+                        data.put(1, memo_ed.getText().toString());
+                        data.put(2, todaydate);
+
+                        if(memoDBHelper.InsertorUpdate(data, true))
+                            Toast.makeText(v.getContext(), "メモを更新しました。", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(v.getContext(), "メモを更新することができませんでした。", Toast.LENGTH_SHORT).show();
+                    }
+                    //追加されていなかったらインサート処理をする
                     else
                     {
-                        Toast.makeText(v.getContext(), getResources().getString(R.string.memo_cannot_save), Toast.LENGTH_SHORT).show();
+                        Map<Integer, Object> data = new TreeMap<>();
+                        data.put(1, todaydate);
+                        data.put(2, memo_ed.getText().toString());
+
+                        if(memoDBHelper.InsertorUpdate(data, false))
+                            Toast.makeText(v.getContext(), "メモを保存しました。", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(v.getContext(), "メモを保存することができませんでした。", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -14,7 +14,8 @@ import com.tetsujin.tt.adapter.CustomFragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
+import static com.tetsujin.tt.FragmentMain.cal;
 
 public class FragmentWeekContainer extends Fragment
 {
@@ -22,7 +23,6 @@ public class FragmentWeekContainer extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View v = inflater.inflate(R.layout.fragment_weekcontainer, container, false);
-    
         //ActivityMainから値を受け取る
         Bundle args = getArguments();
         //FragmentPagerAdapterに渡すためのデータを一元管理するArrayList
@@ -68,30 +68,19 @@ public class FragmentWeekContainer extends Fragment
         //時間割データを渡す
         cfpadapter.setdatas(allweek_values);
         /* 日付データを渡す */
-        //現在の日付を取得
-        Date nowdate = new Date();
-        //Calendarに現在の日付を設定
-        Calendar cal = Calendar.getInstance();
-        //現在の曜日のみを取得
-        CharSequence week = DateFormat.format("E", nowdate);
-        //現在の曜日が「土」か「日」だったら次週の月曜日にする
-        if (week.equals(getResources().getString(R.string.week_saturday)) || week.equals(getResources().getString(R.string.week_sunday)))
-        {
-            //現在の日付を２日足す
-            cal.add(Calendar.DAY_OF_MONTH, 2);
-            //月曜日としてセット
-            cal.set(Calendar.DAY_OF_WEEK, 2);
-        }
-    
+        Calendar callist = (Calendar)cal.clone();
+        
         for (int i = 0; i < 5; i++)
         {
-            cal.set(Calendar.DAY_OF_WEEK, 2 + i);
+            callist.set(Calendar.DAY_OF_WEEK, 2 + i);
     
-            cfpadapter.adddate((String) DateFormat.format("MM/dd(E)", cal));
+            cfpadapter.adddate((String) DateFormat.format("MM/dd(E)", callist));
         }
         
         //ViewPagerにCustomAdapterをセット
         vp.setAdapter(cfpadapter);
+        //一週間の時間割表示時に、今日の曜日の時間割を表示できるように調整する
+        vp.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 2);
         
         return v;
     }

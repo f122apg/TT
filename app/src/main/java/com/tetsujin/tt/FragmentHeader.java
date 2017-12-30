@@ -9,8 +9,15 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import com.tetsujin.tt.database.DBMemo;
+
+import java.io.File;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
+import static com.tetsujin.tt.ActivityMain.memoDBHelper;
+import static com.tetsujin.tt.ActivityMain.memodb;
 
 public class FragmentHeader extends Fragment
 {
@@ -20,7 +27,7 @@ public class FragmentHeader extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_header, container, false);
+        final View v = inflater.inflate(R.layout.fragment_header, container, false);
 
         final String[][] testdata = new String[][]
                 {
@@ -103,12 +110,52 @@ public class FragmentHeader extends Fragment
             }
         });
 
-        v.findViewById(R.id.debug_button).setOnClickListener(new View.OnClickListener()
+        /*************************************************************/
+        /* デバッグ用 */
+        /*************************************************************/
+        v.findViewById(R.id.debug_getdata_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                activityMain.getTimeTable();
+                if(!isChangeFragment)
+                {
+                    FragmentDebug f = new FragmentDebug();
+                    activityMain.showFragment(f);
+                    isChangeFragment = !isChangeFragment;
+                }
+                else
+                {
+                    FragmentMain frgmain = new FragmentMain();
+                    activityMain.showFragment(frgmain);
+                    isChangeFragment = !isChangeFragment;
+                }
+            }
+        });
+    
+        v.findViewById(R.id.debug_dbrm_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                File file = new File("/data/data/com.tetsujin.tt/databases/" + DBMemo.DB_NAME);
+                if(file.exists())
+                {
+                    file.delete();
+                    Toast.makeText(activityMain, "DB deleted", Toast.LENGTH_SHORT).show();
+                }
+                else
+                    Toast.makeText(activityMain, "DB not found", Toast.LENGTH_SHORT).show();
+            }
+        });
+    
+        v.findViewById(R.id.debug_dbcreate_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                memodb = memoDBHelper.getWritableDatabase();
+                Toast.makeText(activityMain, "DB created", Toast.LENGTH_SHORT).show();
             }
         });
 
