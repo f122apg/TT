@@ -1,7 +1,11 @@
 package com.tetsujin.tt.database;
 
-public class DBMemo
+public class DBLogin
 {
+    int id;
+    String StudentID;
+    String MailAddress;
+    
     //データベース名
     public final static String DB_NAME = "MemoDB";
     //テーブル名
@@ -9,7 +13,7 @@ public class DBMemo
     //テーブルの列名
     private final static String COLUMN_DATE = "Date";
     private final static String COLUMN_CONTENT = "Content";
-
+    
     //テーブルを作成するクエリ
     final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" +
             COLUMN_DATE + " TEXT PRIMARY KEY," + COLUMN_CONTENT + " TEXT NOT NULL" +

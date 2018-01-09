@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tetsujin.tt.login.ActivityLogin">
+
+    <!-- 入力欄 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/login_id"
+            android:textSize="25sp"/>
+
+        <EditText
+            android:id="@+id/AyLogin_studentnum_edittext"
+            android:layout_width="370dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/login_password"
+            android:textSize="25sp"/>
+
+        <EditText
+            android:id="@+id/AyLogin_password_edittext"
+            android:layout_width="370dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border"/>
+
+    </LinearLayout>
+
+    <!-- ログインボタン -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/AyLogin_notice_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:textSize="20sp"
+            android:textColor="#FF0000"
+            android:text=""/>
+
+        <Button
+            android:id="@+id/AyLogin_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/login"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -15,8 +15,8 @@ import com.tetsujin.tt.database.DBMemo;
 
 import java.io.File;
 
+import static com.tetsujin.tt.ActivityMain.DBMemoHelper;
 import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.ActivityMain.memoDBHelper;
 import static com.tetsujin.tt.ActivityMain.memodb;
 
 public class FragmentHeader extends Fragment
@@ -154,7 +154,7 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
-                memodb = memoDBHelper.getWritableDatabase();
+                memodb = DBMemoHelper.getWritableDatabase();
                 Toast.makeText(activityMain, "DB created", Toast.LENGTH_SHORT).show();
             }
         });

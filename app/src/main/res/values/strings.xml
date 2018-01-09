@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">TT</string>
-    
+
+    <!-- login -->
+    <string name="login">ログイン</string>
+    <string name="login_id">学籍番号</string>
+    <string name="login_password">パスワード</string>
+    <!-- &#8230 = ... -->
+    <string name="forget_input_all">学籍番号と\nパスワードを入力してください！</string>
+    <string name="forget_input_number">学籍番号を入力してください！</string>
+    <string name="forget_input_password">パスワードを入力してください！</string>
+    <string name="logging_in">ログイン中&#8230;</string>
+    <string name="wrong_number_or_password">学籍番号または\nパスワードが間違っています。</string>
+    <string name="failed_login">ログインに失敗しました。</string>
+
     <!-- weeks -->
     <string name="week_monday">月</string>
     <string name="week_tuesday">火</string>
@@ -9,14 +21,16 @@
     <string name="week_friday">金</string>
     <string name="week_saturday">土</string>
     <string name="week_sunday">日</string>
-    
+
     <!-- notification title -->
     <string name="notification_title">お知らせ</string>
     <string name="notification_receive_num">件のお知らせが来ています</string>
-    
+
     <!-- error -->
     <string name="error">エラー</string>
-    
-    <string name="getdata">時間割のデータを取得しています...</string>
     <string name="memo_cannot_save">メモを保存できませんでした。</string>
+
+
+    <string name="getdata">時間割のデータを取得しています&#8230;</string>
+
 </resources>

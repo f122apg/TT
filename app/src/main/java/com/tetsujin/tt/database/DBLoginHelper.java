@@ -12,9 +12,9 @@ import java.util.Map;
 
 import static com.tetsujin.tt.ActivityMain.memodb;
 
-public class MemoDBHelper extends SQLiteOpenHelper
+public class DBLoginHelper extends SQLiteOpenHelper
 {
-    public MemoDBHelper(Context context)
+    public DBLoginHelper(Context context)
     {
         super(context, DBMemo.DB_NAME, null, 1);
     }
