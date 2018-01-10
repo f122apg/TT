@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">TT</string>
-
+    
     <!-- login -->
     <string name="login">ログイン</string>
-    <string name="login_id">学籍番号</string>
-    <string name="login_password">パスワード</string>
+    <string name="student_id">学籍番号</string>
+    <string name="password">パスワード</string>
+    <string name="hint_student_id">K000C9999</string>
     <!-- &#8230 = ... -->
     <string name="forget_input_all">学籍番号と\nパスワードを入力してください！</string>
     <string name="forget_input_number">学籍番号を入力してください！</string>
@@ -12,7 +13,18 @@
     <string name="logging_in">ログイン中&#8230;</string>
     <string name="wrong_number_or_password">学籍番号または\nパスワードが間違っています。</string>
     <string name="failed_login">ログインに失敗しました。</string>
-
+    
+    <!-- register -->
+    <string name="sign_up">新規登録</string>
+    <string name="register">登録</string>
+    <string name="mailaddress">メールアドレス</string>
+    <string name="hint_mailaddress">example@example.jp</string>
+    <string name="confirm_password">パスワード(確認用)</string>
+    <string name="department">学科</string>
+    <string name="grade">学年</string>
+    <string name="student_class">組</string>
+    <string name="hint_number">1</string>
+    
     <!-- weeks -->
     <string name="week_monday">月</string>
     <string name="week_tuesday">火</string>
@@ -21,16 +33,16 @@
     <string name="week_friday">金</string>
     <string name="week_saturday">土</string>
     <string name="week_sunday">日</string>
-
+    
     <!-- notification title -->
     <string name="notification_title">お知らせ</string>
     <string name="notification_receive_num">件のお知らせが来ています</string>
-
+    
     <!-- error -->
     <string name="error">エラー</string>
     <string name="memo_cannot_save">メモを保存できませんでした。</string>
-
-
+    
+    
     <string name="getdata">時間割のデータを取得しています&#8230;</string>
 
 </resources>
