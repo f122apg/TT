@@ -1,16 +1,22 @@
 package com.tetsujin.tt.database;
 
-public class DBLogin
+public class Login
 {
-    int id;
-    private String StudentID;
-    private String MailAddress;
-    
-    public void setId(int id)
+    String id;
+    String StudentID;
+    String MailAddress;
+
+    public Login(String sid, String ma)
+    {
+        setStudentID(sid);
+        setMailAddress(ma);
+    }
+
+    public void setId(String id)
     {
         this.id = id;
     }
-    
+
     public void setStudentID(String studentID)
     {
         this.StudentID = studentID;
@@ -20,12 +26,12 @@ public class DBLogin
     {
         this.MailAddress = mailAddress;
     }
-    
-    public int getId()
+
+    public String getId()
     {
         return id;
     }
-    
+
     public String getStudentID()
     {
         return StudentID;

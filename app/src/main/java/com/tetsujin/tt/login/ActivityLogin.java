@@ -4,22 +4,31 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.tetsujin.tt.R;
-import com.tetsujin.tt.database.DBLogin;
+import com.tetsujin.tt.TodoItem;
+import com.tetsujin.tt.database.Login;
 
 import java.util.List;
 
 public class ActivityLogin extends AppCompatActivity
 {
     private MobileServiceClient mClient;
+    private String loginId;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,7 +55,6 @@ public class ActivityLogin extends AppCompatActivity
             public void onClick(View v)
             {
                 final EditText studentId = (EditText)findViewById(R.id.AyLogin_studentid_edittext);
-                final String loginId;
                 EditText password = (EditText)findViewById(R.id.AyLogin_password_edittext);
                 final TextView notice = (TextView) findViewById(R.id.AyLogin_notice_textview);
 
@@ -74,58 +82,70 @@ public class ActivityLogin extends AppCompatActivity
                 progressDialog.setMessage(getResources().getString(R.string.logging_in));
                 progressDialog.show();
 
-                AsyncTask<Void, Void, Void> getEmailTask = new AsyncTask<Void, Void, Void>()
+                AsyncTask<Void, Void, String> getEmailTask = new AsyncTask<Void, Void, String>()
                 {
                     @Override
-                    protected Void doInBackground(Void... voids)
+                    protected String doInBackground(Void... voids)
                     {
                         try
                         {
                             System.out.println("-----------------------------> Task Start");
-                            MobileServiceTable<DBLogin> table = mClient.getTable("Login", DBLogin.class);
-                            List<DBLogin> user = table
-//                                    .where()
-//                                    .field("StudentID")
-//                                    .eq(studentId.getText().toString())
+                            MobileServiceTable<Login> table = mClient.getTable(Login.class);
+                            //列:StudentIDと入力された学籍番号が一致された行を検索する
+                            final List<Login> user = table
+                                    .where()
+                                    //列の指定
+                                    .field("StudentID")
+                                    //eq = 等しい
+                                    .eq(studentId.getText().toString())
                                     .execute()
                                     .get();
                             System.out.println("-----------------------------> Get Data");
-                            System.out.println("-----------------------------> Data:" + user.get(0).getMailAddress());
+
+                            if(user.size() != 0)
+                                return user.get(0).getMailAddress();
+                            else
+                                return null;
                         }
                         catch (Exception e)
                         {
                             e.printStackTrace();
                         }
-                        
+
                         return null;
                     }
                 };
-    
-                getEmailTask.execute();
-                progressDialog.dismiss();
 
-                //ログイン実行
-//                auth.signInWithEmailAndPassword(studentId.getText().toString(), password.getText().toString())
-//                        .addOnCompleteListener(activityLogin, new OnCompleteListener<AuthResult>()
+                getEmailTask.execute();
+
+//                if(loginId != null)
+//                {
+//                    //ログイン実行
+//                    auth.signInWithEmailAndPassword(loginId, password.getText().toString()).addOnCompleteListener(activityLogin, new OnCompleteListener<AuthResult>()
+//                    {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task)
 //                        {
-//                            @Override
-//                            public void onComplete(@NonNull Task<AuthResult> task)
+//                            //ログイン成功時
+//                            if (task.isSuccessful())
 //                            {
+//                                Toast.makeText(activityLogin, "Success", Toast.LENGTH_SHORT).show();
 //                                progressDialog.dismiss();
-//
-//                                //ログイン成功時
-//                                if(task.isSuccessful())
-//                                {
-//                                    Toast.makeText(activityLogin, "Success", Toast.LENGTH_SHORT).show();
-//                                }
-//                                //失敗時
-//                                else
-//                                {
-//                                    notice.setText(R.string.wrong_number_or_password);
-//                                    Toast.makeText(activityLogin, R.string.failed_login, Toast.LENGTH_SHORT).show();
-//                                }
+//                                return;
 //                            }
-//                        });
+//                            //失敗時
+//                            else
+//                            {
+//                                notice.setText(R.string.wrong_number_or_password);
+//                                Toast.makeText(activityLogin, R.string.failed_login, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//                }
+//                else
+//                {
+//                    Toast.makeText(activityLogin, "DBからメールアドレスが取得できませんでした。", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 
