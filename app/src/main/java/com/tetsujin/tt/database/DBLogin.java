@@ -3,36 +3,36 @@ package com.tetsujin.tt.database;
 public class DBLogin
 {
     int id;
-    String StudentID;
-    String MailAddress;
+    private String StudentID;
+    private String MailAddress;
     
-    //データベース名
-    public final static String DB_NAME = "MemoDB";
-    //テーブル名
-    private final static String TABLE_NAME = "Memo";
-    //テーブルの列名
-    private final static String COLUMN_DATE = "Date";
-    private final static String COLUMN_CONTENT = "Content";
+    public void setId(int id)
+    {
+        this.id = id;
+    }
     
-    //テーブルを作成するクエリ
-    final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" +
-            COLUMN_DATE + " TEXT PRIMARY KEY," + COLUMN_CONTENT + " TEXT NOT NULL" +
-            ");";
+    public void setStudentID(String studentID)
+    {
+        this.StudentID = studentID;
+    }
     
-    //列「Content」を取得するクエリ
-    final static String GET_RECORD_QUERY = "SELECT " + COLUMN_CONTENT +
-            " FROM " + TABLE_NAME +
-            " WHERE " + COLUMN_DATE + " = ?;";
+    public void setMailAddress(String mailAddress)
+    {
+        this.MailAddress = mailAddress;
+    }
     
-    //インサートをするクエリ
-    final static String INSERT_QUERY = "INSERT INTO " + TABLE_NAME + " VALUES(?, ?);";
+    public int getId()
+    {
+        return id;
+    }
     
-    //列「Content」をアップデートするクエリ
-    final static String UPDATE_QUERY = "UPDATE " + TABLE_NAME +
-            " SET " + COLUMN_CONTENT + " = ?" +
-            " WHERE " + COLUMN_DATE + " = ?;";
+    public String getStudentID()
+    {
+        return StudentID;
+    }
     
-    //列を削除するクエリ
-    final static String DELETE_QUERY = "DELETE FROM " + TABLE_NAME +
-            " WHERE " + COLUMN_DATE + " = ?;";
+    public String getMailAddress()
+    {
+        return MailAddress;
+    }
 }
