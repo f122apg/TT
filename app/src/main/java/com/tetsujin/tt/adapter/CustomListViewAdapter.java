@@ -1,7 +1,6 @@
 package com.tetsujin.tt.adapter;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.tetsujin.tt.R;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class CustomListViewAdapter extends BaseAdapter
 {
@@ -57,7 +53,8 @@ public class CustomListViewAdapter extends BaseAdapter
         {
             convertView = this.inflater.inflate(R.layout.listview_items, null);
         }
-
+        
+        //TODO:TimeTableクラスからデータを取得するように書き換える
         TextView id = (TextView)convertView.findViewById(R.id.id_item_textview);
         TextView starttime = (TextView)convertView.findViewById(R.id.starttime_item_textview);
         TextView endtime = (TextView)convertView.findViewById(R.id.endtime_item_textview);

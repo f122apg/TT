@@ -11,11 +11,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.tetsujin.tt.database.DBMemo;
+import com.tetsujin.tt.database.Memo;
 
 import java.io.File;
 
-import static com.tetsujin.tt.ActivityMain.DBMemoHelper;
+import static com.tetsujin.tt.ActivityMain.MemoHelper;
 import static com.tetsujin.tt.ActivityMain.activityMain;
 import static com.tetsujin.tt.ActivityMain.memodb;
 
@@ -138,7 +138,7 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
-                File file = new File("/data/data/com.tetsujin.tt/databases/" + DBMemo.DB_NAME);
+                File file = new File("/data/data/com.tetsujin.tt/databases/" + Memo.DB_NAME);
                 if(file.exists())
                 {
                     file.delete();
@@ -154,7 +154,7 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
-                memodb = DBMemoHelper.getWritableDatabase();
+                memodb = MemoHelper.getWritableDatabase();
                 Toast.makeText(activityMain, "DB created", Toast.LENGTH_SHORT).show();
             }
         });

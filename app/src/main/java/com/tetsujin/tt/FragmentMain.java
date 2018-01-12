@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.tetsujin.tt.ActivityMain.DBMemoHelper;
+import static com.tetsujin.tt.ActivityMain.MemoHelper;
 
 public class FragmentMain extends Fragment {
 
@@ -85,10 +85,10 @@ public class FragmentMain extends Fragment {
         final EditText memo_ed = (EditText)v.findViewById(R.id.FrgMain_memo_edittext);
         
         //今日のメモがすでに存在している場合、メモ内容を取得する
-        if(DBMemoHelper.HasDate(todaydate))
+        if(MemoHelper.HasDate(todaydate))
         {
             System.out.println("メモが存在しています。");
-            memo_ed.setText(DBMemoHelper.GetRecord(todaydate));
+            memo_ed.setText(MemoHelper.GetRecord(todaydate));
         }
         
         //メモ欄のフォーカスを感知
@@ -101,9 +101,9 @@ public class FragmentMain extends Fragment {
                 if(!hasFocus && memo_ed.getText().toString().isEmpty())
                 {
                     //今日の日付が存在していたら削除する
-                    if (DBMemoHelper.HasDate(todaydate))
+                    if (MemoHelper.HasDate(todaydate))
                     {
-                        DBMemoHelper.Delete(todaydate);
+                        MemoHelper.Delete(todaydate);
                         Toast.makeText(v.getContext(), "メモを削除しました。", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -111,13 +111,13 @@ public class FragmentMain extends Fragment {
                 else if(!hasFocus)
                 {
                     //追加されていたらアップデート処理をする
-                    if (DBMemoHelper.HasDate(todaydate))
+                    if (MemoHelper.HasDate(todaydate))
                     {
                         Map<Integer, Object> data = new TreeMap<>();
                         data.put(1, memo_ed.getText().toString());
                         data.put(2, todaydate);
 
-                        if(DBMemoHelper.InsertorUpdate(data, true))
+                        if(MemoHelper.InsertorUpdate(data, true))
                             Toast.makeText(v.getContext(), "メモを更新しました。", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(v.getContext(), "メモを更新することができませんでした。", Toast.LENGTH_SHORT).show();
@@ -129,7 +129,7 @@ public class FragmentMain extends Fragment {
                         data.put(1, todaydate);
                         data.put(2, memo_ed.getText().toString());
 
-                        if(DBMemoHelper.InsertorUpdate(data, false))
+                        if(MemoHelper.InsertorUpdate(data, false))
                             Toast.makeText(v.getContext(), "メモを保存しました。", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(v.getContext(), "メモを保存することができませんでした。", Toast.LENGTH_SHORT).show();

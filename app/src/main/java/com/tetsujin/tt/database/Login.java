@@ -5,8 +5,9 @@ public class Login
     String id;
     String StudentID;
     String MailAddress;
+    public final static String COLUMN_STUDENTID = "StudentID";
 
-    public Login(String sid, String ma)
+    Login(String sid, String ma)
     {
         setStudentID(sid);
         setMailAddress(ma);

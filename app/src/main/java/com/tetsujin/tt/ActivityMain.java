@@ -12,7 +12,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
-import com.tetsujin.tt.database.DBMemoHelper;
+import com.tetsujin.tt.database.MemoHelper;
 import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
@@ -24,7 +24,7 @@ public class ActivityMain extends AppCompatActivity {
 
     public static ActivityMain activityMain;
 
-    public static DBMemoHelper DBMemoHelper;
+    public static MemoHelper MemoHelper;
     public static SQLiteDatabase memodb;
     private FragmentManager fm;
     private MobileServiceClient mClient;
@@ -38,9 +38,9 @@ public class ActivityMain extends AppCompatActivity {
         if(savedInstanceState == null)
         {
             activityMain = this;
-            DBMemoHelper = new DBMemoHelper(activityMain);
+            MemoHelper = new MemoHelper(activityMain);
             //DBが存在していなかったらDBの作成がされる
-            memodb = DBMemoHelper.getWritableDatabase();
+            memodb = MemoHelper.getWritableDatabase();
             fm = getSupportFragmentManager();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する

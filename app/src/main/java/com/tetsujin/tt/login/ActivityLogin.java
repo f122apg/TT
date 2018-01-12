@@ -4,23 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.tetsujin.tt.R;
-import com.tetsujin.tt.TodoItem;
 import com.tetsujin.tt.database.Login;
 
 import java.util.List;
@@ -95,7 +87,7 @@ public class ActivityLogin extends AppCompatActivity
                             final List<Login> user = table
                                     .where()
                                     //列の指定
-                                    .field("StudentID")
+                                    .field(Login.COLUMN_STUDENTID)
                                     //eq = 等しい
                                     .eq(studentId.getText().toString())
                                     .execute()

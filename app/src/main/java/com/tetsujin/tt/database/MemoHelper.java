@@ -12,17 +12,17 @@ import java.util.Map;
 
 import static com.tetsujin.tt.ActivityMain.memodb;
 
-public class DBLoginHelper extends SQLiteOpenHelper
+public class MemoHelper extends SQLiteOpenHelper
 {
-    public DBLoginHelper(Context context)
+    public MemoHelper(Context context)
     {
-        super(context, DBMemo.DB_NAME, null, 1);
+        super(context, Memo.DB_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL(DBMemo.CREATE_TABLE_QUERY);
+        db.execSQL(Memo.CREATE_TABLE_QUERY);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DBLoginHelper extends SQLiteOpenHelper
     //指定された日付がすでに存在してるかどうかチェックする
     public boolean HasDate(String date)
     {
-        Cursor result = memodb.rawQuery(DBMemo.GET_RECORD_QUERY, new String[]{ date });
+        Cursor result = memodb.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ date });
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
         
@@ -52,7 +52,7 @@ public class DBLoginHelper extends SQLiteOpenHelper
     
     public String GetRecord(String id)
     {
-        Cursor result = memodb.rawQuery(DBMemo.GET_RECORD_QUERY, new String[]{ id });
+        Cursor result = memodb.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ id });
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
         
@@ -77,9 +77,9 @@ public class DBLoginHelper extends SQLiteOpenHelper
         SQLiteStatement sqlst;
         
         if(isupdate)
-            sqlst = memodb.compileStatement(DBMemo.UPDATE_QUERY);
+            sqlst = memodb.compileStatement(Memo.UPDATE_QUERY);
         else
-            sqlst = memodb.compileStatement(DBMemo.INSERT_QUERY);
+            sqlst = memodb.compileStatement(Memo.INSERT_QUERY);
     
         for(int i = 1; i <= data.size(); i ++)
         {
@@ -129,6 +129,6 @@ public class DBLoginHelper extends SQLiteOpenHelper
     //レコードを削除する
     public void Delete(String date)
     {
-        memodb.execSQL(DBMemo.DELETE_QUERY, new Object[]{ date });
+        memodb.execSQL(Memo.DELETE_QUERY, new Object[]{ date });
     }
 }

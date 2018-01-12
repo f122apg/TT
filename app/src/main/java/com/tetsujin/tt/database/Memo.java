@@ -1,6 +1,6 @@
 package com.tetsujin.tt.database;
 
-public class DBMemo
+public class Memo
 {
     //データベース名
     public final static String DB_NAME = "MemoDB";
