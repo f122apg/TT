@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
@@ -29,11 +30,22 @@ public class MemoHelper extends SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase db, int oldversion, int newversion)
     {
     }
-    
+
     //指定された日付がすでに存在してるかどうかチェックする
     public boolean HasDate(String date)
     {
-        Cursor result = memodb.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ date });
+        Cursor result;
+
+        //データベースが存在するが行がない場合、SQLiteExceptionがthrowされる模様
+        try
+        {
+            result = memodb.rawQuery(Memo.GET_RECORD_QUERY, new String[]{date});
+        }
+        catch (SQLiteException e)
+        {
+            return false;
+        }
+
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
         

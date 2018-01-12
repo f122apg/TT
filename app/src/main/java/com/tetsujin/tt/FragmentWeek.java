@@ -33,8 +33,8 @@ public class FragmentWeek extends Fragment {
         }
 
         //ListViewに現在のデータを適用
-        CustomListViewAdapter ca = new CustomListViewAdapter(v.getContext(), value);
-        lv.setAdapter(ca);
+//        CustomListViewAdapter ca = new CustomListViewAdapter(v.getContext(), value);
+//        lv.setAdapter(ca);
 
         return v;
     }

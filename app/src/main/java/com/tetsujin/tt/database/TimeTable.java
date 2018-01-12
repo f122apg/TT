@@ -22,7 +22,7 @@ public class TimeTable
     private String Description;
     
     //コンストラクタ
-    TimeTable(int timeTableID, String lessonCode, String lessonName,
+    public TimeTable(int timeTableID, String lessonCode, String lessonName,
               int weekDay, String startTime, String endTime, int season,
               String classRoomName, int teacherID, String teacherName, String description)
     {

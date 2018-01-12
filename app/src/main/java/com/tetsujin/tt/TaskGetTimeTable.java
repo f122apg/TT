@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.widget.ListView;
 
+import com.tetsujin.tt.adapter.CustomListViewAdapter;
 import com.tetsujin.tt.database.TimeTable;
 
 import org.json.JSONArray;
@@ -48,7 +49,6 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
         this.progressdialog.setMessage(activityMain.getResources().getString(R.string.getdata));
         this.progressdialog.setCancelable(false);
         this.progressdialog.show();
-        return;
     }
 
     //非同期処理
@@ -60,9 +60,8 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
         //返り値 時間割情報を返す
         TimeTable[] retValues = new TimeTable[0];
         //JsonArrayの構文として正しいかどうか正規表現でチェックする文
-        //^\{\s*"[^\s]+"\s*\:
-        final String PATTERN_JSONARRAY = "^\\{\\s*\"[^\\s]+\"\\s*\\:";
-        String json_Arrayname = "data";
+        final String PATTERN_JSONARRAY = "^\\{\\s*\"\\S+\"\\s*:";
+        String json_ArrayName = "data";
 
         try {
             //StringからURLを生成
@@ -93,14 +92,14 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                 //JSONの配列構文かどうか判断して、正しくないなら正しい構文に整形する
                 if(!strBuilder.toString().matches(PATTERN_JSONARRAY))
                 {
-                    strBuilder.insert(0, "{ \"" + json_Arrayname + "\" :");
+                    strBuilder.insert(0, "{ \"" + json_ArrayName + "\" :");
                     strBuilder.append("}");
                 }
                 else
                 {
                     //JSONの配列名を取得
-                    String tmp = strBuilder.toString();
-                    json_Arrayname = tmp.substring(tmp.indexOf("\"") + 1, tmp.indexOf("\"", tmp.indexOf("\"") + 1));
+                    String array = strBuilder.toString();
+                    json_ArrayName = array.substring(array.indexOf("\"") + 1, array.indexOf("\"", array.indexOf("\"") + 1));
                 }
 
                 String timeTableJson = strBuilder.toString();
@@ -108,14 +107,30 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                 try {
                     JSONObject json = new JSONObject(timeTableJson);
                     //JSONの配列を取得
-                    JSONArray datas = json.getJSONArray(json_Arrayname);
+                    JSONArray datas = json.getJSONArray(json_ArrayName);
                     retValues = new TimeTable[datas.length()];
                     //JSONの配列の中にある値を返り値に挿入
                     for (int i = 0; i < datas.length(); i ++)
                     {
                         //配列内の値を取得
                         json = datas.getJSONObject(i);
-                        
+                        System.out.println("get");
+
+                        int timeTableId = json.getInt("TimeTableId");
+                        String lessonCode = json.getString("LessonCode");
+                        String lessonName = json.getString("LessonName");
+                        int weekDay = json.getInt("WeekDay");
+                        String startTime = json.getString("StartTime");
+                        String endTime = json.getString("EndTime");
+                        int season = 0;
+                        String description = json.getString("Description");
+                        String classRoomName = json.getString("ClassRoomName");
+                        int teacherId = json.getInt("TeacherId");
+                        String teacherName = json.getString("TeacherName");
+
+                        retValues[i] = new TimeTable(timeTableId, lessonCode, lessonName, weekDay,
+                                startTime, endTime, season, classRoomName,
+                                teacherId, teacherName, description);
                         
                         //TODO:jsonの読み込み処理を書く
 //                        //要素をStringで取得
@@ -156,8 +171,8 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
     protected void onPostExecute(TimeTable[] values) {
         ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.AyMain_timetable_listview);
 
-        //CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values);
-        //timetable_lv.setAdapter(adapter);
+        CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values);
+        timetable_lv.setAdapter(adapter);
 
         //プログレスダイアログを閉じる
         if(this.progressdialog != null && this.progressdialog.isShowing())

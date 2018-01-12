@@ -8,14 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.tetsujin.tt.R;
+import com.tetsujin.tt.database.TimeTable;
 
 public class CustomListViewAdapter extends BaseAdapter
 {
     private Context context;
     private LayoutInflater inflater;
-    private String[][] items;
+    private TimeTable[] items;
 
-    public CustomListViewAdapter(Context context, String[][] objects)
+    public CustomListViewAdapter(Context context, TimeTable[] objects)
     {
         super();
         this.context = context;
@@ -47,7 +48,7 @@ public class CustomListViewAdapter extends BaseAdapter
     @Override
     public View getView(int postition, View convertView, ViewGroup parent)
     {
-        String[] item = this.items[postition];
+        TimeTable item = this.items[postition];
 
         if(convertView == null)
         {
@@ -60,10 +61,10 @@ public class CustomListViewAdapter extends BaseAdapter
         TextView endtime = (TextView)convertView.findViewById(R.id.endtime_item_textview);
         TextView name = (TextView)convertView.findViewById(R.id.name_item_textview);
 
-        id.setText(item[0]);
-        starttime.setText(item[2]);
-        endtime.setText(item[3]);
-        name.setText(item[1]);
+        id.setText(String.valueOf(item.getTimeTableID()));
+        starttime.setText(item.getStartTime());
+        endtime.setText(item.getEndTime());
+        name.setText(item.getLessonName());
 
         return convertView;
     }

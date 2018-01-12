@@ -79,8 +79,8 @@ public class FragmentMain extends Fragment {
         onedaylist.toArray(oneday);
 
         //１日の時間割を表示
-        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), oneday);
-        timetable_lv.setAdapter(ca);
+//        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), oneday);
+//        timetable_lv.setAdapter(ca);
 
         final EditText memo_ed = (EditText)v.findViewById(R.id.FrgMain_memo_edittext);
         

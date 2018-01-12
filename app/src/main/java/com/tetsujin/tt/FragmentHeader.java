@@ -118,18 +118,23 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
-                if(!isChangeFragment)
-                {
-                    FragmentDebug f = new FragmentDebug();
-                    activityMain.showFragment(f);
-                    isChangeFragment = !isChangeFragment;
-                }
-                else
-                {
-                    FragmentMain frgmain = new FragmentMain();
-                    activityMain.showFragment(frgmain);
-                    isChangeFragment = !isChangeFragment;
-                }
+
+                TaskGetTimeTable t = new TaskGetTimeTable(activityMain);
+                t.execute("http://tetsujintimes.azurewebsites.net/api/TimeTables/cd/2/4");
+
+                //Tableの行一覧表示
+//                if(!isChangeFragment)
+//                {
+//                    FragmentDebug f = new FragmentDebug();
+//                    activityMain.showFragment(f);
+//                    isChangeFragment = !isChangeFragment;
+//                }
+//                else
+//                {
+//                    FragmentMain frgmain = new FragmentMain();
+//                    activityMain.showFragment(frgmain);
+//                    isChangeFragment = !isChangeFragment;
+//                }
             }
         });
     
