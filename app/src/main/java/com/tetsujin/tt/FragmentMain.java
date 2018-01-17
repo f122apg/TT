@@ -1,5 +1,6 @@
 package com.tetsujin.tt;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
@@ -12,24 +13,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
+import com.tetsujin.tt.database.MemoHelper;
+import com.tetsujin.tt.database.TimeTable;
+import com.tetsujin.tt.database.TimeTableHelper;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.tetsujin.tt.ActivityMain.MemoHelper;
+import static com.tetsujin.tt.ActivityMain.activityMain;
+import static com.tetsujin.tt.ActivityMain.getToDayWeekDay;
 
 public class FragmentMain extends Fragment {
 
     public static Calendar cal;
     public static String todaydate;
+    public static MemoHelper memoHelper;
+    public static TimeTableHelper timeTableHelper;
+    public static SQLiteDatabase memoDB;
+    public static SQLiteDatabase timeTableDB;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_main, container, false);
+
+        if(savedInstanceState == null)
+        {
+            memoHelper = new MemoHelper(activityMain);
+            timeTableHelper = new TimeTableHelper(activityMain);
+            //DBが存在していなかったらDBの作成がされる
+            memoDB = memoHelper.getWritableDatabase();
+            timeTableDB = timeTableHelper.getWritableDatabase();
+        }
 
         //日付取得と表示
         TextView date_tv = (TextView)v.findViewById(R.id.AyMain_date_textview);
@@ -52,45 +69,18 @@ public class FragmentMain extends Fragment {
         //日付を表示
         date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
 
-        ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
-
-        String[][] testdata = new String[][]
-                {
-                        {"1", "卒業制作", "09:00", "10:30", "月"},
-                        {"2", "クラウドコンピューティング", "10:40", "12:10", "月"},
-                        {"3", "データベース応用", "09:00", "12:10", "火"},
-                        {"4", "Linux実習", "13:00", "16:10", "火"},
-                        {"5", "キャリアデザイン3", "09:00", "14:30", "水"},
-                        {"6", "オブジェクト指向プログラミング実習1 S1", "09:00", "12:10", "木"},
-                        {"7", "ソフトウェアデザイン S1", "13:00", "14:30", "木"},
-                        {"8", "合同資格対策講座", "09:00", "14:30", "金"},
-                };
-
-        //今日の授業をリストアップする
-        ArrayList<String[]> onedaylist = new ArrayList<>();
-        for(int i = 0; i < testdata.length; i ++)
-        {
-            if(testdata[i][4].equals(week))
-                onedaylist.add(testdata[i]);
-        }
-
-        //リストを配列にする
-        String[][] oneday = new String[onedaylist.size()][4];
-        onedaylist.toArray(oneday);
-
         //１日の時間割を表示
-//        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), oneday);
-//        timetable_lv.setAdapter(ca);
+        ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
+        //時間割データをTimeTableDBから取得
+        TimeTable[] timeTableData = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getToDayWeekDay(true, (String) week)));
+        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTableData);
+        timetable_lv.setAdapter(ca);
 
         final EditText memo_ed = (EditText)v.findViewById(R.id.FrgMain_memo_edittext);
-        
         //今日のメモがすでに存在している場合、メモ内容を取得する
-        if(MemoHelper.HasDate(todaydate))
-        {
-            System.out.println("メモが存在しています。");
-            memo_ed.setText(MemoHelper.GetRecord(todaydate));
-        }
-        
+        if (memoHelper.HasDate(todaydate))
+            memo_ed.setText(memoHelper.GetRecord(todaydate));
+
         //メモ欄のフォーカスを感知
         memo_ed.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
@@ -101,9 +91,9 @@ public class FragmentMain extends Fragment {
                 if(!hasFocus && memo_ed.getText().toString().isEmpty())
                 {
                     //今日の日付が存在していたら削除する
-                    if (MemoHelper.HasDate(todaydate))
+                    if (memoHelper.HasDate(todaydate))
                     {
-                        MemoHelper.Delete(todaydate);
+                        memoHelper.Delete(todaydate);
                         Toast.makeText(v.getContext(), "メモを削除しました。", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -111,13 +101,13 @@ public class FragmentMain extends Fragment {
                 else if(!hasFocus)
                 {
                     //追加されていたらアップデート処理をする
-                    if (MemoHelper.HasDate(todaydate))
+                    if (memoHelper.HasDate(todaydate))
                     {
                         Map<Integer, Object> data = new TreeMap<>();
                         data.put(1, memo_ed.getText().toString());
                         data.put(2, todaydate);
 
-                        if(MemoHelper.InsertorUpdate(data, true))
+                        if(memoHelper.InsertorUpdate(data, true))
                             Toast.makeText(v.getContext(), "メモを更新しました。", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(v.getContext(), "メモを更新することができませんでした。", Toast.LENGTH_SHORT).show();
@@ -129,7 +119,7 @@ public class FragmentMain extends Fragment {
                         data.put(1, todaydate);
                         data.put(2, memo_ed.getText().toString());
 
-                        if(MemoHelper.InsertorUpdate(data, false))
+                        if(memoHelper.InsertorUpdate(data, false))
                             Toast.makeText(v.getContext(), "メモを保存しました。", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(v.getContext(), "メモを保存することができませんでした。", Toast.LENGTH_SHORT).show();

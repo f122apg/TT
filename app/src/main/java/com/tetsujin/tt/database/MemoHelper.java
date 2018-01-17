@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteStatement;
 
 import java.util.Map;
 
-import static com.tetsujin.tt.ActivityMain.memodb;
+import static com.tetsujin.tt.FragmentMain.memoDB;
 
 public class MemoHelper extends SQLiteOpenHelper
 {
@@ -39,7 +39,7 @@ public class MemoHelper extends SQLiteOpenHelper
         //データベースが存在するが行がない場合、SQLiteExceptionがthrowされる模様
         try
         {
-            result = memodb.rawQuery(Memo.GET_RECORD_QUERY, new String[]{date});
+            result = memoDB.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ date });
         }
         catch (SQLiteException e)
         {
@@ -64,7 +64,7 @@ public class MemoHelper extends SQLiteOpenHelper
     
     public String GetRecord(String id)
     {
-        Cursor result = memodb.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ id });
+        Cursor result = memoDB.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ id });
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
         
@@ -89,9 +89,9 @@ public class MemoHelper extends SQLiteOpenHelper
         SQLiteStatement sqlst;
         
         if(isupdate)
-            sqlst = memodb.compileStatement(Memo.UPDATE_QUERY);
+            sqlst = memoDB.compileStatement(Memo.UPDATE_QUERY);
         else
-            sqlst = memodb.compileStatement(Memo.INSERT_QUERY);
+            sqlst = memoDB.compileStatement(Memo.INSERT_QUERY);
     
         for(int i = 1; i <= data.size(); i ++)
         {
@@ -141,6 +141,6 @@ public class MemoHelper extends SQLiteOpenHelper
     //レコードを削除する
     public void Delete(String date)
     {
-        memodb.execSQL(Memo.DELETE_QUERY, new Object[]{ date });
+        memoDB.execSQL(Memo.DELETE_QUERY, new Object[]{ date });
     }
 }

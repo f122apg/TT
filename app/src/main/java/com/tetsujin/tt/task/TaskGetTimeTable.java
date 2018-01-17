@@ -1,12 +1,14 @@
-package com.tetsujin.tt;
+package com.tetsujin.tt.task;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.widget.ListView;
 
+import com.tetsujin.tt.R;
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
 import com.tetsujin.tt.database.TimeTable;
+import com.tetsujin.tt.database.TimeTableHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
+import java.util.TreeMap;
 
 /***********************************************************************/
 //時間割データをネットワーク経由で取得し、ListViewアダプタにセットする非同期のクラス
@@ -114,8 +118,8 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                     {
                         //配列内の値を取得
                         json = datas.getJSONObject(i);
-                        System.out.println("get");
 
+                        //jsonの要素名から値を取得し、変数に一時保存させる
                         int timeTableId = json.getInt("TimeTableId");
                         String lessonCode = json.getString("LessonCode");
                         String lessonName = json.getString("LessonName");
@@ -128,18 +132,10 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                         int teacherId = json.getInt("TeacherId");
                         String teacherName = json.getString("TeacherName");
 
+                        //一時保存された変数からTimeTableのインスタンスを生成
                         retValues[i] = new TimeTable(timeTableId, lessonCode, lessonName, weekDay,
                                 startTime, endTime, season, classRoomName,
                                 teacherId, teacherName, description);
-                        
-                        //TODO:jsonの読み込み処理を書く
-//                        //要素をStringで取得
-//                        String starttime = json.getString("StartDateTime");
-//                        String endtime = json.getString("EndDateTime");
-//                        //HH:mmだけ取得できるよう加工する
-//                        String convert_starttime = starttime.substring(starttime.lastIndexOf('T') + 1, starttime.lastIndexOf('T') + 6);
-//                        String convert_endtime = endtime.substring(endtime.lastIndexOf('T') + 1, endtime.lastIndexOf('T') + 6);
-//                        retValues[i] = new String[]{ json.getString("Id"), json.getString("Title"), convert_starttime, convert_endtime };
                     }
 
                 } catch (JSONException e)
@@ -154,7 +150,8 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
         } catch (IOException e)
         {
             e.printStackTrace();
-        } finally
+        }
+        finally
         {
             if (httpConnect != null)
             {
@@ -162,6 +159,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
             }
         }
 
+        //生成されたインスタンスを変えす
         return retValues;
     }
 
@@ -169,6 +167,28 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
     //取得した時間割データを自作アダプタに渡し、ListViewで表示
     @Override
     protected void onPostExecute(TimeTable[] values) {
+
+        Map<Integer, Object> data = new TreeMap<>();
+        TimeTableHelper timeTableHelper = new TimeTableHelper(activityMain);
+
+        //取得されたデータをDBへインサートする
+        for (TimeTable v:values)
+        {
+            data.put(0, v.getTimeTableID());
+            data.put(1, v.getLessonCode());
+            data.put(2, v.getLessonName());
+            data.put(3, v.getWeekDay());
+            data.put(4, v.getStartTime());
+            data.put(5, v.getEndTime());
+            data.put(6, v.getSeason());
+            data.put(7, v.getClassRoomName());
+            data.put(8, v.getTeacherID());
+            data.put(9, v.getTeacherName());
+            data.put(10, v.getDescription());
+
+            timeTableHelper.Insert(data);
+        }
+
         ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.AyMain_timetable_listview);
 
         CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values);

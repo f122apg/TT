@@ -12,12 +12,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.tetsujin.tt.database.Memo;
+import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import java.io.File;
 
-import static com.tetsujin.tt.ActivityMain.MemoHelper;
 import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.ActivityMain.memodb;
+import static com.tetsujin.tt.FragmentMain.memoHelper;
+import static com.tetsujin.tt.FragmentMain.memoDB;
 
 public class FragmentHeader extends Fragment
 {
@@ -159,7 +160,7 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
-                memodb = MemoHelper.getWritableDatabase();
+                memoDB = memoHelper.getWritableDatabase();
                 Toast.makeText(activityMain, "DB created", Toast.LENGTH_SHORT).show();
             }
         });

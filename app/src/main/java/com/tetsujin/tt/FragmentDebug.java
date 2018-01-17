@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import static com.tetsujin.tt.ActivityMain.memodb;
+import static com.tetsujin.tt.FragmentMain.memoDB;
 
 /************************************************************************/
 /************************************************************************/
@@ -36,7 +36,7 @@ public class FragmentDebug extends Fragment
     
         try
         {
-            Cursor r = memodb.rawQuery("SELECT * FROM Memo", null);
+            Cursor r = memoDB.rawQuery("SELECT * FROM Memo", null);
             
             if(r.getCount() != 0)
             {

@@ -4,11 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
@@ -81,9 +86,9 @@ public class ActivityLogin extends AppCompatActivity
                     {
                         try
                         {
-                            System.out.println("-----------------------------> Task Start");
                             MobileServiceTable<Login> table = mClient.getTable(Login.class);
                             //列:StudentIDと入力された学籍番号が一致された行を検索する
+                            //一致された行のメールアドレスを用いて、ログイン処理を行う
                             final List<Login> user = table
                                     .where()
                                     //列の指定
@@ -92,7 +97,6 @@ public class ActivityLogin extends AppCompatActivity
                                     .eq(studentId.getText().toString())
                                     .execute()
                                     .get();
-                            System.out.println("-----------------------------> Get Data");
 
                             if(user.size() != 0)
                                 return user.get(0).getMailAddress();
@@ -110,34 +114,34 @@ public class ActivityLogin extends AppCompatActivity
 
                 getEmailTask.execute();
 
-//                if(loginId != null)
-//                {
-//                    //ログイン実行
-//                    auth.signInWithEmailAndPassword(loginId, password.getText().toString()).addOnCompleteListener(activityLogin, new OnCompleteListener<AuthResult>()
-//                    {
-//                        @Override
-//                        public void onComplete(@NonNull Task<AuthResult> task)
-//                        {
-//                            //ログイン成功時
-//                            if (task.isSuccessful())
-//                            {
-//                                Toast.makeText(activityLogin, "Success", Toast.LENGTH_SHORT).show();
-//                                progressDialog.dismiss();
-//                                return;
-//                            }
-//                            //失敗時
-//                            else
-//                            {
-//                                notice.setText(R.string.wrong_number_or_password);
-//                                Toast.makeText(activityLogin, R.string.failed_login, Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//                }
-//                else
-//                {
-//                    Toast.makeText(activityLogin, "DBからメールアドレスが取得できませんでした。", Toast.LENGTH_SHORT).show();
-//                }
+                if(loginId != null)
+                {
+                    //ログイン実行
+                    auth.signInWithEmailAndPassword(loginId, password.getText().toString()).addOnCompleteListener(activityLogin, new OnCompleteListener<AuthResult>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task)
+                        {
+                            //ログイン成功時
+                            if (task.isSuccessful())
+                            {
+                                Toast.makeText(activityLogin, "Success", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                return;
+                            }
+                            //失敗時
+                            else
+                            {
+                                notice.setText(R.string.wrong_number_or_password);
+                                Toast.makeText(activityLogin, R.string.failed_login, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    Toast.makeText(activityLogin, "DBからメールアドレスが取得できませんでした。", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
