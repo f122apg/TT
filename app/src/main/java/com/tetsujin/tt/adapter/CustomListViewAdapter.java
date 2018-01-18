@@ -12,6 +12,7 @@ import com.tetsujin.tt.ActivityMain;
 import com.tetsujin.tt.R;
 import com.tetsujin.tt.database.TimeTable;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,7 +27,19 @@ public class CustomListViewAdapter extends BaseAdapter
         super();
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-        this.items = objects;
+
+        //抽出した曜日データを一時的に格納するArrayList
+        ArrayList<TimeTable> list = new ArrayList<>();
+        //今日の曜日だけの時間割データを抽出
+        for (TimeTable value:objects)
+        {
+            if(value.getWeekDay().equals(ActivityMain.getToDayWeekDay(false, null)))
+            {
+                list.add(value);
+            }
+        }
+
+        this.items = list.toArray(new TimeTable[list.size()]);
     }
 
     //アイテムの個数を返す
@@ -49,7 +62,7 @@ public class CustomListViewAdapter extends BaseAdapter
         return items[position].getTimeTableID();
     }
 
-    //ListViewの構成を行う
+    //Lisul..l,kjtViewの構成を行う
     @Override
     public View getView(int postition, View convertView, ViewGroup parent)
     {

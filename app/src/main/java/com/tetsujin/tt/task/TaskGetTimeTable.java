@@ -170,6 +170,8 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
 
         Map<Integer, Object> data = new TreeMap<>();
         TimeTableHelper timeTableHelper = new TimeTableHelper(activityMain);
+        //インサートする前にDBのレコードを全削除する
+        timeTableHelper.Clear();
 
         //取得されたデータをDBへインサートする
         for (TimeTable v:values)

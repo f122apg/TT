@@ -73,6 +73,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
             ArrayList<Object> retValue = new ArrayList<>();
             TimeTable[] rettimeTable = new TimeTable[result.getCount()];
 
+            //返すデータを準備する
             while(result.moveToNext())
             {
                 retValue.add(result.getInt(0));
@@ -126,8 +127,10 @@ public class TimeTableHelper extends SQLiteOpenHelper
             try
             {
                 //エラーチェック 返り値が0でないならば、正しく処理されたとする
-                if (timeTableDB.insert(TimeTable.TABLE_NAME, null, cv) > 0) return true;
-                else return false;
+                if (timeTableDB.insert(TimeTable.TABLE_NAME, null, cv) > 0)
+                    return true;
+                else
+                    return false;
             }
             catch (SQLException e)
             {
@@ -136,5 +139,10 @@ public class TimeTableHelper extends SQLiteOpenHelper
         }
         else
             return false;
+    }
+
+    public void Clear()
+    {
+        timeTableDB.execSQL("DELETE FROM " + TimeTable.TABLE_NAME);
     }
 }

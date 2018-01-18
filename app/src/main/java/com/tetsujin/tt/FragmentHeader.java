@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.tetsujin.tt.database.Memo;
+import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import java.io.File;
@@ -123,7 +124,7 @@ public class FragmentHeader extends Fragment
                 TaskGetTimeTable t = new TaskGetTimeTable(activityMain);
                 t.execute("http://tetsujintimes.azurewebsites.net/api/TimeTables/cd/2/4");
 
-                //Tableの行一覧表示
+//                //Tableの行一覧表示
 //                if(!isChangeFragment)
 //                {
 //                    FragmentDebug f = new FragmentDebug();
@@ -144,14 +145,7 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
-                File file = new File("/data/data/com.tetsujin.tt/databases/" + Memo.DB_NAME);
-                if(file.exists())
-                {
-                    file.delete();
-                    Toast.makeText(activityMain, "DB deleted", Toast.LENGTH_SHORT).show();
-                }
-                else
-                    Toast.makeText(activityMain, "DB not found", Toast.LENGTH_SHORT).show();
+                activityMain.deleteDatabase("TimeTableDB");
             }
         });
     
@@ -160,8 +154,19 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
-                memoDB = memoHelper.getWritableDatabase();
-                Toast.makeText(activityMain, "DB created", Toast.LENGTH_SHORT).show();
+                //Tableの行一覧表示
+                if(!isChangeFragment)
+                {
+                    FragmentDebug f = new FragmentDebug();
+                    activityMain.showFragment(f);
+                    isChangeFragment = !isChangeFragment;
+                }
+                else
+                {
+                    FragmentMain frgmain = new FragmentMain();
+                    activityMain.showFragment(frgmain);
+                    isChangeFragment = !isChangeFragment;
+                }
             }
         });
 

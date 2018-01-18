@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import static com.tetsujin.tt.FragmentMain.memoDB;
+import static com.tetsujin.tt.FragmentMain.timeTableDB;
 
 /************************************************************************/
 /************************************************************************/
@@ -36,16 +37,17 @@ public class FragmentDebug extends Fragment
     
         try
         {
-            Cursor r = memoDB.rawQuery("SELECT * FROM Memo", null);
-            
+            Cursor r = timeTableDB.rawQuery("SELECT * FROM TimeTable", null);
+
+            int linecnt = 1;
             if(r.getCount() != 0)
             {
                 StringBuilder sb = new StringBuilder();
                 while (r.moveToNext())
                 {
-                    sb.append(r.getCount() + " = Date:" + r.getString(0) + ", Content:" + r.getString(1) + "\n");
+                    sb.append(linecnt++ + " = TTId:" + r.getInt(r.getColumnIndex("TimeTableID")) + ", LN:" + r.getString(r.getColumnIndex("LessonName")) + ", WD:" + r.getString(r.getColumnIndex("WeekDay")) + "\n");
                 }
-    
+
                 tv.setText(sb.toString());
             }
             else
@@ -53,6 +55,7 @@ public class FragmentDebug extends Fragment
         }
         catch (Exception e)
         {
+            tv.setText("exception");
         }
     
         return v;

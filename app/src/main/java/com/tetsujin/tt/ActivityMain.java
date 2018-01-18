@@ -24,11 +24,6 @@ import java.util.Date;
 public class ActivityMain extends AppCompatActivity {
 
     public static ActivityMain activityMain;
-
-//    public static MemoHelper memoHelper;
-//    public static TimeTableHelper timeTableHelper;
-//    public static SQLiteDatabase memoDB;
-//    public static SQLiteDatabase timeTableDB;
     private FragmentManager fm;
 
     @Override
@@ -40,11 +35,6 @@ public class ActivityMain extends AppCompatActivity {
         if(savedInstanceState == null)
         {
             activityMain = this;
-//            MemoHelper memoHelper = new MemoHelper(activityMain);
-//            TimeTableHelper timeTableHelper = new TimeTableHelper(activityMain);
-//            //DBが存在していなかったらDBの作成がされる
-//            memoDB = memoHelper.getWritableDatabase();
-//            timeTableDB = timeTableHelper.getWritableDatabase();
             fm = getSupportFragmentManager();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
@@ -115,7 +105,7 @@ public class ActivityMain extends AppCompatActivity {
     //文字列から数値へ変換する場合はtrue
     public static String getToDayWeekDay(boolean getStrToInteger, String weekDay)
     {
-        //falseなら当日の曜日を返し、trueならば指定された曜日を数値へ変換し返す
+        //falseなら当日の曜日を返し、trueでありかつnullではないなら指定された曜日を数値へ変換し返す
         if(!getStrToInteger)
         {
             //現在の日付を取得
@@ -134,9 +124,23 @@ public class ActivityMain extends AppCompatActivity {
 
             return (String) week;
         }
-        else
+        else if(!(weekDay == null))
         {
-            switch (weekDay)
+            //現在の日付を取得
+            Date nowdate = new Date();
+            //Calendarに現在の日付を設定
+            Calendar cal = Calendar.getInstance();
+            //現在の曜日のみを取得
+            CharSequence week = DateFormat.format("E", nowdate);
+            //現在の曜日が「土」か「日」だったら次週の月曜日にする
+            if (week.equals("土") || week.equals("日"))
+            {
+                //現在の日付を２日足し、次週の月曜日にする
+                cal.add(Calendar.DAY_OF_MONTH, 2);
+                cal.set(Calendar.DAY_OF_WEEK, 2);
+            }
+
+            switch ((String)week)
             {
                 case "月":
                     return String.valueOf(Calendar.MONDAY);
@@ -152,6 +156,8 @@ public class ActivityMain extends AppCompatActivity {
                     return "-1";
             }
         }
+
+        return "-1";
     }
 }
 

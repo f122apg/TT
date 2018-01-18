@@ -1,5 +1,6 @@
 package com.tetsujin.tt;
 
+import android.app.AlertDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -69,13 +71,46 @@ public class FragmentMain extends Fragment {
         //日付を表示
         date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
 
-        //１日の時間割を表示
-        ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
+        /*************************************/
+        /*****   ListView(時間割表示用)    *****/
+        /*************************************/
+         ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
         //時間割データをTimeTableDBから取得
         TimeTable[] timeTableData = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getToDayWeekDay(true, (String) week)));
+        //時間割データをアダプタに渡し、表示を行う
         CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTableData);
         timetable_lv.setAdapter(ca);
 
+        //ListViewのクリックイベント
+        timetable_lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            //ListView内にあるアイテムをタップするとAlertDiaglogを用いて、
+            //授業の詳細を表示するようにしている
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id)
+            {
+                ListView lv = (ListView)adapterView;
+                //ListView内に存在するアイテムを取得
+                TimeTable data = (TimeTable) lv.getItemAtPosition(pos);
+
+                //詳細画面を表示
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.lesson_detail)
+                        .setMessage("授業名：" + data.getLessonName() + "\n" +
+                                    "教室：" + data.getClassRoomName() + "\n" +
+                                    "開始時間：" + data.getStartTime() + "\n" +
+                                    "終了時間：" + data.getEndTime() + "\n" +
+                                    "講師：" + data.getTeacherName())
+                        .setPositiveButton(R.string.ok, null);
+            }
+        });
+
+
+
+
+        /*************************************/
+        /*****     EditText(メモ欄用)     *****/
+        /*************************************/
         final EditText memo_ed = (EditText)v.findViewById(R.id.FrgMain_memo_edittext);
         //今日のメモがすでに存在している場合、メモ内容を取得する
         if (memoHelper.HasDate(todaydate))

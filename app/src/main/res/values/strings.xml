@@ -42,7 +42,9 @@
     <string name="error">エラー</string>
     <string name="memo_cannot_save">メモを保存できませんでした。</string>
 
-    
+    <!-- fragmentmain -->
     <string name="getdata">時間割のデータを取得しています&#8230;</string>
+    <string name="lesson_detail">授業の詳細</string>
+    <string name="ok">OK</string>
 
 </resources>
