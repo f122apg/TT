@@ -28,18 +28,26 @@ public class CustomListViewAdapter extends BaseAdapter
         this.context = context;
         this.inflater = LayoutInflater.from(context);
 
-        //抽出した曜日データを一時的に格納するArrayList
-        ArrayList<TimeTable> list = new ArrayList<>();
-        //今日の曜日だけの時間割データを抽出
-        for (TimeTable value:objects)
+        //時間割データが存在しているかチェックし、存在していたら曜日毎のデータを抽出する
+        if(objects != null)
         {
-            if(value.getWeekDay().equals(ActivityMain.getToDayWeekDay(false, null)))
+            //抽出した曜日データを一時的に格納するArrayList
+            ArrayList<TimeTable> list = new ArrayList<>();
+            //今日の曜日だけの時間割データを抽出
+            for (TimeTable value : objects)
             {
-                list.add(value);
+                if (value.getWeekDay().equals(ActivityMain.getToDayWeekDay(false, null)))
+                {
+                    list.add(value);
+                }
             }
-        }
 
-        this.items = list.toArray(new TimeTable[list.size()]);
+            this.items = list.toArray(new TimeTable[list.size()]);
+        }
+        else
+        {
+            this.items = null;
+        }
     }
 
     //アイテムの個数を返す
@@ -62,26 +70,30 @@ public class CustomListViewAdapter extends BaseAdapter
         return items[position].getTimeTableID();
     }
 
-    //Lisul..l,kjtViewの構成を行う
+    //ListViewの構成を行う
     @Override
     public View getView(int postition, View convertView, ViewGroup parent)
     {
-        TimeTable item = this.items[postition];
+        //itemsがnullではないなら時間割データを表示する
+        if(this.items != null)
+        {
+            TimeTable item = this.items[postition];
 
-        if(convertView == null)
+            TextView id = (TextView) convertView.findViewById(R.id.id_item_textview);
+            TextView starttime = (TextView) convertView.findViewById(R.id.starttime_item_textview);
+            TextView endtime = (TextView) convertView.findViewById(R.id.endtime_item_textview);
+            TextView name = (TextView) convertView.findViewById(R.id.name_item_textview);
+
+            id.setText(String.valueOf(item.getTimeTableID()));
+            starttime.setText(item.getStartTime());
+            endtime.setText(item.getEndTime());
+            name.setText(item.getLessonName());
+        }
+
+        if (convertView == null)
         {
             convertView = this.inflater.inflate(R.layout.listview_items, null);
         }
-
-        TextView id = (TextView)convertView.findViewById(R.id.id_item_textview);
-        TextView starttime = (TextView)convertView.findViewById(R.id.starttime_item_textview);
-        TextView endtime = (TextView)convertView.findViewById(R.id.endtime_item_textview);
-        TextView name = (TextView)convertView.findViewById(R.id.name_item_textview);
-
-        id.setText(String.valueOf(item.getTimeTableID()));
-        starttime.setText(item.getStartTime());
-        endtime.setText(item.getEndTime());
-        name.setText(item.getLessonName());
 
         return convertView;
     }

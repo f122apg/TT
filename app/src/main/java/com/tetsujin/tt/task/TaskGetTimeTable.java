@@ -191,7 +191,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
             timeTableHelper.Insert(data);
         }
 
-        ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.AyMain_timetable_listview);
+        ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.FrgMain_timetable_listview);
 
         CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values);
         timetable_lv.setAdapter(adapter);

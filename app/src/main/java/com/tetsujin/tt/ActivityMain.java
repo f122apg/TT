@@ -13,6 +13,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 import com.tetsujin.tt.database.MemoHelper;
+import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.database.TimeTableHelper;
 import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
@@ -23,8 +24,13 @@ import java.util.Date;
 
 public class ActivityMain extends AppCompatActivity {
 
-    public static ActivityMain activityMain;
     private FragmentManager fm;
+    public static ActivityMain activityMain;
+    public static MemoHelper memoHelper;
+    public static TimeTableHelper timeTableHelper;
+    public static SQLiteDatabase memoDB;
+    public static SQLiteDatabase timeTableDB;
+    public static TimeTable[] timeTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,13 @@ public class ActivityMain extends AppCompatActivity {
         if(savedInstanceState == null)
         {
             activityMain = this;
+            memoHelper = new MemoHelper(activityMain);
+            timeTableHelper = new TimeTableHelper(activityMain);
+            //DBが存在していなかったらDBの作成がされる
+            memoDB = memoHelper.getWritableDatabase();
+            timeTableDB = timeTableHelper.getWritableDatabase();
+            //時間割データをTimeTableDBから取得し、static変数に入れる
+            timeTable = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getToDayWeekDay(true, getToDayWeekDay(false, null))));
             fm = getSupportFragmentManager();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
@@ -42,8 +55,8 @@ public class ActivityMain extends AppCompatActivity {
             FragmentHeader frgHead = new FragmentHeader();
             FragmentMain frgMain = new FragmentMain();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.AyMain_headcontainer_linearlayout, frgHead);
-            ft.replace(R.id.AyMain_container_linearlayout, frgMain);
+            ft.replace(R.id.FrgMain_headcontainer_linearlayout, frgHead);
+            ft.replace(R.id.FrgMain_container_linearlayout, frgMain);
             ft.commit();
         }
 
@@ -98,7 +111,7 @@ public class ActivityMain extends AppCompatActivity {
     {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.setCustomAnimations(R.anim.activity_inright, R.anim.activity_outleft, R.anim.activity_inleft, R.anim.activity_outright);
-        transaction.replace(R.id.AyMain_container_linearlayout, frg);
+        transaction.replace(R.id.FrgMain_container_linearlayout, frg);
         transaction.commit();
     }
 

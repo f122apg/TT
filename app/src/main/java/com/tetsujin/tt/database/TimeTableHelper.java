@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.tetsujin.tt.FragmentMain.timeTableDB;
+import static com.tetsujin.tt.ActivityMain.timeTableDB;
 
 public class TimeTableHelper extends SQLiteOpenHelper
 {

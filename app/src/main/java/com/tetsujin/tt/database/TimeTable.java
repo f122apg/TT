@@ -1,12 +1,13 @@
 package com.tetsujin.tt.database;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static com.tetsujin.tt.ActivityMain.getToDayWeekDay;
 
-public class TimeTable
+public class TimeTable implements Serializable
 {
     //データベース名
     final static String DB_NAME = "TimeTableDB";

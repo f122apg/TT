@@ -9,17 +9,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.tetsujin.tt.database.Memo;
-import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.task.TaskGetTimeTable;
 
-import java.io.File;
-
 import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.FragmentMain.memoHelper;
-import static com.tetsujin.tt.FragmentMain.memoDB;
+import static com.tetsujin.tt.ActivityMain.timeTable;
 
 public class FragmentHeader extends Fragment
 {
@@ -43,32 +37,37 @@ public class FragmentHeader extends Fragment
                         {"8", "合同資格対策講座", "09:00", "14:30", "金"},
                 };
 
-        /* onClickListeners */
+        /*
+            onClickListeners
+        */
         //B1 1週間の時間割に遷移する
         v.findViewById(R.id.Header_B1_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                //ヘッダーにある画像を変えるためにリソースIDを保持する変数
                 final int resourceid;
 
                 //FragmentWeekContainerの表示
                 if(!isChangeFragment)
                 {
                     resourceid = R.drawable.icon_arrow_back;
+                    Bundle bundle = new Bundle();
 
                     //FragmentWeekContainerに時間割データを渡す
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("datalength", testdata.length);
-                    for (int i = 0; i < testdata.length; i++)
+                    if(timeTable != null)
                     {
-                        bundle.putStringArray("data" + i, testdata[i]);
+                        bundle.putSerializable("timetable", timeTable);
                     }
+                    else
+                        bundle.putString("timetable", "null");
 
                     //FragmentWeekContainerに値を渡し、表示する
                     FragmentWeekContainer frgwc = new FragmentWeekContainer();
                     frgwc.setArguments(bundle);
                     activityMain.showFragment(frgwc);
+
                 }
                 //FragmentMainの表示
                 else
@@ -78,7 +77,9 @@ public class FragmentHeader extends Fragment
                     activityMain.showFragment(frgmain);
                 }
 
-                /* アニメーション処理 */
+                /*
+                    アニメーション処理
+                */
                 //Fragmentの表示と共に、B1ボタンを矢印に変更するアニメーションを開始させる
                 final ImageButton ib = (ImageButton)v.findViewById(R.id.Header_B1_button);
                 //アニメーションの読み込みとアニメーションにかける時間を設定
@@ -172,5 +173,4 @@ public class FragmentHeader extends Fragment
 
         return v;
     }
-
 }

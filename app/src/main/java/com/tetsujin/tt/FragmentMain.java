@@ -1,7 +1,6 @@
 package com.tetsujin.tt;
 
 import android.app.AlertDialog;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
@@ -15,43 +14,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
-import com.tetsujin.tt.database.MemoHelper;
 import com.tetsujin.tt.database.TimeTable;
-import com.tetsujin.tt.database.TimeTableHelper;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.ActivityMain.getToDayWeekDay;
+import static com.tetsujin.tt.ActivityMain.memoHelper;
+import static com.tetsujin.tt.ActivityMain.timeTable;
 
 public class FragmentMain extends Fragment {
 
     public static Calendar cal;
     public static String todaydate;
-    public static MemoHelper memoHelper;
-    public static TimeTableHelper timeTableHelper;
-    public static SQLiteDatabase memoDB;
-    public static SQLiteDatabase timeTableDB;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-        if(savedInstanceState == null)
-        {
-            memoHelper = new MemoHelper(activityMain);
-            timeTableHelper = new TimeTableHelper(activityMain);
-            //DBが存在していなかったらDBの作成がされる
-            memoDB = memoHelper.getWritableDatabase();
-            timeTableDB = timeTableHelper.getWritableDatabase();
-        }
-
         //日付取得と表示
-        TextView date_tv = (TextView)v.findViewById(R.id.AyMain_date_textview);
+        TextView date_tv = (TextView)v.findViewById(R.id.FrgMain_date_textview);
         //現在の日付を取得
         Date nowdate = new Date();
         //Calendarに現在の日付を設定
@@ -74,11 +58,9 @@ public class FragmentMain extends Fragment {
         /*************************************/
         /*****   ListView(時間割表示用)    *****/
         /*************************************/
-         ListView timetable_lv = (ListView)v.findViewById(R.id.AyMain_timetable_listview);
-        //時間割データをTimeTableDBから取得
-        TimeTable[] timeTableData = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getToDayWeekDay(true, (String) week)));
+         ListView timetable_lv = (ListView)v.findViewById(R.id.FrgMain_timetable_listview);
         //時間割データをアダプタに渡し、表示を行う
-        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTableData);
+        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTable);
         timetable_lv.setAdapter(ca);
 
         //ListViewのクリックイベント
@@ -96,17 +78,14 @@ public class FragmentMain extends Fragment {
                 //詳細画面を表示
                 new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.lesson_detail)
-                        .setMessage("授業名：" + data.getLessonName() + "\n" +
-                                    "教室：" + data.getClassRoomName() + "\n" +
-                                    "開始時間：" + data.getStartTime() + "\n" +
-                                    "終了時間：" + data.getEndTime() + "\n" +
-                                    "講師：" + data.getTeacherName())
+                        .setMessage(R.string.lesson_name + data.getLessonName() + "\n" +
+                                    R.string.classroom + data.getClassRoomName() + "\n" +
+                                    R.string.starttime + data.getStartTime() + "\n" +
+                                    R.string.endtime + data.getEndTime() + "\n" +
+                                    R.string.teacher + data.getTeacherName())
                         .setPositiveButton(R.string.ok, null);
             }
         });
-
-
-
 
         /*************************************/
         /*****     EditText(メモ欄用)     *****/

@@ -6,16 +6,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.tetsujin.tt.FragmentWeek;
+import com.tetsujin.tt.database.TimeTable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
 {
 
     //各曜日の時間割データを一元管理
-    private ArrayList<ArrayList<String[]>> weekdatas = new ArrayList<>();
+    private ArrayList<ArrayList<String[]>> weekdata = new ArrayList<>();
     //日付データ
-    private ArrayList<String> datedatas = new ArrayList<>();
+    private ArrayList<String> datedata = new ArrayList<>();
 
     //コンストラクタ
     public CustomFragmentPagerAdapter(FragmentManager fm)
@@ -27,7 +29,7 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public Fragment getItem(int position)
     {
-        ArrayList<String[]> weekdata = weekdatas.get(position);
+        ArrayList<String[]> weekdata = weekdata.get(position);
 
         //Fragmentへデータを送信
         Bundle bundle = new Bundle();
@@ -54,18 +56,18 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
-        return datedatas.get(position);
+        return datedata.get(position);
     }
 
     //時間割データをセット
-    public void setdatas(ArrayList<ArrayList<String[]>> datas)
+    public void setdata(Serializable data)
     {
-        weekdatas.addAll(datas);
+
     }
 
     //日付データをセット
     public void adddate(String date)
     {
-        datedatas.add(date);
+        datedata.add(date);
     }
 }
