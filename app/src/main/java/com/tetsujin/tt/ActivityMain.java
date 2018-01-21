@@ -7,27 +7,30 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
-import com.tetsujin.tt.database.MemoDBHelper;
+import com.tetsujin.tt.database.MemoHelper;
+import com.tetsujin.tt.database.TimeTable;
+import com.tetsujin.tt.database.TimeTableHelper;
 import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class ActivityMain extends AppCompatActivity {
 
-    //TODO:時間割データの一時的な保存場所
-    String timetabledata_url = "http://tetsujin.azurewebsites.net/api/schedules";
-
-    public static ActivityMain activityMain;
-
-    public static MemoDBHelper memoDBHelper;
-    public static SQLiteDatabase memodb;
     private FragmentManager fm;
-    private MobileServiceClient mClient;
+    public static ActivityMain activityMain;
+    public static MemoHelper memoHelper;
+    public static TimeTableHelper timeTableHelper;
+    public static SQLiteDatabase memoDB;
+    public static SQLiteDatabase timeTableDB;
+    public static TimeTable[] timeTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,18 +41,22 @@ public class ActivityMain extends AppCompatActivity {
         if(savedInstanceState == null)
         {
             activityMain = this;
-            memoDBHelper = new MemoDBHelper(activityMain);
+            memoHelper = new MemoHelper(activityMain);
+            timeTableHelper = new TimeTableHelper(activityMain);
             //DBが存在していなかったらDBの作成がされる
-            memodb = memoDBHelper.getWritableDatabase();
+            memoDB = memoHelper.getWritableDatabase();
+            timeTableDB = timeTableHelper.getWritableDatabase();
+            //時間割データをTimeTableDBから取得し、static変数に入れる
+            timeTable = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getToDayWeekDay(true, getToDayWeekDay(false, null))));
             fm = getSupportFragmentManager();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
             //初回のみアニメーションをさせないようにshowFragmentメソッドを使わずに表示
-            FragmentHeader frghead = new FragmentHeader();
-            FragmentMain frgmain = new FragmentMain();
+            FragmentHeader frgHead = new FragmentHeader();
+            FragmentMain frgMain = new FragmentMain();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.AyMain_headcontainer_linearlayout, frghead);
-            ft.replace(R.id.AyMain_container_linearlayout, frgmain);
+            ft.replace(R.id.FrgMain_headcontainer_linearlayout, frgHead);
+            ft.replace(R.id.FrgMain_container_linearlayout, frgMain);
             ft.commit();
         }
 
@@ -64,13 +71,6 @@ public class ActivityMain extends AppCompatActivity {
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
         //Notification Hubsにこの端末の登録作業を行う
         registerWithNotificationHubs();
-    }
-
-    //時間割データを取得する
-    public void getTimeTable()
-    {
-        TaskGetTimeTable task = new TaskGetTimeTable(this);
-        task.execute(timetabledata_url);
     }
 
     //Google Play Servicesが利用可能かどうか確認する
@@ -111,8 +111,71 @@ public class ActivityMain extends AppCompatActivity {
     {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.setCustomAnimations(R.anim.activity_inright, R.anim.activity_outleft, R.anim.activity_inleft, R.anim.activity_outright);
-        transaction.replace(R.id.AyMain_container_linearlayout, frg);
+        transaction.replace(R.id.FrgMain_container_linearlayout, frg);
         transaction.commit();
+    }
+    
+    //falseなら今日の曜日を漢字のStringで返し、
+    //trueでありかつnullではないなら指定された曜日を数値へ変換し返す
+    //trueでありかつnullならば今日の曜日を数値で返す
+    public static String getToDayWeekDay(boolean getStrToInteger, String weekDay)
+    {
+        //現在の日付を取得
+        Date nowdate = new Date();
+        //Calendarに現在の日付を設定
+        Calendar cal = Calendar.getInstance();
+        //現在の曜日のみを取得
+        CharSequence week = DateFormat.format("E", nowdate);
+        //現在の曜日が「土」か「日」だったら次週の月曜日にする
+        if (week.equals("土") || week.equals("日"))
+        {
+            //現在の日付を２日足し、次週の月曜日にする
+            cal.add(Calendar.DAY_OF_MONTH, 2);
+            cal.set(Calendar.DAY_OF_WEEK, 2);
+            
+            week = DateFormat.format("E", cal);
+        }
+        
+        if(!getStrToInteger)
+        {
+            return (String) week;
+        }
+        else if(!(weekDay == null))
+        {
+            switch (weekDay)
+            {
+                case "月":
+                    return String.valueOf(Calendar.MONDAY);
+                case "火":
+                    return String.valueOf(Calendar.TUESDAY);
+                case "水":
+                    return String.valueOf(Calendar.WEDNESDAY);
+                case "木":
+                    return String.valueOf(Calendar.THURSDAY);
+                case "金":
+                    return String.valueOf(Calendar.FRIDAY);
+                default:
+                    return "-1";
+            }
+        }
+        else
+        {
+            switch ((String) week)
+            {
+                case "月":
+                    return String.valueOf(Calendar.MONDAY);
+                case "火":
+                    return String.valueOf(Calendar.TUESDAY);
+                case "水":
+                    return String.valueOf(Calendar.WEDNESDAY);
+                case "木":
+                    return String.valueOf(Calendar.THURSDAY);
+                case "金":
+                    return String.valueOf(Calendar.FRIDAY);
+                default:
+                    return "-1";
+            }
+        }
     }
 }
 

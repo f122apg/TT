@@ -5,35 +5,47 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
 import java.util.Map;
 
-import static com.tetsujin.tt.ActivityMain.memodb;
+import static com.tetsujin.tt.ActivityMain.memoDB;
 
-public class MemoDBHelper extends SQLiteOpenHelper
+public class MemoHelper extends SQLiteOpenHelper
 {
-    public MemoDBHelper(Context context)
+    public MemoHelper(Context context)
     {
-        super(context, DBMemo.DB_NAME, null, 1);
+        super(context, Memo.DB_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL(DBMemo.CREATE_TABLE_QUERY);
+        db.execSQL(Memo.CREATE_TABLE_QUERY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldversion, int newversion)
     {
     }
-    
+
     //指定された日付がすでに存在してるかどうかチェックする
     public boolean HasDate(String date)
     {
-        Cursor result = memodb.rawQuery(DBMemo.GET_RECORD_QUERY, new String[]{ date });
+        Cursor result;
+
+        //データベースが存在するが行がない場合、SQLiteExceptionがthrowされる模様
+        try
+        {
+            result = memoDB.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ date });
+        }
+        catch (SQLiteException e)
+        {
+            return false;
+        }
+
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
         
@@ -50,9 +62,9 @@ public class MemoDBHelper extends SQLiteOpenHelper
         }
     }
     
-    public String GetRecord(String id)
+    public String GetRecord(String date)
     {
-        Cursor result = memodb.rawQuery(DBMemo.GET_RECORD_QUERY, new String[]{ id });
+        Cursor result = memoDB.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ date });
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
         
@@ -77,9 +89,9 @@ public class MemoDBHelper extends SQLiteOpenHelper
         SQLiteStatement sqlst;
         
         if(isupdate)
-            sqlst = memodb.compileStatement(DBMemo.UPDATE_QUERY);
+            sqlst = memoDB.compileStatement(Memo.UPDATE_QUERY);
         else
-            sqlst = memodb.compileStatement(DBMemo.INSERT_QUERY);
+            sqlst = memoDB.compileStatement(Memo.INSERT_QUERY);
     
         for(int i = 1; i <= data.size(); i ++)
         {
@@ -129,6 +141,6 @@ public class MemoDBHelper extends SQLiteOpenHelper
     //レコードを削除する
     public void Delete(String date)
     {
-        memodb.execSQL(DBMemo.DELETE_QUERY, new Object[]{ date });
+        memoDB.execSQL(Memo.DELETE_QUERY, new Object[]{ date });
     }
 }

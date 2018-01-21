@@ -9,15 +9,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.tetsujin.tt.database.DBMemo;
-
-import java.io.File;
+import com.tetsujin.tt.database.TimeTable;
+import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.ActivityMain.memoDBHelper;
-import static com.tetsujin.tt.ActivityMain.memodb;
+import static com.tetsujin.tt.ActivityMain.timeTable;
+import static com.tetsujin.tt.ActivityMain.timeTableHelper;
 
 public class FragmentHeader extends Fragment
 {
@@ -41,32 +39,41 @@ public class FragmentHeader extends Fragment
                         {"8", "合同資格対策講座", "09:00", "14:30", "金"},
                 };
 
-        /* onClickListeners */
+        /*
+            onClickListeners
+        */
         //B1 1週間の時間割に遷移する
         v.findViewById(R.id.Header_B1_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                //ヘッダーにある画像を変えるためにリソースIDを保持する変数
                 final int resourceid;
 
                 //FragmentWeekContainerの表示
                 if(!isChangeFragment)
                 {
                     resourceid = R.drawable.icon_arrow_back;
-
-                    //FragmentWeekContainerに時間割データを渡す
                     Bundle bundle = new Bundle();
-                    bundle.putInt("datalength", testdata.length);
-                    for (int i = 0; i < testdata.length; i++)
+                    
+                    //Fragmentに渡すデータを準備する
+                    TimeTable[] timeTableALL = timeTableHelper.GetRecordALL();
+                    
+                    //FragmentWeekContainerに時間割データを渡す
+                    if(timeTable != null)
                     {
-                        bundle.putStringArray("data" + i, testdata[i]);
+                        bundle.putBoolean("isNull", false);
+                        bundle.putSerializable("timetable", timeTableALL);
                     }
+                    else
+                        bundle.putBoolean("isNull", true);
 
                     //FragmentWeekContainerに値を渡し、表示する
                     FragmentWeekContainer frgwc = new FragmentWeekContainer();
                     frgwc.setArguments(bundle);
                     activityMain.showFragment(frgwc);
+
                 }
                 //FragmentMainの表示
                 else
@@ -76,7 +83,9 @@ public class FragmentHeader extends Fragment
                     activityMain.showFragment(frgmain);
                 }
 
-                /* アニメーション処理 */
+                /*
+                    アニメーション処理
+                */
                 //Fragmentの表示と共に、B1ボタンを矢印に変更するアニメーションを開始させる
                 final ImageButton ib = (ImageButton)v.findViewById(R.id.Header_B1_button);
                 //アニメーションの読み込みとアニメーションにかける時間を設定
@@ -118,6 +127,41 @@ public class FragmentHeader extends Fragment
             @Override
             public void onClick(View view)
             {
+
+                TaskGetTimeTable t = new TaskGetTimeTable(activityMain);
+                t.execute("http://tetsujintimes.azurewebsites.net/api/TimeTables/cd/2/4");
+
+//                //Tableの行一覧表示
+//                if(!isChangeFragment)
+//                {
+//                    FragmentDebug f = new FragmentDebug();
+//                    activityMain.showFragment(f);
+//                    isChangeFragment = !isChangeFragment;
+//                }
+//                else
+//                {
+//                    FragmentMain frgmain = new FragmentMain();
+//                    activityMain.showFragment(frgmain);
+//                    isChangeFragment = !isChangeFragment;
+//                }
+            }
+        });
+    
+        v.findViewById(R.id.debug_dbrm_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                activityMain.deleteDatabase("TimeTableDB");
+            }
+        });
+    
+        v.findViewById(R.id.debug_dbcreate_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //Tableの行一覧表示
                 if(!isChangeFragment)
                 {
                     FragmentDebug f = new FragmentDebug();
@@ -132,34 +176,7 @@ public class FragmentHeader extends Fragment
                 }
             }
         });
-    
-        v.findViewById(R.id.debug_dbrm_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                File file = new File("/data/data/com.tetsujin.tt/databases/" + DBMemo.DB_NAME);
-                if(file.exists())
-                {
-                    file.delete();
-                    Toast.makeText(activityMain, "DB deleted", Toast.LENGTH_SHORT).show();
-                }
-                else
-                    Toast.makeText(activityMain, "DB not found", Toast.LENGTH_SHORT).show();
-            }
-        });
-    
-        v.findViewById(R.id.debug_dbcreate_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                memodb = memoDBHelper.getWritableDatabase();
-                Toast.makeText(activityMain, "DB created", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         return v;
     }
-
 }

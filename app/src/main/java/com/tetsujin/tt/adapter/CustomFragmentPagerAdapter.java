@@ -6,16 +6,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.tetsujin.tt.FragmentWeek;
+import com.tetsujin.tt.database.TimeTable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
 {
 
-    //各曜日の時間割データを一元管理
-    private ArrayList<ArrayList<String[]>> weekdatas = new ArrayList<>();
+    //各曜日の時間割データを一括管理
+    private ArrayList<ArrayList<TimeTable>> weeklist;
     //日付データ
-    private ArrayList<String> datedatas = new ArrayList<>();
+    private ArrayList<String> datelist = new ArrayList<>();
 
     //コンストラクタ
     public CustomFragmentPagerAdapter(FragmentManager fm)
@@ -27,15 +29,10 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public Fragment getItem(int position)
     {
-        ArrayList<String[]> weekdata = weekdatas.get(position);
-
         //Fragmentへデータを送信
         Bundle bundle = new Bundle();
-        bundle.putInt("datalength", weekdata.size());
-        for (int i = 0; i < weekdata.size(); i ++)
-        {
-            bundle.putStringArray("data" + i, weekdata.get(i));
-        }
+        //特定の曜日の時間割データを送信
+        bundle.putParcelableArrayList("data", weeklist.get(position));
 
         FragmentWeek fw = new FragmentWeek();
         fw.setArguments(bundle);
@@ -54,18 +51,55 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
-        return datedatas.get(position);
+        return datelist.get(position);
     }
 
-    //時間割データをセット
-    public void setdatas(ArrayList<ArrayList<String[]>> datas)
+    //時間割データを各曜日ごとにソートしてセット
+    public void setdata(TimeTable[] data)
     {
-        weekdatas.addAll(datas);
+        //一時的に各曜日ごとにデータをセットする
+        //0 = Monday, 1 = Tuesday...
+        ArrayList<TimeTable>[] temp = new ArrayList[5];
+        //初期化
+        for(int i = 0; i < 5; i ++)
+        {
+            temp[i] = new ArrayList<>();
+        }
+        weeklist = new ArrayList<>();
+        
+        //各曜日の時間割データを各配列に挿入する
+        for (TimeTable value : data)
+        {
+            switch (value.getWeekDay())
+            {
+                case Calendar.MONDAY:
+                    temp[0].add(value);
+                    break;
+                case Calendar.TUESDAY:
+                    temp[1].add(value);
+                    break;
+                case Calendar.WEDNESDAY:
+                    temp[2].add(value);
+                    break;
+                case Calendar.THURSDAY:
+                    temp[3].add(value);
+                    break;
+                case Calendar.FRIDAY:
+                    temp[4].add(value);
+                    break;
+            }
+        }
+        
+        //一時的にセットしたデータを一元管理用リストにセット
+        for(int i = 0; i < 5; i ++)
+        {
+            weeklist.add(i, temp[i]);
+        }
     }
 
     //日付データをセット
     public void adddate(String date)
     {
-        datedatas.add(date);
+        datelist.add(date);
     }
 }

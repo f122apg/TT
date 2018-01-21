@@ -8,12 +8,12 @@
     tools:context="com.tetsujin.tt.ActivityMain">
     
     <LinearLayout
-        android:id="@+id/AyMain_headcontainer_linearlayout"
+        android:id="@+id/FrgMain_headcontainer_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
     
     <LinearLayout
-        android:id="@+id/AyMain_container_linearlayout"
+        android:id="@+id/FrgMain_container_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

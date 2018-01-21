@@ -38,7 +38,7 @@
         <Button
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="DB作成"
+            android:text="Tablelist"
             android:id="@+id/debug_dbcreate_button"/>
 
         <Button
