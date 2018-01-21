@@ -1,7 +1,6 @@
 package com.tetsujin.tt.adapter;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import com.tetsujin.tt.R;
 import com.tetsujin.tt.database.TimeTable;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class CustomListViewAdapter extends BaseAdapter
 {
@@ -22,7 +19,7 @@ public class CustomListViewAdapter extends BaseAdapter
     private LayoutInflater inflater;
     private TimeTable[] items;
 
-    public CustomListViewAdapter(Context context, TimeTable[] objects)
+    public CustomListViewAdapter(Context context, TimeTable[] objects, boolean calledFromCFPAdapter)
     {
         super();
         this.context = context;
@@ -31,23 +28,29 @@ public class CustomListViewAdapter extends BaseAdapter
         //時間割データが存在しているかチェックし、存在していたら曜日毎のデータを抽出する
         if(objects != null)
         {
-            //抽出した曜日データを一時的に格納するArrayList
-            ArrayList<TimeTable> list = new ArrayList<>();
-            //今日の曜日だけの時間割データを抽出
-            for (TimeTable value : objects)
+            //CustomFragmentPagerAdapterから呼ばれていない場合、今日の時間割データだけを追加する
+            if(!calledFromCFPAdapter)
             {
-                if (value.getWeekDay().equals(ActivityMain.getToDayWeekDay(false, null)))
+                //抽出した曜日データを一時的に格納するArrayList
+                ArrayList<TimeTable> list = new ArrayList<>();
+                //今日の曜日だけの時間割データを抽出
+                for (TimeTable value : objects)
                 {
-                    list.add(value);
+                    //時間割データが現在の曜日と一致していたら"今日"の時間割データとして追加する
+                    if (value.getWeekDay() == Integer.parseInt(ActivityMain.getToDayWeekDay(true, null)))
+                        list.add(value);
                 }
+    
+                this.items = list.toArray(new TimeTable[list.size()]);
             }
-
-            this.items = list.toArray(new TimeTable[list.size()]);
+            //CustomFragmentPagerAdapterから渡された時間割データをすべてitemsに挿入
+            else
+            {
+                this.items = objects;
+            }
         }
         else
-        {
             this.items = null;
-        }
     }
 
     //アイテムの個数を返す
@@ -72,27 +75,25 @@ public class CustomListViewAdapter extends BaseAdapter
 
     //ListViewの構成を行う
     @Override
-    public View getView(int postition, View convertView, ViewGroup parent)
+    public View getView(int position, View convertView, ViewGroup parent)
     {
-        //itemsがnullではないなら時間割データを表示する
+        if (convertView == null)
+        {
+            convertView = this.inflater.inflate(R.layout.listview_items, null);
+        }
+        
+        //itemsがnullではないならば時間割の表示を行う
         if(this.items != null)
         {
-            TimeTable item = this.items[postition];
+            TimeTable item = this.items[position];
 
-            TextView id = (TextView) convertView.findViewById(R.id.id_item_textview);
             TextView starttime = (TextView) convertView.findViewById(R.id.starttime_item_textview);
             TextView endtime = (TextView) convertView.findViewById(R.id.endtime_item_textview);
             TextView name = (TextView) convertView.findViewById(R.id.name_item_textview);
 
-            id.setText(String.valueOf(item.getTimeTableID()));
             starttime.setText(item.getStartTime());
             endtime.setText(item.getEndTime());
             name.setText(item.getLessonName());
-        }
-
-        if (convertView == null)
-        {
-            convertView = this.inflater.inflate(R.layout.listview_items, null);
         }
 
         return convertView;

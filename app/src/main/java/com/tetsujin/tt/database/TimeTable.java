@@ -1,13 +1,13 @@
 package com.tetsujin.tt.database;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static com.tetsujin.tt.ActivityMain.getToDayWeekDay;
 
-public class TimeTable implements Serializable
+public class TimeTable implements Parcelable
 {
     //データベース名
     final static String DB_NAME = "TimeTableDB";
@@ -40,10 +40,17 @@ public class TimeTable implements Serializable
             COLUMN_TEACHERNAME   + " TEXT NOT NULL," +
             COLUMN_DESCRIPTION   + " TEXT" +
             ");";
-
-    //特定条件に合致するすべての列を取得するクエリ
-    final static String GET_RECORD_QUERY = "SELECT * FROM " +
-            TABLE_NAME + " WHERE ? = ?;";
+    
+    //すべてのレコードを取得するクエリ
+    final static String GET_RECORD_ALL = "SELECT * FROM " + TABLE_NAME + ";";
+    
+    //IDに合致するすべてのレコードを取得するクエリ
+    final static String GET_RECORD_ID_QUERY = "SELECT * FROM " +
+            TABLE_NAME + " WHERE " + COLUMN_TIMETABLEID + " = ?;";
+    
+    //特定の曜日に合致するすべてのレコードを取得するクエリ
+    final static String GET_RECORD_AT_WEEKDAY_QUERY = "SELECT * FROM " +
+            TABLE_NAME + " WHERE " + COLUMN_WEEKDAY + " = ?;";
 
     //時間割のID
     private int TimeTableID;
@@ -62,51 +69,9 @@ public class TimeTable implements Serializable
     private String TeacherName;
     private String Description;
     
-    //コンストラクタ
-    public TimeTable(ArrayList<Object> list)
-    {
-        this.TimeTableID = (int)list.get(0);
-
-        String lessonCode = (String)list.get(1);
-        if(lessonCode.length() == 13)
-            this.LessonCode = lessonCode;
-        else
-            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
-
-        this.LessonName = (String)list.get(2);
-
-        this.WeekDay = Integer.parseInt(getToDayWeekDay(true, (String)list.get(3)));
-
-        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
-        String startTime = (String)list.get(4);
-        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
-        Matcher m = p.matcher(startTime);
-        if(m.find())
-            this.StartTime = m.group();
-        else
-            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
-
-        String endTime = (String)list.get(5);
-        m = p.matcher(endTime);
-        if(m.find())
-            this.EndTime = m.group();
-        else
-            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
-
-        String season = (String)list.get(6);
-        if(season.equals("前期"))
-            this.Season = 0;
-        else if(season.equals("後期"))
-            this.Season = 1;
-        else
-            throw new IllegalArgumentException("Seasonの値が不正です。");
-
-        this.ClassRoomName = (String)list.get(7);
-        this.TeacherID = (int)list.get(8);
-        this.TeacherName = (String)list.get(9);
-        this.Description = (String)list.get(10);
-    }
-
+    /*
+        コンストラクタ
+     */
     public TimeTable(int timeTableID, String lessonCode, String lessonName,
               int weekDay, String startTime, String endTime, int season,
               String classRoomName, int teacherID, String teacherName, String description)
@@ -146,6 +111,65 @@ public class TimeTable implements Serializable
         this.Description = description;
     }
     
+    //ArrayListからTimeTableを作成する
+    public TimeTable(ArrayList<Object> list)
+    {
+        this.TimeTableID = (int)list.get(0);
+        
+        String lessonCode = (String)list.get(1);
+        if(lessonCode.length() == 13)
+            this.LessonCode = lessonCode;
+        else
+            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
+        
+        this.LessonName = (String)list.get(2);
+        
+        this.WeekDay = (int)list.get(3);
+        
+        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
+        String startTime = (String)list.get(4);
+        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
+        Matcher m = p.matcher(startTime);
+        if(m.find())
+            this.StartTime = m.group();
+        else
+            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
+        
+        String endTime = (String)list.get(5);
+        m = p.matcher(endTime);
+        if(m.find())
+            this.EndTime = m.group();
+        else
+            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
+        
+        int season = (int)list.get(6);
+        if(season == 0 || season == 1)
+            this.Season = season;
+        else
+            throw new IllegalArgumentException("Seasonの値が不正です。");
+        
+        this.ClassRoomName = (String)list.get(7);
+        this.TeacherID = (int)list.get(8);
+        this.TeacherName = (String)list.get(9);
+        this.Description = (String)list.get(10);
+    }
+    
+    //Parcelを復元する
+    public TimeTable(Parcel in)
+    {
+        this.TimeTableID = in.readInt();
+        this.LessonCode = in.readString();
+        this.LessonName = in.readString();
+        this.WeekDay = in.readInt();
+        this.StartTime = in.readString();
+        this.EndTime = in.readString();
+        this.Season = in.readInt();
+        this.ClassRoomName = in.readString();
+        this.TeacherID = in.readInt();
+        this.TeacherName = in.readString();
+        this.Description = in.readString();
+    }
+    
     /*
         ゲッター
      */
@@ -164,23 +188,9 @@ public class TimeTable implements Serializable
         return this.LessonName;
     }
     
-    public String getWeekDay()
+    public int getWeekDay()
     {
-        switch (this.WeekDay)
-        {
-            case Calendar.MONDAY:
-                return "月";
-            case Calendar.TUESDAY:
-                return "火";
-            case Calendar.WEDNESDAY:
-                return "水";
-            case Calendar.THURSDAY:
-                return "木";
-            case Calendar.FRIDAY:
-                return "金";
-            default:
-                return null;
-        }
+        return this.WeekDay;
     }
     
     public String getStartTime()
@@ -193,17 +203,9 @@ public class TimeTable implements Serializable
         return this.EndTime;
     }
     
-    public String getSeason()
+    public int getSeason()
     {
-        switch (this.Season)
-        {
-            case 0:
-                return "前期";
-            case 1:
-                return "後期";
-            default:
-                return null;
-        }
+        return this.Season;
     }
     
     public String getClassRoomName()
@@ -225,4 +227,55 @@ public class TimeTable implements Serializable
     {
         return this.Description;
     }
+    
+    /*
+        show
+     */
+    public String showDescription()
+    {
+        if(!getDescription().equals("null"))
+            return getDescription();
+        else
+            return "なし";
+    }
+    
+    /*
+        Parcel
+     */
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+    
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(this.TimeTableID);
+        dest.writeString(this.LessonCode);
+        dest.writeString(this.LessonName);
+        dest.writeInt(this.WeekDay);
+        dest.writeString(this.StartTime);
+        dest.writeString(this.EndTime);
+        dest.writeInt(this.Season);
+        dest.writeString(this.ClassRoomName);
+        dest.writeInt(this.TeacherID);
+        dest.writeString(this.TeacherName);
+        dest.writeString(this.Description);
+    }
+    
+    public static final Parcelable.Creator<TimeTable> CREATOR = new Parcelable.Creator<TimeTable>()
+    {
+        @Override
+        public TimeTable createFromParcel(Parcel source)
+        {
+            return new TimeTable(source);
+        }
+        
+        @Override
+        public TimeTable[] newArray(int size)
+        {
+            return new TimeTable[size];
+        }
+    };
 }

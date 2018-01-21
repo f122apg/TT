@@ -10,10 +10,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
+import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
 import static com.tetsujin.tt.ActivityMain.timeTable;
+import static com.tetsujin.tt.ActivityMain.timeTableHelper;
 
 public class FragmentHeader extends Fragment
 {
@@ -54,14 +56,18 @@ public class FragmentHeader extends Fragment
                 {
                     resourceid = R.drawable.icon_arrow_back;
                     Bundle bundle = new Bundle();
-
+                    
+                    //Fragmentに渡すデータを準備する
+                    TimeTable[] timeTableALL = timeTableHelper.GetRecordALL();
+                    
                     //FragmentWeekContainerに時間割データを渡す
                     if(timeTable != null)
                     {
-                        bundle.putSerializable("timetable", timeTable);
+                        bundle.putBoolean("isNull", false);
+                        bundle.putSerializable("timetable", timeTableALL);
                     }
                     else
-                        bundle.putString("timetable", "null");
+                        bundle.putBoolean("isNull", true);
 
                     //FragmentWeekContainerに値を渡し、表示する
                     FragmentWeekContainer frgwc = new FragmentWeekContainer();

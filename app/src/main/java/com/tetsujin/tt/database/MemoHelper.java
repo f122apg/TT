@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteStatement;
 
 import java.util.Map;
 
-import static com.tetsujin.tt.FragmentMain.memoDB;
+import static com.tetsujin.tt.ActivityMain.memoDB;
 
 public class MemoHelper extends SQLiteOpenHelper
 {
@@ -62,9 +62,9 @@ public class MemoHelper extends SQLiteOpenHelper
         }
     }
     
-    public String GetRecord(String id)
+    public String GetRecord(String date)
     {
-        Cursor result = memoDB.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ id });
+        Cursor result = memoDB.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ date });
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
         

@@ -114,46 +114,35 @@ public class ActivityMain extends AppCompatActivity {
         transaction.replace(R.id.FrgMain_container_linearlayout, frg);
         transaction.commit();
     }
-
-    //文字列から数値へ変換する場合はtrue
+    
+    //falseなら今日の曜日を漢字のStringで返し、
+    //trueでありかつnullではないなら指定された曜日を数値へ変換し返す
+    //trueでありかつnullならば今日の曜日を数値で返す
     public static String getToDayWeekDay(boolean getStrToInteger, String weekDay)
     {
-        //falseなら当日の曜日を返し、trueでありかつnullではないなら指定された曜日を数値へ変換し返す
+        //現在の日付を取得
+        Date nowdate = new Date();
+        //Calendarに現在の日付を設定
+        Calendar cal = Calendar.getInstance();
+        //現在の曜日のみを取得
+        CharSequence week = DateFormat.format("E", nowdate);
+        //現在の曜日が「土」か「日」だったら次週の月曜日にする
+        if (week.equals("土") || week.equals("日"))
+        {
+            //現在の日付を２日足し、次週の月曜日にする
+            cal.add(Calendar.DAY_OF_MONTH, 2);
+            cal.set(Calendar.DAY_OF_WEEK, 2);
+            
+            week = DateFormat.format("E", cal);
+        }
+        
         if(!getStrToInteger)
         {
-            //現在の日付を取得
-            Date nowdate = new Date();
-            //Calendarに現在の日付を設定
-            Calendar cal = Calendar.getInstance();
-            //現在の曜日のみを取得
-            CharSequence week = DateFormat.format("E", nowdate);
-            //現在の曜日が「土」か「日」だったら次週の月曜日にする
-            if (week.equals("土") || week.equals("日"))
-            {
-                //現在の日付を２日足し、次週の月曜日にする
-                cal.add(Calendar.DAY_OF_MONTH, 2);
-                cal.set(Calendar.DAY_OF_WEEK, 2);
-            }
-
             return (String) week;
         }
         else if(!(weekDay == null))
         {
-            //現在の日付を取得
-            Date nowdate = new Date();
-            //Calendarに現在の日付を設定
-            Calendar cal = Calendar.getInstance();
-            //現在の曜日のみを取得
-            CharSequence week = DateFormat.format("E", nowdate);
-            //現在の曜日が「土」か「日」だったら次週の月曜日にする
-            if (week.equals("土") || week.equals("日"))
-            {
-                //現在の日付を２日足し、次週の月曜日にする
-                cal.add(Calendar.DAY_OF_MONTH, 2);
-                cal.set(Calendar.DAY_OF_WEEK, 2);
-            }
-
-            switch ((String)week)
+            switch (weekDay)
             {
                 case "月":
                     return String.valueOf(Calendar.MONDAY);
@@ -169,8 +158,24 @@ public class ActivityMain extends AppCompatActivity {
                     return "-1";
             }
         }
-
-        return "-1";
+        else
+        {
+            switch ((String) week)
+            {
+                case "月":
+                    return String.valueOf(Calendar.MONDAY);
+                case "火":
+                    return String.valueOf(Calendar.TUESDAY);
+                case "水":
+                    return String.valueOf(Calendar.WEDNESDAY);
+                case "木":
+                    return String.valueOf(Calendar.THURSDAY);
+                case "金":
+                    return String.valueOf(Calendar.FRIDAY);
+                default:
+                    return "-1";
+            }
+        }
     }
 }
 

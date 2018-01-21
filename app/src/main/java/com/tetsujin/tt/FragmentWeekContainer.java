@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tetsujin.tt.adapter.CustomFragmentPagerAdapter;
+import com.tetsujin.tt.database.TimeTable;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.tetsujin.tt.FragmentMain.cal;
@@ -30,9 +30,16 @@ public class FragmentWeekContainer extends Fragment
         ViewPager vp = (ViewPager) v.findViewById(R.id.FrgVP_viewpager);
         FragmentManager fm = getChildFragmentManager();
         CustomFragmentPagerAdapter cfpadapter = new CustomFragmentPagerAdapter(fm);
-        //時間割データを渡す
-        cfpadapter.setdata(args.getSerializable("timetable"));
-        /* 日付データを渡す */
+        
+        if(!args.getBoolean("isNull"))
+        {
+            //時間割データを渡す
+            cfpadapter.setdata((TimeTable[])args.getParcelableArray("timetable"));
+        }
+        
+        /*
+            日付データを渡す
+        */
         Calendar callist = (Calendar)cal.clone();
         
         for (int i = 0; i < 5; i++)

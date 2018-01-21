@@ -1,40 +1,62 @@
 package com.tetsujin.tt;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
+import com.tetsujin.tt.database.TimeTable;
 
-public class FragmentWeek extends Fragment {
+import java.util.ArrayList;
+
+public class FragmentWeek extends Fragment
+{
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_week, container, false);
+        final View v = inflater.inflate(R.layout.fragment_week, container, false);
         ListView lv = (ListView)v.findViewById(R.id.FrgWeek_listview);
 
         //CustomFragmentPagerAdapterから送られた値を受け取る
         Bundle args = getArguments();
-        String[][] value = new String[args.getInt("datalength")][];
-        for (int i = 0; i < value.length; i ++)
-        {
-            value[i] = args.getStringArray("data" + i);
-            System.out.println("ID:" + value[i][0] + ", 授業名:" + value[i][1] + ", 曜日:" + value[i][4]);
-        }
+        ArrayList<Parcelable> value = args.getParcelableArrayList("data");
 
         //ListViewに現在のデータを適用
-//        CustomListViewAdapter ca = new CustomListViewAdapter(v.getContext(), value);
-//        lv.setAdapter(ca);
+        CustomListViewAdapter ca = new CustomListViewAdapter(v.getContext(), value.toArray(new TimeTable[value.size()]), true);
+        lv.setAdapter(ca);
+    
+        //ListViewのクリックイベント
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            //ListView内にあるアイテムをタップするとAlertDiaglogを用いて、
+            //授業の詳細を表示するようにしている
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id)
+            {
+                ListView lv = (ListView)adapterView;
+                //ListView内に存在するアイテムを取得
+                TimeTable data = (TimeTable) lv.getItemAtPosition(pos);
+            
+                //詳細画面を表示
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle(R.string.lesson_detail)
+                        .setMessage(getResources().getString(R.string.lesson_name) + data.getLessonName() + "\n" +
+                                getResources().getString(R.string.classroom) + data.getClassRoomName() + "\n" +
+                                getResources().getString(R.string.starttime) + data.getStartTime() + "\n" +
+                                getResources().getString(R.string.endtime) + data.getEndTime() + "\n" +
+                                getResources().getString(R.string.teacher) + data.getTeacherName() + "\n" +
+                                getResources().getString(R.string.description) + data.showDescription())
+                        .setPositiveButton(R.string.ok, null)
+                        .show();
+            }
+        });
 
         return v;
     }

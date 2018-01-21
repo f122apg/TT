@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.tetsujin.tt.ActivityMain.activityMain;
 import static com.tetsujin.tt.ActivityMain.memoHelper;
 import static com.tetsujin.tt.ActivityMain.timeTable;
 
@@ -49,6 +50,8 @@ public class FragmentMain extends Fragment {
             //現在の日付を２日足し、次週の月曜日にする
             cal.add(Calendar.DAY_OF_MONTH, 2);
             cal.set(Calendar.DAY_OF_WEEK, 2);
+            
+            week = DateFormat.format("E", cal);
         }
         todaydate = (String)DateFormat.format("yyyy-MM-dd", cal.getTime());
         
@@ -60,7 +63,7 @@ public class FragmentMain extends Fragment {
         /*************************************/
          ListView timetable_lv = (ListView)v.findViewById(R.id.FrgMain_timetable_listview);
         //時間割データをアダプタに渡し、表示を行う
-        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTable);
+        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTable, false);
         timetable_lv.setAdapter(ca);
 
         //ListViewのクリックイベント
@@ -76,14 +79,16 @@ public class FragmentMain extends Fragment {
                 TimeTable data = (TimeTable) lv.getItemAtPosition(pos);
 
                 //詳細画面を表示
-                new AlertDialog.Builder(getActivity())
+                new AlertDialog.Builder(activityMain)
                         .setTitle(R.string.lesson_detail)
-                        .setMessage(R.string.lesson_name + data.getLessonName() + "\n" +
-                                    R.string.classroom + data.getClassRoomName() + "\n" +
-                                    R.string.starttime + data.getStartTime() + "\n" +
-                                    R.string.endtime + data.getEndTime() + "\n" +
-                                    R.string.teacher + data.getTeacherName())
-                        .setPositiveButton(R.string.ok, null);
+                        .setMessage(getResources().getString(R.string.lesson_name) + data.getLessonName() + "\n" +
+                                    getResources().getString(R.string.classroom) + data.getClassRoomName() + "\n" +
+                                    getResources().getString(R.string.starttime) + data.getStartTime() + "\n" +
+                                    getResources().getString(R.string.endtime) + data.getEndTime() + "\n" +
+                                    getResources().getString(R.string.teacher) + data.getTeacherName() + "\n" +
+                                    getResources().getString(R.string.description) + data.showDescription())
+                        .setPositiveButton(R.string.ok, null)
+                        .show();
             }
         });
 

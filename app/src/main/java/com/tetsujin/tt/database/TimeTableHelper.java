@@ -13,6 +13,17 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.tetsujin.tt.ActivityMain.timeTableDB;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_CLASSROOMNAME;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_DESCRIPTION;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_ENDTIME;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_LESSONCODE;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_LESSONNAME;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_SEASON;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_STARTTIME;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_TEACHERID;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_TEACHERNAME;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_TIMETABLEID;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_WEEKDAY;
 
 public class TimeTableHelper extends SQLiteOpenHelper
 {
@@ -40,7 +51,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
         //データベースが存在するが行がない場合、SQLiteExceptionがthrowされる模様
         try
         {
-            result = timeTableDB.rawQuery(TimeTable.GET_RECORD_QUERY, new String[]{ TimeTable.COLUMN_TIMETABLEID, String.valueOf(id) });
+            result = timeTableDB.rawQuery(TimeTable.GET_RECORD_ID_QUERY, new String[]{ String.valueOf(id) });
         }
         catch (SQLiteException e)
         {
@@ -62,11 +73,55 @@ public class TimeTableHelper extends SQLiteOpenHelper
             return false;
         }
     }
-
+    
+    //データベース内にあるレコードすべて取得する
+    public TimeTable[] GetRecordALL()
+    {
+        Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_ALL, null);
+        
+        //空(CursorIndexOutOfBoundsException)ではない場合、文字列を返す
+        try
+        {
+            ArrayList<Object> retValue = new ArrayList<>();
+            TimeTable[] rettimeTable = new TimeTable[result.getCount()];
+            
+            //返すデータを準備する
+            while(result.moveToNext())
+            {
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TIMETABLEID)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONCODE)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONNAME)));
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_WEEKDAY)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_STARTTIME)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_ENDTIME)));
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_SEASON)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_CLASSROOMNAME)));
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TEACHERID)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_TEACHERNAME)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_DESCRIPTION)));
+                
+                rettimeTable[result.getPosition()] = new TimeTable(retValue);
+                retValue.clear();
+            }
+            
+            return rettimeTable;
+        }
+        catch (CursorIndexOutOfBoundsException e)
+        {
+            return null;
+        }
+        finally
+        {
+            result.close();
+        }
+    }
+    
+    
+    //特定の時間割データだけを取得する
     public TimeTable[] GetRecordAtWeekDay(int weekday)
     {
-        Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_QUERY, new String[]{ TimeTable.COLUMN_WEEKDAY, String.valueOf(weekday) });
-        
+        Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_AT_WEEKDAY_QUERY, new String[]{ String.valueOf(weekday) });
+    
         //空(CursorIndexOutOfBoundsException)ではない場合、文字列を返す
         try
         {
@@ -76,17 +131,17 @@ public class TimeTableHelper extends SQLiteOpenHelper
             //返すデータを準備する
             while(result.moveToNext())
             {
-                retValue.add(result.getInt(0));
-                retValue.add(result.getString(1));
-                retValue.add(result.getString(2));
-                retValue.add(result.getString(3));
-                retValue.add(result.getString(4));
-                retValue.add(result.getString(5));
-                retValue.add(result.getString(6));
-                retValue.add(result.getString(7));
-                retValue.add(result.getInt(8));
-                retValue.add(result.getString(9));
-                retValue.add(result.getString(10));
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TIMETABLEID)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONCODE)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONNAME)));
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_WEEKDAY)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_STARTTIME)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_ENDTIME)));
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_SEASON)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_CLASSROOMNAME)));
+                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TEACHERID)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_TEACHERNAME)));
+                retValue.add(result.getString(result.getColumnIndex(COLUMN_DESCRIPTION)));
 
                 rettimeTable[result.getPosition()] = new TimeTable(retValue);
                 retValue.clear();
@@ -112,13 +167,13 @@ public class TimeTableHelper extends SQLiteOpenHelper
         {
             //インサートするデータを準備する
             ContentValues cv = new ContentValues();
-            cv.put(TimeTable.COLUMN_TIMETABLEID, (Integer) data.get(0));
+            cv.put(COLUMN_TIMETABLEID, (Integer) data.get(0));
             cv.put(TimeTable.COLUMN_LESSONCODE, (String) data.get(1));
             cv.put(TimeTable.COLUMN_LESSONNAME, (String) data.get(2));
-            cv.put(TimeTable.COLUMN_WEEKDAY, (String) data.get(3));
-            cv.put(TimeTable.COLUMN_STARTTIME, (String) data.get(4));
+            cv.put(TimeTable.COLUMN_WEEKDAY, (Integer) data.get(3));
+            cv.put(COLUMN_STARTTIME, (String) data.get(4));
             cv.put(TimeTable.COLUMN_ENDTIME, (String) data.get(5));
-            cv.put(TimeTable.COLUMN_SEASON, (String) data.get(6));
+            cv.put(TimeTable.COLUMN_SEASON, (Integer) data.get(6));
             cv.put(TimeTable.COLUMN_CLASSROOMNAME, (String) data.get(7));
             cv.put(TimeTable.COLUMN_TEACHERID, (Integer) data.get(8));
             cv.put(TimeTable.COLUMN_TEACHERNAME, (String) data.get(9));

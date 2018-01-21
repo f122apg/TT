@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import static com.tetsujin.tt.FragmentMain.memoDB;
-import static com.tetsujin.tt.FragmentMain.timeTableDB;
+import static com.tetsujin.tt.ActivityMain.timeTableDB;
 
 /************************************************************************/
 /************************************************************************/
