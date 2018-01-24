@@ -43,7 +43,7 @@ public class FragmentHeader extends Fragment
             onClickListeners
         */
         //B1 1週間の時間割に遷移する
-        v.findViewById(R.id.Header_B1_button).setOnClickListener(new View.OnClickListener()
+        v.findViewById(R.id.FrgHeader_B1_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -54,6 +54,7 @@ public class FragmentHeader extends Fragment
                 //FragmentWeekContainerの表示
                 if(!isChangeFragment)
                 {
+                    //リソースIDを左矢印に変更
                     resourceid = R.drawable.icon_arrow_back;
                     Bundle bundle = new Bundle();
                     
@@ -78,6 +79,7 @@ public class FragmentHeader extends Fragment
                 //FragmentMainの表示
                 else
                 {
+                    //リソースIDを一週間の時間割に変更
                     resourceid = R.drawable.icon_week;
                     FragmentMain frgmain = new FragmentMain();
                     activityMain.showFragment(frgmain);
@@ -87,7 +89,7 @@ public class FragmentHeader extends Fragment
                     アニメーション処理
                 */
                 //Fragmentの表示と共に、B1ボタンを矢印に変更するアニメーションを開始させる
-                final ImageButton ib = (ImageButton)v.findViewById(R.id.Header_B1_button);
+                final ImageButton ib = (ImageButton)v.findViewById(R.id.FrgHeader_B1_button);
                 //アニメーションの読み込みとアニメーションにかける時間を設定
                 Animation fadeout_anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadeout);
                 fadeout_anim.setDuration(250);
@@ -114,6 +116,69 @@ public class FragmentHeader extends Fragment
                 //アニメーションを開始
                 ib.startAnimation(fadeout_anim);
 
+                //フラグを反転
+                isChangeFragment = !isChangeFragment;
+            }
+        });
+        
+        //B3 1か月のカレンダーに遷移する
+        v.findViewById(R.id.FrgHeader_B3_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //ヘッダーにある画像を変えるためにリソースIDを保持する変数
+                final int resourceid;
+    
+                //FragmentWeekContainerの表示
+                if(!isChangeFragment)
+                {
+                    //リソースIDを左矢印に変更
+                    resourceid = R.drawable.icon_arrow_back;
+                    
+                    FragmentMonth frgmonth = new FragmentMonth();
+                    activityMain.showFragment(frgmonth);
+                }
+                //FragmentMainの表示
+                else
+                {
+                    //リソースIDを一か月のカレンダーに変更
+                    resourceid = R.drawable.icon_month;
+                    FragmentMain frgmain = new FragmentMain();
+                    activityMain.showFragment(frgmain);
+                }
+                
+                /*
+                    アニメーション処理
+                */
+                //Fragmentの表示と共に、B1ボタンを矢印に変更するアニメーションを開始させる
+                final ImageButton ib = (ImageButton)v.findViewById(R.id.FrgHeader_B3_button);
+                //アニメーションの読み込みとアニメーションにかける時間を設定
+                Animation fadeout_anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadeout);
+                fadeout_anim.setDuration(250);
+                final View finalv = v;
+                //リスナーを設定
+                fadeout_anim.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation){}
+        
+                    //アニメーション終了時、ボタンの画像を変更しアニメーションをかける
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        ib.setImageResource(resourceid);
+                        Animation fadein_anim = AnimationUtils.loadAnimation(finalv.getContext(), R.anim.icon_fadein);
+                        fadein_anim.setDuration(250);
+                        ib.startAnimation(fadein_anim);
+                    }
+        
+                    @Override
+                    public void onAnimationRepeat(Animation animation){}
+                });
+                //アニメーションを開始
+                ib.startAnimation(fadeout_anim);
+    
                 //フラグを反転
                 isChangeFragment = !isChangeFragment;
             }

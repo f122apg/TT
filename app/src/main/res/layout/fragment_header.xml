@@ -8,7 +8,7 @@
     
     <!-- 上部 Button群 -->
     <ImageButton
-        android:id="@+id/Header_B1_button"
+        android:id="@+id/FrgHeader_B1_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@null"
@@ -16,7 +16,7 @@
         android:src="@drawable/icon_week"/>
         
     <ImageButton
-        android:id="@+id/Header_B3_button"
+        android:id="@+id/FrgHeader_B3_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="5dp"
@@ -48,7 +48,7 @@
             android:id="@+id/debug_getdata_button"/>
         
         <ImageButton
-            android:id="@+id/Header_B2_button"
+            android:id="@+id/FrgHeader_B2_button"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:background="@null"
