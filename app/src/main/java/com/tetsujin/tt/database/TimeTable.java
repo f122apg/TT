@@ -3,7 +3,6 @@ package com.tetsujin.tt.database;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +61,7 @@ public class TimeTable implements Parcelable
     private int WeekDay;
     private String StartTime;
     private String EndTime;
-    //前期か後期か
+    //前期 = 0 か後期 = 1 か
     private int Season;
     private String ClassRoomName;
     private int TeacherID;
@@ -72,87 +71,109 @@ public class TimeTable implements Parcelable
     /*
         コンストラクタ
      */
-    public TimeTable(int timeTableID, String lessonCode, String lessonName,
-              int weekDay, String startTime, String endTime, int season,
-              String classRoomName, int teacherID, String teacherName, String description)
+
+    private TimeTable(Builder builder)
     {
-        this.TimeTableID = timeTableID;
-        
-        if(lessonCode.length() == 13)
-            this.LessonCode = lessonCode;
-        else
-            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
-        
-        this.LessonName = lessonName;
-        this.WeekDay = weekDay;
-    
-        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
-        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
-        Matcher m = p.matcher(startTime);
-        if(m.find())
-            this.StartTime = m.group();
-        else
-            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
-        
-        m = p.matcher(endTime);
-        if(m.find())
-            this.EndTime = m.group();
-        else
-            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
-    
-        if(season == 0 || season == 1)
-            this.Season = season;
-        else
-            throw new IllegalArgumentException("Seasonの値が不正です。");
-            
-        this.ClassRoomName = classRoomName;
-        this.TeacherID = teacherID;
-        this.TeacherName = teacherName;
-        this.Description = description;
+        this.TimeTableID = builder.TimeTableID;
+        this.LessonCode = builder.LessonCode;
+        this.LessonName = builder.LessonName;
+        this.WeekDay = builder.WeekDay;
+        this.StartTime = builder.StartTime;
+        this.EndTime = builder.EndTime;
+        this.Season = builder.Season;
+        this.ClassRoomName = builder.ClassRoomName;
+        this.TeacherID = builder.TeacherID;
+        this.TeacherName = builder.TeacherName;
+        this.Description = builder.Description;
     }
-    
-    //ArrayListからTimeTableを作成する
-    public TimeTable(ArrayList<Object> list)
-    {
-        this.TimeTableID = (int)list.get(0);
-        
-        String lessonCode = (String)list.get(1);
-        if(lessonCode.length() == 13)
-            this.LessonCode = lessonCode;
-        else
-            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
-        
-        this.LessonName = (String)list.get(2);
-        
-        this.WeekDay = (int)list.get(3);
-        
-        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
-        String startTime = (String)list.get(4);
-        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
-        Matcher m = p.matcher(startTime);
-        if(m.find())
-            this.StartTime = m.group();
-        else
-            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
-        
-        String endTime = (String)list.get(5);
-        m = p.matcher(endTime);
-        if(m.find())
-            this.EndTime = m.group();
-        else
-            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
-        
-        int season = (int)list.get(6);
-        if(season == 0 || season == 1)
-            this.Season = season;
-        else
-            throw new IllegalArgumentException("Seasonの値が不正です。");
-        
-        this.ClassRoomName = (String)list.get(7);
-        this.TeacherID = (int)list.get(8);
-        this.TeacherName = (String)list.get(9);
-        this.Description = (String)list.get(10);
-    }
+
+    //サーバサイドから受け取った情報を基に時間割データを生成する場合
+//    public TimeTable(int timeTableID, String lessonCode, String lessonName,
+//              int weekDay, String startTime, String endTime, int season,
+//              String classRoomName, int teacherID, String teacherName, String description)
+//    {
+//        this.TimeTableID = timeTableID;
+//
+//        if(lessonCode.length() == 13)
+//            this.LessonCode = lessonCode;
+//        else
+//            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
+//
+//        this.LessonName = lessonName;
+//
+//        if(weekDay > 6)
+//            this.WeekDay = weekDay;
+//        else
+//            throw new IllegalArgumentException("WeekDayの値が不正です。");
+//
+//        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
+//        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
+//        Matcher m = p.matcher(startTime);
+//        if(m.find())
+//            this.StartTime = m.group();
+//        else
+//            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
+//
+//        m = p.matcher(endTime);
+//        if(m.find())
+//            this.EndTime = m.group();
+//        else
+//            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
+//
+//        if(season == 0 || season == 1)
+//            this.Season = season;
+//        else
+//            throw new IllegalArgumentException("Seasonの値が不正です。");
+//
+//        this.ClassRoomName = classRoomName;
+//        this.TeacherID = teacherID;
+//        this.TeacherName = teacherName;
+//        this.Description = description;
+//    }
+//
+//    //ArrayListからTimeTableを作成する
+//    //ローカルのデータベースから時間割を生成する場合
+//    public TimeTable(ArrayList<Object> list)
+//    {
+//        this.TimeTableID = (int)list.get(0);
+//
+//        String lessonCode = (String)list.get(1);
+//        if(lessonCode.length() == 13)
+//            this.LessonCode = lessonCode;
+//        else
+//            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
+//
+//        this.LessonName = (String)list.get(2);
+//
+//        this.WeekDay = (int)list.get(3);
+//
+//        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
+//        String startTime = (String)list.get(4);
+//        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
+//        Matcher m = p.matcher(startTime);
+//        if(m.find())
+//            this.StartTime = m.group();
+//        else
+//            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
+//
+//        String endTime = (String)list.get(5);
+//        m = p.matcher(endTime);
+//        if(m.find())
+//            this.EndTime = m.group();
+//        else
+//            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
+//
+//        int season = (int)list.get(6);
+//        if(season == 0 || season == 1)
+//            this.Season = season;
+//        else
+//            throw new IllegalArgumentException("Seasonの値が不正です。");
+//
+//        this.ClassRoomName = (String)list.get(7);
+//        this.TeacherID = (int)list.get(8);
+//        this.TeacherName = (String)list.get(9);
+//        this.Description = (String)list.get(10);
+//    }
     
     //Parcelを復元する
     public TimeTable(Parcel in)
@@ -278,4 +299,120 @@ public class TimeTable implements Parcelable
             return new TimeTable[size];
         }
     };
+
+    /*
+        ビルダー
+     */
+    public static class Builder
+    {
+        //時間割のID
+        private int TimeTableID;
+        //授業コードは13文字
+        private String LessonCode;
+        private String LessonName;
+        //java.util.Calendarの形式に沿う
+        //-1でエラーとする
+        private int WeekDay;
+        private String StartTime;
+        private String EndTime;
+        //前期 = 0 か後期 = 1 か
+        private int Season;
+        private String ClassRoomName;
+        private int TeacherID;
+        private String TeacherName;
+        private String Description;
+
+        public Builder(int timeTableID)
+        {
+            TimeTableID = timeTableID;
+        }
+
+        public Builder LessonCode(String lessonCode)
+        {
+            LessonCode = lessonCode;
+            return this;
+        }
+
+        public Builder LessonName(String lessonName)
+        {
+            LessonName = lessonName;
+            return this;
+        }
+
+        public Builder WeekDay(int weekDay)
+        {
+            WeekDay = weekDay;
+            return this;
+        }
+
+        public Builder StartTime(String startTime)
+        {
+            StartTime = startTime;
+            return this;
+        }
+
+        public Builder EndTime(String endTime)
+        {
+            EndTime = endTime;
+            return this;
+        }
+
+        public Builder Season(int season)
+        {
+            Season = season;
+            return this;
+        }
+
+        public Builder ClassRoomName(String classRoomName)
+        {
+            ClassRoomName = classRoomName;
+            return this;
+        }
+
+        public Builder TeacherID(int teacherID)
+        {
+            TeacherID = teacherID;
+            return this;
+        }
+
+        public Builder TeacherName(String teacherName)
+        {
+            TeacherName = teacherName;
+            return this;
+        }
+
+        public Builder Description(String description)
+        {
+            Description = description;
+            return this;
+        }
+
+        public TimeTable build() {
+            //月～金までのどれかかチェックして、違うならばthrowする
+            if(!(WeekDay >= 2 && WeekDay <= 6))
+                throw new IllegalStateException("曜日の値が不正です。");
+
+            //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
+            //存在しない場合throwする
+            Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
+            Matcher m = p.matcher(StartTime);
+            if(m.find())
+                StartTime = m.group();
+            else
+                throw new IllegalStateException("StartTime内にHH:mmが存在しません。");
+
+            m = p.matcher(EndTime);
+            if(m.find())
+                EndTime = m.group();
+            else
+                throw new IllegalStateException("EndTime内にHH:mmが存在しません。");
+
+            //Seasonが0または1じゃない場合は、throw
+            if(!(Season == 0) && !(Season == 1))
+                throw new IllegalStateException("Seasonの値が不正です。");
+
+            //フィールドの値が正常ならばbuilderをコンストラクタに渡す
+            return new TimeTable(this);
+        }
+    }
 }

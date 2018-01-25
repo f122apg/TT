@@ -16,18 +16,20 @@ import android.widget.Toast;
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
 import com.tetsujin.tt.database.TimeTable;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
+import static com.tetsujin.tt.ActivityMain.getParsedDate;
+import static com.tetsujin.tt.ActivityMain.getToDay;
 import static com.tetsujin.tt.ActivityMain.memoHelper;
 import static com.tetsujin.tt.ActivityMain.timeTable;
 
 public class FragmentMain extends Fragment {
 
-    public static Calendar cal;
     public static String todaydate;
     
     @Override
@@ -35,28 +37,12 @@ public class FragmentMain extends Fragment {
                              final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_main, container, false);
 
+        //今日の日付を取得
+        todaydate = getToDay();
         //日付取得と表示
         TextView date_tv = (TextView)v.findViewById(R.id.FrgMain_date_textview);
-        //現在の日付を取得
-        Date nowdate = new Date();
-        //Calendarに現在の日付を設定
-        cal = Calendar.getInstance();
-        //現在の曜日のみを取得
-        CharSequence week = DateFormat.format("E", nowdate);
-        //現在の曜日が「土」か「日」だったら次週の月曜日にする
-        if(week.equals(getResources().getString(R.string.week_saturday))
-                || week.equals(getResources().getString(R.string.week_sunday)))
-        {
-            //現在の日付を２日足し、次週の月曜日にする
-            cal.add(Calendar.DAY_OF_MONTH, 2);
-            cal.set(Calendar.DAY_OF_WEEK, 2);
-            
-            week = DateFormat.format("E", cal);
-        }
-        todaydate = (String)DateFormat.format("yyyy-MM-dd", cal.getTime());
-        
         //日付を表示
-        date_tv.setText(DateFormat.format("MM/dd(E)", cal.getTime()));
+        date_tv.setText(DateFormat.format(getResources().getString(R.string.format_MM_dd_E), getParsedDate(todaydate, getResources().getString(R.string.format_yyyy_MM_dd))));
 
         /*************************************/
         /*****   ListView(時間割表示用)    *****/

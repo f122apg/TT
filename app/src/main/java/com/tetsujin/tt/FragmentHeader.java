@@ -24,20 +24,7 @@ public class FragmentHeader extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_header, container, false);
-
-        final String[][] testdata = new String[][]
-                {
-                        {"1", "卒業制作", "09:00", "10:30", "月"},
-                        {"2", "クラウドコンピューティング", "10:40", "12:10", "月"},
-                        {"3", "データベース応用", "09:00", "12:10", "火"},
-                        {"4", "Linux実習", "13:00", "16:10", "火"},
-                        {"5", "キャリアデザイン3", "09:00", "14:30", "水"},
-                        {"6", "オブジェクト指向プログラミング実習1 S1", "09:00", "12:10", "木"},
-                        {"7", "ソフトウェアデザイン S1", "13:00", "14:30", "木"},
-                        {"8", "合同資格対策講座", "09:00", "14:30", "金"},
-                };
 
         /*
             onClickListeners

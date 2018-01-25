@@ -48,7 +48,6 @@ public class MemoHelper extends SQLiteOpenHelper
 
         //カーソルの位置を初期位置「-1」から「0」にする
         result.moveToFirst();
-        
         //指定された日付のレコードが存在していたらtrueを返す
         if(result.getCount() != 0)
         {

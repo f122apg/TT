@@ -78,33 +78,11 @@ public class TimeTableHelper extends SQLiteOpenHelper
     public TimeTable[] GetRecordALL()
     {
         Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_ALL, null);
-        
-        //空(CursorIndexOutOfBoundsException)ではない場合、文字列を返す
+
         try
         {
-            ArrayList<Object> retValue = new ArrayList<>();
-            TimeTable[] rettimeTable = new TimeTable[result.getCount()];
-            
-            //返すデータを準備する
-            while(result.moveToNext())
-            {
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TIMETABLEID)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONCODE)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONNAME)));
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_WEEKDAY)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_STARTTIME)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_ENDTIME)));
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_SEASON)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_CLASSROOMNAME)));
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TEACHERID)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_TEACHERNAME)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_DESCRIPTION)));
-                
-                rettimeTable[result.getPosition()] = new TimeTable(retValue);
-                retValue.clear();
-            }
-            
-            return rettimeTable;
+            //レコードをTimeTableに変換し返す
+            return getTimeTableFromCursor(result);
         }
         catch (CursorIndexOutOfBoundsException e)
         {
@@ -121,33 +99,11 @@ public class TimeTableHelper extends SQLiteOpenHelper
     public TimeTable[] GetRecordAtWeekDay(int weekday)
     {
         Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_AT_WEEKDAY_QUERY, new String[]{ String.valueOf(weekday) });
-    
-        //空(CursorIndexOutOfBoundsException)ではない場合、文字列を返す
+
         try
         {
-            ArrayList<Object> retValue = new ArrayList<>();
-            TimeTable[] rettimeTable = new TimeTable[result.getCount()];
-
-            //返すデータを準備する
-            while(result.moveToNext())
-            {
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TIMETABLEID)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONCODE)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_LESSONNAME)));
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_WEEKDAY)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_STARTTIME)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_ENDTIME)));
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_SEASON)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_CLASSROOMNAME)));
-                retValue.add(result.getInt(result.getColumnIndex(COLUMN_TEACHERID)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_TEACHERNAME)));
-                retValue.add(result.getString(result.getColumnIndex(COLUMN_DESCRIPTION)));
-
-                rettimeTable[result.getPosition()] = new TimeTable(retValue);
-                retValue.clear();
-            }
-
-            return rettimeTable;
+            //レコードをTimeTableに変換し返す
+            return getTimeTableFromCursor(result);
         }
         catch (CursorIndexOutOfBoundsException e)
         {
@@ -157,6 +113,31 @@ public class TimeTableHelper extends SQLiteOpenHelper
         {
             result.close();
         }
+    }
+
+    //引数のカーソルからTimeTableのインスタンスを生成し、それらを配列で返す
+    private TimeTable[] getTimeTableFromCursor(Cursor cr)
+    {
+        TimeTable[] retValue = new TimeTable[cr.getCount()];
+
+        while(cr.moveToNext())
+        {
+            retValue[cr.getPosition()] =
+                    new TimeTable.Builder(cr.getInt(cr.getColumnIndex(COLUMN_TIMETABLEID)))
+                    .LessonCode(cr.getString(cr.getColumnIndex(COLUMN_LESSONCODE)))
+                    .LessonName(cr.getString(cr.getColumnIndex(COLUMN_LESSONNAME)))
+                    .WeekDay(cr.getInt(cr.getColumnIndex(COLUMN_WEEKDAY)))
+                    .StartTime(cr.getString(cr.getColumnIndex(COLUMN_STARTTIME)))
+                    .EndTime(cr.getString(cr.getColumnIndex(COLUMN_ENDTIME)))
+                    .Season(cr.getInt(cr.getColumnIndex(COLUMN_SEASON)))
+                    .ClassRoomName(cr.getString(cr.getColumnIndex(COLUMN_CLASSROOMNAME)))
+                    .TeacherID(cr.getInt(cr.getColumnIndex(COLUMN_TEACHERID)))
+                    .TeacherName(cr.getString(cr.getColumnIndex(COLUMN_TEACHERNAME)))
+                    .Description(cr.getString(cr.getColumnIndex(COLUMN_DESCRIPTION)))
+                    .build();
+        }
+
+        return retValue;
     }
     
     //レコードのインサートを行う

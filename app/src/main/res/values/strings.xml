@@ -52,8 +52,7 @@
     <string name="teacher">講師：</string>
     <string name="description">詳細：</string>
     <string name="ok">OK</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="format_month_year">yyyy年MM月</string>
+    <string name="format_yyyy_MM_dd">yyyy-MM-dd</string>
+    <string name="format_MM_dd_E">MM/dd(E)</string>
 
 </resources>

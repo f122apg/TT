@@ -37,7 +37,7 @@ public class CustomListViewAdapter extends BaseAdapter
                 for (TimeTable value : objects)
                 {
                     //時間割データが現在の曜日と一致していたら"今日"の時間割データとして追加する
-                    if (value.getWeekDay() == Integer.parseInt(ActivityMain.getToDayWeekDay(true, null)))
+                    if (value.getWeekDay() == Integer.parseInt(ActivityMain.getWeekDay(true)))
                         list.add(value);
                 }
     

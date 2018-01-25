@@ -9,13 +9,12 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.tetsujin.tt.adapter.CustomFragmentPagerAdapter;
 import com.tetsujin.tt.database.TimeTable;
 
 import java.util.Calendar;
-
-import static com.tetsujin.tt.FragmentMain.cal;
 
 public class FragmentWeekContainer extends Fragment
 {
@@ -38,22 +37,27 @@ public class FragmentWeekContainer extends Fragment
         }
         
         /*
-            日付データを渡す
+            日付の月曜日から曜日の値を取得して、それをインクリメントしつつ渡す
+            例：日付が1/25(木)だったら、まず月曜日である1/22を渡し、次に1/23を渡す...
+            これを金曜日まで行う
         */
-        Calendar callist = (Calendar)cal.clone();
+        Calendar weekDate = Calendar.getInstance();
         
         for (int i = 0; i < 5; i++)
         {
-            callist.set(Calendar.DAY_OF_WEEK, 2 + i);
-    
-            cfpadapter.adddate((String) DateFormat.format("MM/dd(E)", callist));
+            //日付をインクリメントしてセット
+            weekDate.set(Calendar.DAY_OF_WEEK, 2 + i);
+
+            //インクリメントされた日付をアダプタに挿入
+            cfpadapter.adddate((String) DateFormat.format(getResources().getString(R.string.format_MM_dd_E), weekDate));
         }
         
         //ViewPagerにCustomAdapterをセット
         vp.setAdapter(cfpadapter);
         //一週間の時間割表示時に、今日の曜日の時間割を表示できるように調整する
-        vp.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 2);
-        
+        weekDate = Calendar.getInstance();
+        vp.setCurrentItem(cfpadapter.getPosFromDate((String) DateFormat.format(getResources().getString(R.string.format_MM_dd_E), weekDate)));
+
         return v;
     }
 }

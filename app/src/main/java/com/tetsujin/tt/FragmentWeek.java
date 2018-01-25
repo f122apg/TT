@@ -26,7 +26,7 @@ public class FragmentWeek extends Fragment
 
         //CustomFragmentPagerAdapterから送られた値を受け取る
         Bundle args = getArguments();
-        ArrayList<Parcelable> value = args.getParcelableArrayList("data");
+        ArrayList<Parcelable> value = args.getParcelableArrayList("timetable");
 
         //ListViewに現在のデータを適用
         CustomListViewAdapter ca = new CustomListViewAdapter(v.getContext(), value.toArray(new TimeTable[value.size()]), true);

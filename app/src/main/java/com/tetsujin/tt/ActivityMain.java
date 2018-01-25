@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -19,8 +20,11 @@ import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -46,8 +50,8 @@ public class ActivityMain extends AppCompatActivity {
             //DBが存在していなかったらDBの作成がされる
             memoDB = memoHelper.getWritableDatabase();
             timeTableDB = timeTableHelper.getWritableDatabase();
-            //時間割データをTimeTableDBから取得し、static変数に入れる
-            timeTable = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getToDayWeekDay(true, getToDayWeekDay(false, null))));
+            //指定した曜日の時間割データをTimeTableDBから取得し、static変数に入れる
+            timeTable = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getWeekDay(true)));
             fm = getSupportFragmentManager();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
@@ -114,68 +118,85 @@ public class ActivityMain extends AppCompatActivity {
         transaction.replace(R.id.FrgMain_container_linearlayout, frg);
         transaction.commit();
     }
-    
-    //falseなら今日の曜日を漢字のStringで返し、
-    //trueでありかつnullではないなら指定された曜日を数値へ変換し返す
-    //trueでありかつnullならば今日の曜日を数値で返す
-    public static String getToDayWeekDay(boolean getStrToInteger, String weekDay)
+
+    //今日の日付をyyyy-MM-ddで取得する
+    public static String getToDay()
     {
-        //現在の日付を取得
-        Date nowdate = new Date();
         //Calendarに現在の日付を設定
         Calendar cal = Calendar.getInstance();
-        //現在の曜日のみを取得
-        CharSequence week = DateFormat.format("E", nowdate);
+
+        return (String) DateFormat.format(activityMain.getResources().getString(R.string.format_yyyy_MM_dd), cal);
+
+    }
+
+    //String型の日付をpatternでparseされたDateを返す
+    public static Date getParsedDate(String source, String pattern)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        try
+        {
+            return sdf.parse(source);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getWeekDay(boolean getInteger)
+    {
+        //getTodayで取得した日付を用いて、曜日をintegerで取得
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.JAPANESE);
+
+        try
+        {
+            cal.clear();
+            //calにparseした日付を設定
+            cal.setTime(sdf.parse(getToDay()));
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+
+        //曜日を取得
+        int week = cal.get(Calendar.DAY_OF_WEEK);
+
         //現在の曜日が「土」か「日」だったら次週の月曜日にする
-        if (week.equals("土") || week.equals("日"))
+        if(week == Calendar.SATURDAY || week == Calendar.SUNDAY)
         {
             //現在の日付を２日足し、次週の月曜日にする
             cal.add(Calendar.DAY_OF_MONTH, 2);
             cal.set(Calendar.DAY_OF_WEEK, 2);
-            
-            week = DateFormat.format("E", cal);
+
+            week = cal.get(Calendar.DAY_OF_WEEK);
         }
-        
-        if(!getStrToInteger)
+
+        //getIntegerがfalseなら、曜日を漢字で返す
+        //trueならばString型で曜日を数字として返す
+        if (!getInteger)
         {
-            return (String) week;
-        }
-        else if(!(weekDay == null))
-        {
-            switch (weekDay)
+            switch (week)
             {
-                case "月":
-                    return String.valueOf(Calendar.MONDAY);
-                case "火":
-                    return String.valueOf(Calendar.TUESDAY);
-                case "水":
-                    return String.valueOf(Calendar.WEDNESDAY);
-                case "木":
-                    return String.valueOf(Calendar.THURSDAY);
-                case "金":
-                    return String.valueOf(Calendar.FRIDAY);
+                case Calendar.MONDAY:
+                    return "月";
+                case Calendar.TUESDAY:
+                    return "火";
+                case Calendar.WEDNESDAY:
+                    return "水";
+                case Calendar.THURSDAY:
+                    return "木";
+                case Calendar.FRIDAY:
+                    return "金";
                 default:
-                    return "-1";
+                    return null;
             }
         }
         else
-        {
-            switch ((String) week)
-            {
-                case "月":
-                    return String.valueOf(Calendar.MONDAY);
-                case "火":
-                    return String.valueOf(Calendar.TUESDAY);
-                case "水":
-                    return String.valueOf(Calendar.WEDNESDAY);
-                case "木":
-                    return String.valueOf(Calendar.THURSDAY);
-                case "金":
-                    return String.valueOf(Calendar.FRIDAY);
-                default:
-                    return "-1";
-            }
-        }
+            return String.valueOf(week);
     }
 }
 

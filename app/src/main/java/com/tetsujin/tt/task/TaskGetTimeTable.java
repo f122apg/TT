@@ -133,9 +133,18 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                         String teacherName = json.getString("TeacherName");
 
                         //一時保存された変数からTimeTableのインスタンスを生成
-                        retValues[i] = new TimeTable(timeTableId, lessonCode, lessonName, weekDay,
-                                startTime, endTime, season, classRoomName,
-                                teacherId, teacherName, description);
+                        retValues[i] = new TimeTable.Builder(timeTableId)
+                                .LessonCode(lessonCode)
+                                .LessonName(lessonName)
+                                .WeekDay(weekDay)
+                                .StartTime(startTime)
+                                .EndTime(endTime)
+                                .Season(season)
+                                .ClassRoomName(classRoomName)
+                                .TeacherID(teacherId)
+                                .TeacherName(teacherName)
+                                .Description(description)
+                                .build();
                     }
 
                 } catch (JSONException e)

@@ -52,9 +52,9 @@ public class CustomCalendarView extends LinearLayout
         lpweekday.gravity = Gravity.CENTER;
         weekday.setLayoutParams(lpweekday);
         
-        
-        
-        
+
+
+
         addViews(yyyymm, weekday);
     }
     

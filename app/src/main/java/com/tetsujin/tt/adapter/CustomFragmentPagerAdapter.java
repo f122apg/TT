@@ -32,7 +32,7 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
         //Fragmentへデータを送信
         Bundle bundle = new Bundle();
         //特定の曜日の時間割データを送信
-        bundle.putParcelableArrayList("data", weeklist.get(position));
+        bundle.putParcelableArrayList("timetable", weeklist.get(position));
 
         FragmentWeek fw = new FragmentWeek();
         fw.setArguments(bundle);
@@ -101,5 +101,11 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
     public void adddate(String date)
     {
         datelist.add(date);
+    }
+
+    //日付がどこに挿入されているか検索する
+    public int getPosFromDate(String date)
+    {
+        return datelist.indexOf(date);
     }
 }
