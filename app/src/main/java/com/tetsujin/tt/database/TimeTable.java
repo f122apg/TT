@@ -71,7 +71,7 @@ public class TimeTable implements Parcelable
     /*
         コンストラクタ
      */
-
+    //Builderで使用される
     private TimeTable(Builder builder)
     {
         this.TimeTableID = builder.TimeTableID;
@@ -86,94 +86,6 @@ public class TimeTable implements Parcelable
         this.TeacherName = builder.TeacherName;
         this.Description = builder.Description;
     }
-
-    //サーバサイドから受け取った情報を基に時間割データを生成する場合
-//    public TimeTable(int timeTableID, String lessonCode, String lessonName,
-//              int weekDay, String startTime, String endTime, int season,
-//              String classRoomName, int teacherID, String teacherName, String description)
-//    {
-//        this.TimeTableID = timeTableID;
-//
-//        if(lessonCode.length() == 13)
-//            this.LessonCode = lessonCode;
-//        else
-//            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
-//
-//        this.LessonName = lessonName;
-//
-//        if(weekDay > 6)
-//            this.WeekDay = weekDay;
-//        else
-//            throw new IllegalArgumentException("WeekDayの値が不正です。");
-//
-//        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
-//        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
-//        Matcher m = p.matcher(startTime);
-//        if(m.find())
-//            this.StartTime = m.group();
-//        else
-//            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
-//
-//        m = p.matcher(endTime);
-//        if(m.find())
-//            this.EndTime = m.group();
-//        else
-//            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
-//
-//        if(season == 0 || season == 1)
-//            this.Season = season;
-//        else
-//            throw new IllegalArgumentException("Seasonの値が不正です。");
-//
-//        this.ClassRoomName = classRoomName;
-//        this.TeacherID = teacherID;
-//        this.TeacherName = teacherName;
-//        this.Description = description;
-//    }
-//
-//    //ArrayListからTimeTableを作成する
-//    //ローカルのデータベースから時間割を生成する場合
-//    public TimeTable(ArrayList<Object> list)
-//    {
-//        this.TimeTableID = (int)list.get(0);
-//
-//        String lessonCode = (String)list.get(1);
-//        if(lessonCode.length() == 13)
-//            this.LessonCode = lessonCode;
-//        else
-//            throw new IllegalArgumentException("LessonCodeは13文字でなくてはなりません。");
-//
-//        this.LessonName = (String)list.get(2);
-//
-//        this.WeekDay = (int)list.get(3);
-//
-//        //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
-//        String startTime = (String)list.get(4);
-//        Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
-//        Matcher m = p.matcher(startTime);
-//        if(m.find())
-//            this.StartTime = m.group();
-//        else
-//            throw new IllegalArgumentException("StartTime内にHH:mmが存在しません。");
-//
-//        String endTime = (String)list.get(5);
-//        m = p.matcher(endTime);
-//        if(m.find())
-//            this.EndTime = m.group();
-//        else
-//            throw new IllegalArgumentException("EndTime内にHH:mmが存在しません。");
-//
-//        int season = (int)list.get(6);
-//        if(season == 0 || season == 1)
-//            this.Season = season;
-//        else
-//            throw new IllegalArgumentException("Seasonの値が不正です。");
-//
-//        this.ClassRoomName = (String)list.get(7);
-//        this.TeacherID = (int)list.get(8);
-//        this.TeacherName = (String)list.get(9);
-//        this.Description = (String)list.get(10);
-//    }
     
     //Parcelを復元する
     public TimeTable(Parcel in)
