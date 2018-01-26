@@ -1,7 +1,6 @@
 package com.tetsujin.tt;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -11,58 +10,83 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
+import org.w3c.dom.Text;
 
-public class CustomCalendarView extends LinearLayout
-{
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class CustomCalendarView extends LinearLayout {
+
     public CustomCalendarView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setOrientation(VERTICAL);
-        
-        initView(context);
+        test(this, context);
     }
-    
-    private void initView(Context context)
-    {
-        //現在の日付を取得
+
+    private void test(LinearLayout parent, Context context) {
+        //Calendarのインスタンスを生成
+        //現在の日付を取得している
         Calendar cal = Calendar.getInstance();
-        
-        //年月を設定する
-        TextView yyyymm = new TextView(context);
-        yyyymm.setText(DateFormat.format("yyyy年M月", cal));
-        yyyymm.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 
-        LayoutParams lpyyyymm = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        lpyyyymm.gravity = Gravity.CENTER;
-        lpyyyymm.topMargin = 50;
-        yyyymm.setLayoutParams(lpyyyymm);
-        
-        //曜日表示
-        TextView weekday = new TextView(context);
-        weekday.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-        weekday.setText("日  月  火  水  木  金  土");
-    
-        LayoutParams lpweekday = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        lpweekday.gravity = Gravity.CENTER;
-        weekday.setLayoutParams(lpweekday);
-        
+        cal.clear();
+        //インスタンスに以下の日付を設定している
+        //つまりcal = 2017月12月1日が設定される
+        cal.set(2017, 11, 1);
 
+        int maxDate = cal.getActualMaximum(Calendar.DATE);
 
+        String[][] testTable =
+                {
+                        {"日", "月", "火", "水", "木", "金", "土"},
 
-        addViews(yyyymm, weekday);
-    }
-    
-    private void addViews(View ... view)
-    {
-        for(View v:view)
+                        {"　", "　", "　", "　", "　", "　", "　"},
+                        {"　", "　", "　", "　", "　", "　", "　"},
+                        {"　", "　", "　", "　", "　", "　", "　"},
+                        {"　", "　", "　", "　", "　", "　", "　"},
+                        {"　", "　", "　", "　", "　", "　", "　"},
+                        {"　", "　", "　", "　", "　", "　", "　"}
+                };
+
+        testTable[1][(cal.get(Calendar.DAY_OF_WEEK) - 1)] = "1";
+
+        int count = 2;
+        boolean breakflg = false;
+
+        for(int row = 1; row < 7; row ++)
         {
-            addView(v);
+            for(int column = 0; column < 7; column ++)
+            {
+                if(row == 1){
+                    column = (cal.get(Calendar.DAY_OF_WEEK));
+                }
+                testTable[row][column] = String.valueOf(count);
+                count ++;
+
+                if(count > maxDate){
+                    breakflg = true;
+                    break;
+                }
+            }
+
+            if(breakflg)
+                break;
+        }
+
+        for(int row = 0; row < 7; row ++)
+        {
+            LinearLayout child = new LinearLayout(context);
+            child.setOrientation(HORIZONTAL);
+
+            for(int column = 0; column < 7; column ++)
+            {
+                TextView tv = new TextView(context);
+                tv.setText(testTable[row][column]);
+
+                child.addView(tv);
+            }
+
+            parent.addView(child);
         }
     }
 }

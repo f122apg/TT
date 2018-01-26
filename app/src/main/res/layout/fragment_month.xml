@@ -1,12 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.tetsujin.tt.FragmentMonth">
-
-    <com.tetsujin.tt.CustomCalendarView
-        android:id="@+id/Calendar1"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tetsujin.tt.FragmentMonth">
+    
+    <TextView
+        android:id="@+id/FrgMonth_YYYYMM_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="35sp"
+        android:text="YYYY/MM"/>
+    
+    <GridView
+        android:id="@+id/gv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:numColumns="7"
+        android:columnWidth="50dp"
+        android:minHeight="50dp"
+        android:stretchMode="columnWidth"/>
 
 </LinearLayout>
