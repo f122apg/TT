@@ -202,7 +202,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
 
         ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.FrgMain_timetable_listview);
 
-        CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values, false);
+        CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values, 0, false, false);
         timetable_lv.setAdapter(adapter);
 
         //プログレスダイアログを閉じる

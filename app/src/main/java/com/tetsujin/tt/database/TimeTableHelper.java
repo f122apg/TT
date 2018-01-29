@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import static com.tetsujin.tt.ActivityMain.timeTableDB;
@@ -75,7 +74,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
     }
     
     //データベース内にあるレコードすべて取得する
-    public TimeTable[] GetRecordALL()
+    public TimeTable[] GetRecordAll()
     {
         Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_ALL, null);
 
@@ -95,7 +94,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
     }
     
     
-    //特定の時間割データだけを取得する
+    //特定の曜日の時間割データだけを取得する
     public TimeTable[] GetRecordAtWeekDay(int weekday)
     {
         Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_AT_WEEKDAY_QUERY, new String[]{ String.valueOf(weekday) });

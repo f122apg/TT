@@ -61,6 +61,35 @@ public class MemoHelper extends SQLiteOpenHelper
         }
     }
     
+    //データベース内にあるレコードすべて取得する
+    public String[] GetRecordAll()
+    {
+        Cursor result = memoDB.rawQuery(Memo.GET_RECORD_ALL, null);
+        
+        try
+        {
+            String[] retValue = new String[result.getCount()];
+            
+            //すべてのメモを返す
+            while(result.moveToNext())
+            {
+                retValue[result.getPosition()] = result.getString(result.getColumnIndex(Memo.COLUMN_DATE));
+            }
+            
+            return retValue;
+        }
+        catch (CursorIndexOutOfBoundsException e)
+        {
+            return null;
+        }
+        finally
+        {
+            result.close();
+        }
+    }
+    
+    
+    //特定の日付のレコードを返す
     public String GetRecord(String date)
     {
         Cursor result = memoDB.rawQuery(Memo.GET_RECORD_QUERY, new String[]{ date });
@@ -70,7 +99,7 @@ public class MemoHelper extends SQLiteOpenHelper
         //空(CursorIndexOutOfBoundsException)ではない場合、文字列を返す
         try
         {
-            return result.getString(0);
+            return result.getString(result.getColumnIndex(Memo.COLUMN_CONTENT));
         }
         catch (CursorIndexOutOfBoundsException e)
         {

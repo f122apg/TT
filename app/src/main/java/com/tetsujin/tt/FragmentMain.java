@@ -16,17 +16,16 @@ import android.widget.Toast;
 import com.tetsujin.tt.adapter.CustomListViewAdapter;
 import com.tetsujin.tt.database.TimeTable;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
 import static com.tetsujin.tt.ActivityMain.getParsedDate;
 import static com.tetsujin.tt.ActivityMain.getToDay;
+import static com.tetsujin.tt.ActivityMain.getWeekDay;
 import static com.tetsujin.tt.ActivityMain.memoHelper;
 import static com.tetsujin.tt.ActivityMain.timeTable;
+import static com.tetsujin.tt.ActivityMain.timeTableHelper;
 
 public class FragmentMain extends Fragment {
 
@@ -36,9 +35,19 @@ public class FragmentMain extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_main, container, false);
-
-        //今日の日付を取得
-        todaydate = getToDay();
+        
+        Bundle bundle = getArguments();
+        try
+        {
+            //渡された値を元に日付を設定
+            todaydate = bundle.getString("date");
+        }
+        catch (NullPointerException e)
+        {
+            //今日の日付を取得
+            todaydate = getToDay();
+        }
+        
         //日付取得と表示
         TextView date_tv = (TextView)v.findViewById(R.id.FrgMain_date_textview);
         //日付を表示
@@ -47,9 +56,11 @@ public class FragmentMain extends Fragment {
         /*************************************/
         /*****   ListView(時間割表示用)    *****/
         /*************************************/
+        //指定した曜日の時間割データをTimeTableDBから取得し、static変数に入れる
+        timeTable = timeTableHelper.GetRecordAtWeekDay(getWeekDay(todaydate));
          ListView timetable_lv = (ListView)v.findViewById(R.id.FrgMain_timetable_listview);
         //時間割データをアダプタに渡し、表示を行う
-        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTable, false);
+        CustomListViewAdapter ca = new CustomListViewAdapter(getContext(), timeTable, getWeekDay(todaydate), true, false);
         timetable_lv.setAdapter(ca);
 
         //ListViewのクリックイベント

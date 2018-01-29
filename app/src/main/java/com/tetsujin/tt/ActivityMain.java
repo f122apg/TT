@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -50,8 +49,6 @@ public class ActivityMain extends AppCompatActivity {
             //DBが存在していなかったらDBの作成がされる
             memoDB = memoHelper.getWritableDatabase();
             timeTableDB = timeTableHelper.getWritableDatabase();
-            //指定した曜日の時間割データをTimeTableDBから取得し、static変数に入れる
-            timeTable = timeTableHelper.GetRecordAtWeekDay(Integer.parseInt(getWeekDay(true)));
             fm = getSupportFragmentManager();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
@@ -124,7 +121,16 @@ public class ActivityMain extends AppCompatActivity {
     {
         //Calendarに現在の日付を設定
         Calendar cal = Calendar.getInstance();
-
+        
+        //現在の曜日が「土」か「日」だったら次週の月曜日にする
+        int week = cal.get(Calendar.DAY_OF_WEEK);
+        if(week == Calendar.SATURDAY || week == Calendar.SUNDAY)
+        {
+            //現在の日付を２日足し、次週の月曜日にする
+            cal.add(Calendar.DAY_OF_MONTH, 2);
+            cal.set(Calendar.DAY_OF_WEEK, 2);
+        }
+        
         return (String) DateFormat.format(activityMain.getResources().getString(R.string.format_yyyy_MM_dd), cal);
 
     }
@@ -145,7 +151,7 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
-    public static String getWeekDay(boolean getInteger)
+    public static String getTodayWeekDay(boolean getInteger)
     {
         //getTodayで取得した日付を用いて、曜日をintegerで取得
         Calendar cal = Calendar.getInstance();
@@ -156,7 +162,8 @@ public class ActivityMain extends AppCompatActivity {
             cal.clear();
             //calにparseした日付を設定
             cal.setTime(sdf.parse(getToDay()));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             return null;
@@ -197,6 +204,39 @@ public class ActivityMain extends AppCompatActivity {
         }
         else
             return String.valueOf(week);
+    }
+    
+    public static Integer getWeekDay(String date)
+    {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.JAPANESE);
+    
+        try
+        {
+            cal.clear();
+            //calにparseした日付を設定
+            cal.setTime(sdf.parse(date));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        
+        //曜日を取得
+        int week = cal.get(Calendar.DAY_OF_WEEK);
+        
+        //現在の曜日が「土」か「日」だったら次週の月曜日にする
+        if(week == Calendar.SATURDAY || week == Calendar.SUNDAY)
+        {
+            //現在の日付を２日足し、次週の月曜日にする
+            cal.add(Calendar.DAY_OF_MONTH, 2);
+            cal.set(Calendar.DAY_OF_WEEK, 2);
+            
+            week = cal.get(Calendar.DAY_OF_WEEK);
+        }
+        
+        return week;
     }
 }
 

@@ -19,7 +19,7 @@ public class CustomListViewAdapter extends BaseAdapter
     private LayoutInflater inflater;
     private TimeTable[] items;
 
-    public CustomListViewAdapter(Context context, TimeTable[] objects, boolean calledFromCFPAdapter)
+    public CustomListViewAdapter(Context context, TimeTable[] objects, int weekday, boolean setPastTimeTable, boolean calledFromCFPAdapter)
     {
         super();
         this.context = context;
@@ -28,8 +28,10 @@ public class CustomListViewAdapter extends BaseAdapter
         //時間割データが存在しているかチェックし、存在していたら曜日毎のデータを抽出する
         if(objects != null)
         {
-            //CustomFragmentPagerAdapterから呼ばれていない場合、今日の時間割データだけを追加する
-            if(!calledFromCFPAdapter)
+            //CustomFragmentPagerAdapterから呼ばれていない、かつ、
+            //setPastTimeTableがfalseならば(過去の時間割を設定したくない)場合は
+            //今日の時間割データだけを追加する
+            if(!calledFromCFPAdapter && !setPastTimeTable)
             {
                 //抽出した曜日データを一時的に格納するArrayList
                 ArrayList<TimeTable> list = new ArrayList<>();
@@ -37,7 +39,22 @@ public class CustomListViewAdapter extends BaseAdapter
                 for (TimeTable value : objects)
                 {
                     //時間割データが現在の曜日と一致していたら"今日"の時間割データとして追加する
-                    if (value.getWeekDay() == Integer.parseInt(ActivityMain.getWeekDay(true)))
+                    if (value.getWeekDay() == Integer.parseInt(ActivityMain.getTodayWeekDay(true)))
+                        list.add(value);
+                }
+    
+                this.items = list.toArray(new TimeTable[list.size()]);
+            }
+            //過去の時間割データを設定する
+            else if(setPastTimeTable)
+            {
+                //抽出した曜日データを一時的に格納するArrayList
+                ArrayList<TimeTable> list = new ArrayList<>();
+                //過去の曜日だけの時間割データを抽出
+                for (TimeTable value : objects)
+                {
+                    //時間割データが指定した曜日と一致していたら"過去"の時間割データとして追加する
+                    if (value.getWeekDay() == weekday)
                         list.add(value);
                 }
     

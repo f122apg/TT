@@ -4,22 +4,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.tetsujin.tt.FragmentMonth">
-    
-    <TextView
-        android:id="@+id/FrgMonth_YYYYMM_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="35sp"
-        android:text="YYYY/MM"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/FrgMonth_PreviousMonth_imagebutton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/clicking_animation"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_previous_month_arrow_left"/>
+
+        <TextView
+            android:id="@+id/FrgMonth_YYYYMM_textview"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:textSize="35sp"
+            android:text="YYYY/MM"/>
+
+        <ImageButton
+            android:id="@+id/FrgMonth_NextMonth_imagebutton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/clicking_animation"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_next_month_arrow_right"/>
+
+    </LinearLayout>
     
     <GridView
-        android:id="@+id/gv"
+        android:id="@+id/FrgMonth_Calendar_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
+        android:layout_marginLeft="12dp"
         android:numColumns="7"
         android:columnWidth="50dp"
         android:minHeight="50dp"

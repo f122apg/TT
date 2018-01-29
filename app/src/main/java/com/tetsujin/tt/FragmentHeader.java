@@ -46,13 +46,13 @@ public class FragmentHeader extends Fragment
                     Bundle bundle = new Bundle();
                     
                     //Fragmentに渡すデータを準備する
-                    TimeTable[] timeTableALL = timeTableHelper.GetRecordALL();
+                    TimeTable[] timeTableAll = timeTableHelper.GetRecordAll();
                     
                     //FragmentWeekContainerに時間割データを渡す
                     if(timeTable != null)
                     {
                         bundle.putBoolean("isNull", false);
-                        bundle.putSerializable("timetable", timeTableALL);
+                        bundle.putSerializable("timetable", timeTableAll);
                     }
                     else
                         bundle.putBoolean("isNull", true);

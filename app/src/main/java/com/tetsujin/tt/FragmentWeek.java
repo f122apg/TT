@@ -29,7 +29,7 @@ public class FragmentWeek extends Fragment
         ArrayList<Parcelable> value = args.getParcelableArrayList("timetable");
 
         //ListViewに現在のデータを適用
-        CustomListViewAdapter ca = new CustomListViewAdapter(v.getContext(), value.toArray(new TimeTable[value.size()]), true);
+        CustomListViewAdapter ca = new CustomListViewAdapter(v.getContext(), value.toArray(new TimeTable[value.size()]), 0, false, true);
         lv.setAdapter(ca);
     
         //ListViewのクリックイベント
