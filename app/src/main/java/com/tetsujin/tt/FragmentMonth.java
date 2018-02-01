@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.tetsujin.tt.adapter.CustomGridViewAdapter;
+import com.tetsujin.tt.adapter.MonthAdapter;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -93,7 +93,7 @@ public class FragmentMonth extends Fragment implements View.OnClickListener
         yyyymm_tv.setText(year + "/" + month);
     
         GridView gv = (GridView) view.findViewById(R.id.FrgMonth_Calendar_gridview);
-        CustomGridViewAdapter cgva = new CustomGridViewAdapter(getContext(), getMonthCalendar(year, month), year, month, memoDate);
+        MonthAdapter cgva = new MonthAdapter(getContext(), getMonthCalendar(year, month), year, month, memoDate);
         gv.setAdapter(cgva);
     }
     

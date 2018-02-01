@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.widget.ListView;
 
 import com.tetsujin.tt.R;
-import com.tetsujin.tt.adapter.CustomListViewAdapter;
+import com.tetsujin.tt.adapter.CustomListViewLessonListAdapter;
 import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.database.TimeTableHelper;
 
@@ -202,7 +202,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
 
         ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.FrgMain_timetable_listview);
 
-        CustomListViewAdapter adapter = new CustomListViewAdapter(this.activityMain, values, 0, false, false);
+        CustomListViewLessonListAdapter adapter = new CustomListViewLessonListAdapter(this.activityMain, values, 0, false, false);
         timetable_lv.setAdapter(adapter);
 
         //プログレスダイアログを閉じる

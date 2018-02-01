@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tetsujin.tt.FragmentWeek"
-    android:id="@+id/FrgWeek_parent_linearlayout">
+    android:id="@+id/FrgWeek_parent_linearlayout"
+    android:orientation="vertical">
 
     <ListView
         android:id="@+id/FrgWeek_listview"
         android:layout_width="match_parent"
-        android:layout_height="500dp"/>
+        android:layout_height="match_parent"
+        android:layout_weight="3"/>
 
 </LinearLayout>

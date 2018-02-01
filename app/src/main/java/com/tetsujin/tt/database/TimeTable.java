@@ -3,6 +3,7 @@ package com.tetsujin.tt.database;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -162,17 +163,6 @@ public class TimeTable implements Parcelable
     }
     
     /*
-        show
-     */
-    public String showDescription()
-    {
-        if(!getDescription().equals("null"))
-            return getDescription();
-        else
-            return "なし";
-    }
-    
-    /*
         Parcel
      */
     @Override
@@ -326,5 +316,25 @@ public class TimeTable implements Parcelable
             //フィールドの値が正常ならばbuilderをコンストラクタに渡す
             return new TimeTable(this);
         }
+    }
+
+    public String showDescription()
+    {
+        if(!getDescription().equals("null"))
+            return getDescription();
+        else
+            return "なし";
+    }
+
+    public String[][] createTableValue(TimeTable[] value)
+    {
+        String[][] retValue = new String[value.length * 5][5];
+        for (String[] v:
+             retValue)
+        {
+            Arrays.fill(v, "");
+        }
+        retValue[0] = { "月", "火", "水", "木", "金"};
+
     }
 }

@@ -13,13 +13,13 @@ import com.tetsujin.tt.database.TimeTable;
 
 import java.util.ArrayList;
 
-public class CustomListViewAdapter extends BaseAdapter
+public class CustomListViewLessonListAdapter extends BaseAdapter
 {
     private Context context;
     private LayoutInflater inflater;
     private TimeTable[] items;
 
-    public CustomListViewAdapter(Context context, TimeTable[] objects, int weekday, boolean setPastTimeTable, boolean calledFromCFPAdapter)
+    public CustomListViewLessonListAdapter(Context context, TimeTable[] objects, int weekday, boolean setPastTimeTable, boolean calledFromCFPAdapter)
     {
         super();
         this.context = context;

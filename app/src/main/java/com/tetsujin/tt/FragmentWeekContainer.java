@@ -9,9 +9,11 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.tetsujin.tt.adapter.CustomFragmentPagerAdapter;
+import com.tetsujin.tt.adapter.LessonListAdapter;
 import com.tetsujin.tt.database.TimeTable;
 
 import java.util.Calendar;
@@ -24,6 +26,7 @@ public class FragmentWeekContainer extends Fragment
         View v = inflater.inflate(R.layout.fragment_weekcontainer, container, false);
         //FragmentMainから時間割データを受け取る
         Bundle args = getArguments();
+        TimeTable[] timeTable = new TimeTable[0];
     
         //ViewPagerとFragmentを用いた、タブ形式の各曜日の授業を表示する画面を生成
         ViewPager vp = (ViewPager) v.findViewById(R.id.FrgVP_viewpager);
@@ -32,8 +35,10 @@ public class FragmentWeekContainer extends Fragment
         
         if(!args.getBoolean("isNull"))
         {
+            timeTable = (TimeTable[])args.getParcelableArray("timetable");
+
             //時間割データを渡す
-            cfpadapter.setdata((TimeTable[])args.getParcelableArray("timetable"));
+            cfpadapter.setdata(timeTable);
         }
         
         /*
@@ -57,6 +62,10 @@ public class FragmentWeekContainer extends Fragment
         //一週間の時間割表示時に、今日の曜日の時間割を表示できるように調整する
         weekDate = Calendar.getInstance();
         vp.setCurrentItem(cfpadapter.getPosFromDate((String) DateFormat.format(getResources().getString(R.string.format_MM_dd_E), weekDate)));
+
+        GridView gv = (GridView)v.findViewById(R.id.FrgWeekContainer_lessonlist_gridview);
+        LessonListAdapter lla = new LessonListAdapter(this.getContext(), timeTable);
+        gv.setAdapter(lla);
 
         return v;
     }

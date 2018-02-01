@@ -16,7 +16,7 @@ import com.tetsujin.tt.R;
 import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 import static com.tetsujin.tt.ActivityMain.activityMain;
 
-public class CustomGridViewAdapter extends BaseAdapter {
+public class MonthAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
@@ -25,7 +25,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
     private int year;
     private int month;
 
-    public CustomGridViewAdapter(Context context, String[][] objects, int yyyy, int mm, String[] memoDate)
+    public MonthAdapter(Context context, String[][] objects, int yyyy, int mm, String[] memoDate)
     {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
