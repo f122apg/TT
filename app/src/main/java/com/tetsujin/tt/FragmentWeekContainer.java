@@ -64,8 +64,10 @@ public class FragmentWeekContainer extends Fragment
         vp.setCurrentItem(cfpadapter.getPosFromDate((String) DateFormat.format(getResources().getString(R.string.format_MM_dd_E), weekDate)));
 
         GridView gv = (GridView)v.findViewById(R.id.FrgWeekContainer_lessonlist_gridview);
-        LessonListAdapter lla = new LessonListAdapter(this.getContext(), timeTable);
-        gv.setAdapter(lla);
+        String[][] table = TimeTable.createTableValue(TimeTable.createWeekDayList((timeTable)));
+
+        //LessonListAdapter lla = new LessonListAdapter(this.getContext(), table);
+        //gv.setAdapter(lla);
 
         return v;
     }

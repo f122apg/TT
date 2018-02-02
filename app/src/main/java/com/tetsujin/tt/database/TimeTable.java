@@ -3,7 +3,9 @@ package com.tetsujin.tt.database;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,30 +29,16 @@ public class TimeTable implements Parcelable
     final static String COLUMN_DESCRIPTION = "Description";
 
     //テーブルを作成するクエリ
-    final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" +
-            COLUMN_TIMETABLEID   + " INTEGER PRIMARY KEY," +
-            COLUMN_LESSONCODE    + " TEXT NOT NULL," +
-            COLUMN_LESSONNAME    + " TEXT NOT NULL," +
-            COLUMN_WEEKDAY       + " INTEGER NOT NULL," +
-            COLUMN_STARTTIME     + " TEXT NOT NULL," +
-            COLUMN_ENDTIME       + " TEXT NOT NULL," +
-            COLUMN_SEASON        + " INTEGER NOT NULL," +
-            COLUMN_CLASSROOMNAME + " TEXT NOT NULL," +
-            COLUMN_TEACHERID     + " INTEGER NOT NULL," +
-            COLUMN_TEACHERNAME   + " TEXT NOT NULL," +
-            COLUMN_DESCRIPTION   + " TEXT" +
-            ");";
-    
+    final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_TIMETABLEID + " INTEGER PRIMARY KEY," + COLUMN_LESSONCODE + " TEXT NOT NULL," + COLUMN_LESSONNAME + " TEXT NOT NULL," + COLUMN_WEEKDAY + " INTEGER NOT NULL," + COLUMN_STARTTIME + " TEXT NOT NULL," + COLUMN_ENDTIME + " TEXT NOT NULL," + COLUMN_SEASON + " INTEGER NOT NULL," + COLUMN_CLASSROOMNAME + " TEXT NOT NULL," + COLUMN_TEACHERID + " INTEGER NOT NULL," + COLUMN_TEACHERNAME + " TEXT NOT NULL," + COLUMN_DESCRIPTION + " TEXT" + ");";
+
     //すべてのレコードを取得するクエリ
     final static String GET_RECORD_ALL = "SELECT * FROM " + TABLE_NAME + ";";
-    
+
     //IDに合致するすべてのレコードを取得するクエリ
-    final static String GET_RECORD_ID_QUERY = "SELECT * FROM " +
-            TABLE_NAME + " WHERE " + COLUMN_TIMETABLEID + " = ?;";
-    
+    final static String GET_RECORD_ID_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TIMETABLEID + " = ?;";
+
     //特定の曜日に合致するすべてのレコードを取得するクエリ
-    final static String GET_RECORD_AT_WEEKDAY_QUERY = "SELECT * FROM " +
-            TABLE_NAME + " WHERE " + COLUMN_WEEKDAY + " = ?;";
+    final static String GET_RECORD_AT_WEEKDAY_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_WEEKDAY + " = ?;";
 
     //時間割のID
     private int TimeTableID;
@@ -68,7 +56,7 @@ public class TimeTable implements Parcelable
     private int TeacherID;
     private String TeacherName;
     private String Description;
-    
+
     /*
         コンストラクタ
      */
@@ -87,7 +75,7 @@ public class TimeTable implements Parcelable
         this.TeacherName = builder.TeacherName;
         this.Description = builder.Description;
     }
-    
+
     //Parcelを復元する
     public TimeTable(Parcel in)
     {
@@ -103,7 +91,7 @@ public class TimeTable implements Parcelable
         this.TeacherName = in.readString();
         this.Description = in.readString();
     }
-    
+
     /*
         ゲッター
      */
@@ -111,57 +99,57 @@ public class TimeTable implements Parcelable
     {
         return this.TimeTableID;
     }
-    
+
     public String getLessonCode()
     {
         return this.LessonCode;
     }
-    
+
     public String getLessonName()
     {
         return this.LessonName;
     }
-    
+
     public int getWeekDay()
     {
         return this.WeekDay;
     }
-    
+
     public String getStartTime()
     {
         return this.StartTime;
     }
-    
+
     public String getEndTime()
     {
         return this.EndTime;
     }
-    
+
     public int getSeason()
     {
         return this.Season;
     }
-    
+
     public String getClassRoomName()
     {
         return this.ClassRoomName;
     }
-    
+
     public int getTeacherID()
     {
         return this.TeacherID;
     }
-    
+
     public String getTeacherName()
     {
         return this.TeacherName;
     }
-    
+
     public String getDescription()
     {
         return this.Description;
     }
-    
+
     /*
         Parcel
      */
@@ -170,7 +158,7 @@ public class TimeTable implements Parcelable
     {
         return 0;
     }
-    
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -186,7 +174,7 @@ public class TimeTable implements Parcelable
         dest.writeString(this.TeacherName);
         dest.writeString(this.Description);
     }
-    
+
     public static final Parcelable.Creator<TimeTable> CREATOR = new Parcelable.Creator<TimeTable>()
     {
         @Override
@@ -194,7 +182,7 @@ public class TimeTable implements Parcelable
         {
             return new TimeTable(source);
         }
-        
+
         @Override
         public TimeTable[] newArray(int size)
         {
@@ -289,52 +277,97 @@ public class TimeTable implements Parcelable
             return this;
         }
 
-        public TimeTable build() {
+        public TimeTable build()
+        {
             //月～金までのどれかかチェックして、違うならばthrowする
-            if(!(WeekDay >= 2 && WeekDay <= 6))
-                throw new IllegalStateException("曜日の値が不正です。");
+            if (!(WeekDay >= 2 && WeekDay <= 6)) throw new IllegalStateException("曜日の値が不正です。");
 
             //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
             //存在しない場合throwする
             Pattern p = Pattern.compile("[0-9]{2}:[0-9]{2}");
             Matcher m = p.matcher(StartTime);
-            if(m.find())
-                StartTime = m.group();
-            else
-                throw new IllegalStateException("StartTime内にHH:mmが存在しません。");
+            if (m.find()) StartTime = m.group();
+            else throw new IllegalStateException("StartTime内にHH:mmが存在しません。");
 
             m = p.matcher(EndTime);
-            if(m.find())
-                EndTime = m.group();
-            else
-                throw new IllegalStateException("EndTime内にHH:mmが存在しません。");
+            if (m.find()) EndTime = m.group();
+            else throw new IllegalStateException("EndTime内にHH:mmが存在しません。");
 
             //Seasonが0または1じゃない場合は、throw
-            if(!(Season == 0) && !(Season == 1))
-                throw new IllegalStateException("Seasonの値が不正です。");
+            if (!(Season == 0) && !(Season == 1)) throw new IllegalStateException("Seasonの値が不正です。");
 
             //フィールドの値が正常ならばbuilderをコンストラクタに渡す
             return new TimeTable(this);
         }
     }
 
+    //授業の詳細を表示する関数
     public String showDescription()
     {
-        if(!getDescription().equals("null"))
-            return getDescription();
-        else
-            return "なし";
+        if (!getDescription().equals("null")) return getDescription();
+        else return "なし";
     }
 
-    public String[][] createTableValue(TimeTable[] value)
+    //TimeTableの配列を元に曜日ごとにArrayListでデータをわける
+    public static ArrayList<TimeTable>[] createWeekDayList(TimeTable[] data)
     {
-        String[][] retValue = new String[value.length * 5][5];
-        for (String[] v:
-             retValue)
+        //0 = Monday, 1 = Tuesday...
+        ArrayList<TimeTable>[] retValue = new ArrayList[5];
+        //初期化
+        for (int i = 0; i < 5; i++)
+        {
+            retValue[i] = new ArrayList<>();
+        }
+
+        //各曜日の時間割データを各配列に挿入する
+        for (TimeTable value : data)
+        {
+            switch (value.getWeekDay())
+            {
+                case Calendar.MONDAY:
+                    retValue[0].add(value);
+                    break;
+                case Calendar.TUESDAY:
+                    retValue[1].add(value);
+                    break;
+                case Calendar.WEDNESDAY:
+                    retValue[2].add(value);
+                    break;
+                case Calendar.THURSDAY:
+                    retValue[3].add(value);
+                    break;
+                case Calendar.FRIDAY:
+                    retValue[4].add(value);
+                    break;
+            }
+        }
+
+        return retValue;
+    }
+
+    public static String[][] createTableValue(ArrayList<TimeTable>[] value)
+    {
+        //曜日分:1 + 時間割分
+        String[][] retValue = new String[1 + value.length][5];
+        //初期化
+        for (String[] v : retValue)
         {
             Arrays.fill(v, "");
         }
-        retValue[0] = { "月", "火", "水", "木", "金"};
+        retValue[0] = new String[]{"月", "火", "水", "木", "金"};
 
+        for(int row = 1; row < retValue.length - 1; row ++ )
+        {
+            for (int column = 0; column < 5; column++)
+            {
+                //データ数分ループ
+                for (int data = 0; data < value[row - 1].size(); data++)
+                {
+                    retValue[row][column] = value[row - 1].get(data).getLessonName();
+                }
+            }
+        }
+
+        return retValue;
     }
 }

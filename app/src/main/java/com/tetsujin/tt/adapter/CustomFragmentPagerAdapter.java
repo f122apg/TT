@@ -54,42 +54,12 @@ public class CustomFragmentPagerAdapter extends FragmentPagerAdapter
         return datelist.get(position);
     }
 
-    //時間割データを各曜日ごとにソートしてセット
     public void setdata(TimeTable[] data)
     {
-        //一時的に各曜日ごとにデータをセットする
-        //0 = Monday, 1 = Tuesday...
-        ArrayList<TimeTable>[] temp = new ArrayList[5];
-        //初期化
-        for(int i = 0; i < 5; i ++)
-        {
-            temp[i] = new ArrayList<>();
-        }
         weeklist = new ArrayList<>();
-        
-        //各曜日の時間割データを各配列に挿入する
-        for (TimeTable value : data)
-        {
-            switch (value.getWeekDay())
-            {
-                case Calendar.MONDAY:
-                    temp[0].add(value);
-                    break;
-                case Calendar.TUESDAY:
-                    temp[1].add(value);
-                    break;
-                case Calendar.WEDNESDAY:
-                    temp[2].add(value);
-                    break;
-                case Calendar.THURSDAY:
-                    temp[3].add(value);
-                    break;
-                case Calendar.FRIDAY:
-                    temp[4].add(value);
-                    break;
-            }
-        }
-        
+        //時間割データを各曜日ごとにソートしてセット
+        ArrayList<TimeTable>[] temp = TimeTable.createWeekDayList(data);
+
         //一時的にセットしたデータを一元管理用リストにセット
         for(int i = 0; i < 5; i ++)
         {

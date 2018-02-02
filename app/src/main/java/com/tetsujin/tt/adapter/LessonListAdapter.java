@@ -26,14 +26,12 @@ public class LessonListAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private TimeTable[] items;
-    private int[] timeTableCount = new int[5];
 
     public LessonListAdapter(Context context, TimeTable[] objects)
     {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.items = objects;
-        Arrays.fill(timeTableCount, 0);
     }
 
     public int getCount()
