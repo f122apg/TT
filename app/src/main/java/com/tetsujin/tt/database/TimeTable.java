@@ -280,7 +280,7 @@ public class TimeTable implements Parcelable
         public TimeTable build()
         {
             //月～金までのどれかかチェックして、違うならばthrowする
-            if (!(WeekDay >= 2 && WeekDay <= 6)) throw new IllegalStateException("曜日の値が不正です。");
+            if (!(WeekDay >= Calendar.MONDAY && WeekDay <= Calendar.FRIDAY)) throw new IllegalStateException("曜日の値が不正です。");
 
             //HH:mm形式の文字列が存在するかチェック(find())して、存在していたらgroup()で取得
             //存在しない場合throwする
@@ -307,8 +307,13 @@ public class TimeTable implements Parcelable
         if (!getDescription().equals("null")) return getDescription();
         else return "なし";
     }
+    
+    private static Boolean isNull(Object object)
+    {
+        return object == null;
+    }
 
-    //TimeTableの配列を元に曜日ごとにArrayListでデータをわける
+    //TimeTableの配列を元に曜日ごとにソートしArrayListに挿入
     public static ArrayList<TimeTable>[] createWeekDayList(TimeTable[] data)
     {
         //0 = Monday, 1 = Tuesday...
@@ -318,6 +323,10 @@ public class TimeTable implements Parcelable
         {
             retValue[i] = new ArrayList<>();
         }
+    
+        //時間割データがnullだったら、ソートせずにそのまま値を渡す
+        if(isNull(data))
+            return retValue;
 
         //各曜日の時間割データを各配列に挿入する
         for (TimeTable value : data)
@@ -345,29 +354,42 @@ public class TimeTable implements Parcelable
         return retValue;
     }
 
+    //曜日ごとに分けた時間割データから表を生成する
     public static String[][] createTableValue(ArrayList<TimeTable>[] value)
     {
-        //曜日分:1 + 時間割分
-        String[][] retValue = new String[1 + value.length][5];
+        String[][] retValue = new String[8][5];
         //初期化
         for (String[] v : retValue)
         {
             Arrays.fill(v, "");
         }
-        retValue[0] = new String[]{"月", "火", "水", "木", "金"};
 
-        for(int row = 1; row < retValue.length - 1; row ++ )
+        //retValueにvalueを入れたかどうか検知するためのカウンタ 曜日分だけ生成
+        int[] insertCount = new int[5];
+        
+        //表における行
+        for(int row = 0; row < 8; row ++ )
         {
+            //表における列
             for (int column = 0; column < 5; column++)
             {
-                //データ数分ループ
-                for (int data = 0; data < value[row - 1].size(); data++)
+                //行(縦)より各曜日の値(value[column])の挿入されている数が大きい場合、
+                //その曜日にまだ挿入できるデータがあると判定して挿入を行う
+                if(row < value[column].size())
                 {
-                    retValue[row][column] = value[row - 1].get(data).getLessonName();
+                    String insertData = value[column].get(insertCount[column]).getLessonName();
+
+                    //挿入するデータが表示できる文字数を超えた場合、一部省略する
+                    if(insertData.length() > 23)
+                        insertData = insertData.substring(0, insertData.length() - 2) + "..";
+                    
+                    //データを挿入
+                    retValue[row][column] = insertData;
+                    insertCount[column]++;
                 }
             }
         }
-
+        
         return retValue;
     }
 }

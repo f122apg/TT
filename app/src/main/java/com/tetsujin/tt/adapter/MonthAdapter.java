@@ -67,8 +67,8 @@ public class MonthAdapter extends BaseAdapter {
         //TextViewのサイズをwrap_contentに設定
         tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         //TextViewの位置を調整
-        tv.setWidth(context.getResources().getDimensionPixelSize(R.dimen.width_height_50dp));
-        tv.setHeight(context.getResources().getDimensionPixelSize(R.dimen.width_height_50dp));
+        tv.setWidth(context.getResources().getDimensionPixelSize(R.dimen.size_50dp));
+        tv.setHeight(context.getResources().getDimensionPixelSize(R.dimen.size_50dp));
         tv.setGravity(Gravity.CENTER);
     
         //日付がMemoDBに存在していたらTextViewに印をつける

@@ -25,12 +25,12 @@ public class FragmentHeader extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_header, container, false);
-
+        
         /*
             onClickListeners
         */
         //B1 1週間の時間割に遷移する
-        v.findViewById(R.id.FrgHeader_B1_button).setOnClickListener(new View.OnClickListener()
+        v.findViewById(R.id.FrgHeader_week_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -76,7 +76,7 @@ public class FragmentHeader extends Fragment
                     アニメーション処理
                 */
                 //Fragmentの表示と共に、B1ボタンを矢印に変更するアニメーションを開始させる
-                final ImageButton ib = (ImageButton)v.findViewById(R.id.FrgHeader_B1_button);
+                final ImageButton ib = (ImageButton)v.findViewById(R.id.FrgHeader_week_button);
                 //アニメーションの読み込みとアニメーションにかける時間を設定
                 Animation fadeout_anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadeout);
                 fadeout_anim.setDuration(250);
@@ -109,7 +109,7 @@ public class FragmentHeader extends Fragment
         });
         
         //B3 1か月のカレンダーに遷移する
-        v.findViewById(R.id.FrgHeader_B3_button).setOnClickListener(new View.OnClickListener()
+        v.findViewById(R.id.FrgHeader_month_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -139,7 +139,7 @@ public class FragmentHeader extends Fragment
                     アニメーション処理
                 */
                 //Fragmentの表示と共に、B1ボタンを矢印に変更するアニメーションを開始させる
-                final ImageButton ib = (ImageButton)v.findViewById(R.id.FrgHeader_B3_button);
+                final ImageButton ib = (ImageButton)v.findViewById(R.id.FrgHeader_month_button);
                 //アニメーションの読み込みとアニメーションにかける時間を設定
                 Animation fadeout_anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadeout);
                 fadeout_anim.setDuration(250);

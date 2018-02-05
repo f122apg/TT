@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tetsujin.tt.adapter.CustomListViewLessonListAdapter;
+import com.tetsujin.tt.adapter.LessonListAdapter;
 import com.tetsujin.tt.database.TimeTable;
 
 import java.util.Map;
@@ -60,7 +60,7 @@ public class FragmentMain extends Fragment {
         timeTable = timeTableHelper.GetRecordAtWeekDay(getWeekDay(todaydate));
          ListView timetable_lv = (ListView)v.findViewById(R.id.FrgMain_timetable_listview);
         //時間割データをアダプタに渡し、表示を行う
-        CustomListViewLessonListAdapter ca = new CustomListViewLessonListAdapter(getContext(), timeTable, getWeekDay(todaydate), true, false);
+        LessonListAdapter ca = new LessonListAdapter(getContext(), timeTable, getWeekDay(todaydate), true, false);
         timetable_lv.setAdapter(ca);
 
         //ListViewのクリックイベント

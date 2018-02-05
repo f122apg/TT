@@ -8,12 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
 
-import com.tetsujin.tt.adapter.CustomHorizontalListViewAdapter;
-import com.tetsujin.tt.adapter.CustomListViewLessonListAdapter;
 import com.tetsujin.tt.adapter.LessonListAdapter;
 import com.tetsujin.tt.database.TimeTable;
 
@@ -33,7 +29,7 @@ public class FragmentWeek extends Fragment
         ArrayList<Parcelable> timeTable = args.getParcelableArrayList("timetable");
 
         //ListViewに現在のデータを適用
-        CustomListViewLessonListAdapter ca = new CustomListViewLessonListAdapter(v.getContext(), timeTable.toArray(new TimeTable[timeTable.size()]), 0, false, true);
+        LessonListAdapter ca = new LessonListAdapter(v.getContext(), timeTable.toArray(new TimeTable[timeTable.size()]), 0, false, true);
         lv.setAdapter(ca);
         //ListViewのクリックイベント
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
