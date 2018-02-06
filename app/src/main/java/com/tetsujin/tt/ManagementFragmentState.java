@@ -29,7 +29,7 @@ public class ManagementFragmentState implements Cloneable
             this.id = id;
         }
     
-        public int getResouce()
+        public int getResource()
         {
             return id;
         }
@@ -94,48 +94,42 @@ public class ManagementFragmentState implements Cloneable
     public void setState(stateList fragment)
     {
         this.state = fragment;
-        
-        setResouceId(fragment);
     }
     
-    public int getResourceid(stateList fragment)
+    public int getResourceId(stateList fragment)
     {
-        return resourceId.get(fragment).getResouce();
-    }
-    
-    public void setResouceId(stateList fragment)
-    {
-        switch (fragment)
+        switch (resourceId.get(fragment).getResource())
         {
-            case MAIN:
-                System.out.println("main");
-            case WEEK:
-                System.out.println("week");
-            case MONTH:
-                System.out.println("month");
-            case NOTIFICATION:
-                System.out.println("notification");
+            case R.drawable.icon_week:
+                System.out.println("weekid");
+            case R.drawable.icon_month:
+                System.out.println("monthid");
+            case R.drawable.icon_notification:
+                System.out.println("notificationid");
             default:
                 System.out.println("unknown");
         }
-        
-        switch (fragment)
+
+        return resourceId.get(fragment).getResource();
+    }
+    
+    public void setResourceId(stateList fragment, resource r, Boolean defaultValue)
+    {
+        //デフォルトの値を設定するかどうか falseならば指定したリソースを設定
+        //trueはデフォルト値
+        if(!defaultValue)
+            resourceId.put(fragment, r);
+        else
         {
-            case WEEK:
-                if(getResourceid(fragment) == resource.WEEK.getResouce())
-                    resourceId.put(fragment, resource.ARROW);
-                else
+            switch (fragment)
+            {
+                case WEEK:
                     resourceId.put(fragment, resource.WEEK);
-            case MONTH:
-                if(getResourceid(fragment) == resource.MONTH.getResouce())
-                    resourceId.put(fragment, resource.ARROW);
-                else
+                case MONTH:
                     resourceId.put(fragment, resource.MONTH);
-            case NOTIFICATION:
-                if(getResourceid(fragment) == resource.NOTIFICATION.getResouce())
-                    resourceId.put(fragment, resource.ARROW);
-                else
+                case NOTIFICATION:
                     resourceId.put(fragment, resource.NOTIFICATION);
+            }
         }
     }
     

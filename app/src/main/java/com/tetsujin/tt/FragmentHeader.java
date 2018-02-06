@@ -1,6 +1,7 @@
 package com.tetsujin.tt;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,10 +12,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
+import static com.tetsujin.tt.ActivityMain.timeTable;
+import static com.tetsujin.tt.ActivityMain.timeTableHelper;
 import static com.tetsujin.tt.ManagementFragmentState.stateList;
+import static com.tetsujin.tt.ManagementFragmentState.resource;
 
 public class FragmentHeader extends Fragment implements View.OnClickListener
 {
@@ -30,9 +35,9 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
         
         v.findViewById(R.id.FrgHeader_week_button).setOnClickListener(this);
         v.findViewById(R.id.FrgHeader_month_button).setOnClickListener(this);
-//        /*
-//            onClickListeners
-//        */
+        /*
+            onClickListeners
+        */
 //        //B1 1週間の時間割に遷移する
 //        v.findViewById(R.id.FrgHeader_week_button).setOnClickListener(new View.OnClickListener()
 //        {
@@ -45,6 +50,7 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
 //                //FragmentWeekContainerの表示
 //                if(!state.equal(stateList.MAIN))
 //                {
+//                    resourceid = R.drawable.icon_arrow_back;
 //                    Bundle bundle = new Bundle();
 //
 //                    //Fragmentに渡すデータを準備する
@@ -73,11 +79,10 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
 //                    FragmentMain frgmain = new FragmentMain();
 //                    activityMain.showFragment(frgmain);
 //
+//                    resourceid = R.drawable.icon_week;
 //                    //状態をFragmentWeekに変更
 //                    state.setState(ManagementFragmentState.stateList.WEEK);
 //                }
-//
-//                resourceid = 1;
 //
 //                /*
 //                    アニメーション処理
@@ -251,47 +256,97 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
                 //状態がweekではなかったら、weekに変更
                 //weekであったら、mainに変更
                 if(!state.equal(stateList.WEEK))
+                {
                     state.setState(stateList.WEEK);
+                    state.setResourceId(stateList.WEEK, resource.ARROW, false);
+                }
                 else
+                {
                     state.setState(stateList.MAIN);
+                    state.setResourceId(stateList.WEEK, resource.WEEK, false);
+                }
                 break;
             case R.id.FrgHeader_month_button:
                 //状態がmonthではなかったら、monthに変更
                 //monthであったら、mainに変更
                 if(!state.equal(stateList.MONTH))
+                {
                     state.setState(stateList.MONTH);
+                    state.setResourceId(stateList.MONTH, resource.ARROW, false);
+                }
                 else
+                {
                     state.setState(stateList.MAIN);
+                    state.setResourceId(stateList.MONTH, resource.MONTH, false);
+                }
                 break;
         }
-        
-        System.out.println("old f:" + oldState.getn() + ", id:" + oldState.getnid());
-        System.out.println("now f:" + state.getn() + ", id:" + state.getnid());
-        
-        /*
-            アニメーション処理
-        */
-        final ImageButton iButton = (ImageButton)vButton;
-        
+
+        for(int i = 0; i < 3; i ++)
+        {
+            if(state.getResourceId(state.getState()) == R.drawable.icon_arrow_back)
+            {
+                animated(v.getContext(), vButton, state.getResourceId(state.getState()), 250);
+                state.setResourceId(state.getState(), null, true);
+            }
+        }
+
+        animated(v.getContext(), vButton, state.getResourceId(state.getState()), 250);
+
+//        /*
+//            アニメーション処理
+//        */
+//        final ImageButton iButton = (ImageButton)vButton;
+//
+//        //アニメーションの読み込みとアニメーションにかける時間を設定
+//        Animation fadeOutAnime = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadeout);
+//        fadeOutAnime.setDuration(250);
+//        //リスナーを設定
+//        fadeOutAnime.setAnimationListener(new Animation.AnimationListener()
+//        {
+//            @Override
+//            public void onAnimationStart(Animation animation){}
+//
+//            //アニメーション終了時、ボタンの画像を変更しアニメーションをかける
+//            @Override
+//            public void onAnimationEnd(Animation animation)
+//            {
+//                iButton.setImageResource(state.getResourceId(state.getState()));
+//                Animation fadein_anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadein);
+//                fadein_anim.setDuration(250);
+//                iButton.startAnimation(fadein_anim);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation){}
+//        });
+//        //アニメーションを開始
+//        iButton.startAnimation(fadeOutAnime);
+    }
+
+    private void animated(Context context, View target, final int imageResId, final int duraction)
+    {
+        final ImageButton iButton = (ImageButton)target;
+
         //アニメーションの読み込みとアニメーションにかける時間を設定
-        Animation fadeOutAnime = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadeout);
-        fadeOutAnime.setDuration(250);
+        Animation fadeOutAnime = AnimationUtils.loadAnimation(context, R.anim.icon_fadeout);
+        fadeOutAnime.setDuration(duraction);
         //リスナーを設定
         fadeOutAnime.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
             public void onAnimationStart(Animation animation){}
-        
+
             //アニメーション終了時、ボタンの画像を変更しアニメーションをかける
             @Override
             public void onAnimationEnd(Animation animation)
             {
-                iButton.setImageResource(state.getResourceid(state.getState()));
+                iButton.setImageResource(imageResId);
                 Animation fadein_anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadein);
-                fadein_anim.setDuration(250);
+                fadein_anim.setDuration(duraction);
                 iButton.startAnimation(fadein_anim);
             }
-        
+
             @Override
             public void onAnimationRepeat(Animation animation){}
         });
