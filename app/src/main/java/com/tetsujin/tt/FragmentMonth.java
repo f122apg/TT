@@ -76,9 +76,6 @@ public class FragmentMonth extends Fragment implements View.OnClickListener
                     else
                         month ++;
                     break;
-                    
-                default:
-                    break;
             }
     
             //UIをアップデート
