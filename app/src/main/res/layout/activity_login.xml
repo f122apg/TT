@@ -22,7 +22,6 @@
     <EditText
         android:id="@+id/AyLogin_studentid_edittext"
         style="@style/inputform"
-        android:maxLength="9"
         android:hint="@string/hint_student_id"/>
     
     <TextView
