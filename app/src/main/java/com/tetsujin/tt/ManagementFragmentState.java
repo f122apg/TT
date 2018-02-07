@@ -98,18 +98,6 @@ public class ManagementFragmentState implements Cloneable
     
     public int getResourceId(stateList fragment)
     {
-        switch (resourceId.get(fragment).getResource())
-        {
-            case R.drawable.icon_week:
-                System.out.println("weekid");
-            case R.drawable.icon_month:
-                System.out.println("monthid");
-            case R.drawable.icon_notification:
-                System.out.println("notificationid");
-            default:
-                System.out.println("unknown");
-        }
-
         return resourceId.get(fragment).getResource();
     }
     
@@ -125,10 +113,13 @@ public class ManagementFragmentState implements Cloneable
             {
                 case WEEK:
                     resourceId.put(fragment, resource.WEEK);
+                    break;
                 case MONTH:
                     resourceId.put(fragment, resource.MONTH);
+                    break;
                 case NOTIFICATION:
                     resourceId.put(fragment, resource.NOTIFICATION);
+                    break;
             }
         }
     }

@@ -4,22 +4,17 @@ package com.tetsujin.tt;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.ActivityMain.timeTable;
-import static com.tetsujin.tt.ActivityMain.timeTableHelper;
-import static com.tetsujin.tt.ManagementFragmentState.stateList;
-import static com.tetsujin.tt.ManagementFragmentState.resource;
 
 public class FragmentHeader extends Fragment implements View.OnClickListener
 {
@@ -253,45 +248,49 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
         switch (vButton.getId())
         {
             case R.id.FrgHeader_week_button:
-                //状態がweekではなかったら、weekに変更
-                //weekであったら、mainに変更
-                if(!state.equal(stateList.WEEK))
-                {
-                    state.setState(stateList.WEEK);
-                    state.setResourceId(stateList.WEEK, resource.ARROW, false);
-                }
-                else
-                {
-                    state.setState(stateList.MAIN);
-                    state.setResourceId(stateList.WEEK, resource.WEEK, false);
-                }
-                break;
+//                //状態がweekではなかったら、weekに変更
+//                //weekであったら、mainに変更
+//                if(!state.equal(stateList.WEEK))
+//                {
+//                    state.setState(stateList.WEEK);
+//                    state.setResourceId(stateList.WEEK, resource.ARROW, false);
+//                }
+//                else
+//                {
+//                    state.setResourceId(stateList.WEEK, resource.WEEK, false);
+//                }
+//                break;
             case R.id.FrgHeader_month_button:
-                //状態がmonthではなかったら、monthに変更
-                //monthであったら、mainに変更
-                if(!state.equal(stateList.MONTH))
-                {
-                    state.setState(stateList.MONTH);
-                    state.setResourceId(stateList.MONTH, resource.ARROW, false);
-                }
-                else
-                {
-                    state.setState(stateList.MAIN);
-                    state.setResourceId(stateList.MONTH, resource.MONTH, false);
-                }
-                break;
+//                //状態がmonthではなかったら、monthに変更
+//                //monthであったら、mainに変更
+//                if(!state.equal(stateList.MONTH))
+//                {
+//                    state.setState(stateList.MONTH);
+//                    state.setResourceId(stateList.MONTH, resource.ARROW, false);
+//                }
+//                else
+//                {
+//                    state.setResourceId(stateList.MONTH, resource.MONTH, false);
+//                }
+//                break;
         }
+    
+//        Object[] list = new Object[3];
+//        list[0] = stateList.WEEK;
+//        list[1] = stateList.MONTH;
+//        list[2] = stateList.NOTIFICATION;
+//
+//        for(int i = 0; i < 3; i ++)
+//        {
+//            if(
+//                state.getResourceId((stateList) list[i]) == R.drawable.icon_arrow_back)
+//            {
+//                animated(v.getContext(), vButton, state.getResourceId((stateList) list[i]));
+//                state.setResourceId((stateList) list[i], null, true);
+//            }
+//        }
 
-        for(int i = 0; i < 3; i ++)
-        {
-            if(state.getResourceId(state.getState()) == R.drawable.icon_arrow_back)
-            {
-                animated(v.getContext(), vButton, state.getResourceId(state.getState()), 250);
-                state.setResourceId(state.getState(), null, true);
-            }
-        }
-
-        animated(v.getContext(), vButton, state.getResourceId(state.getState()), 250);
+        animated(v.getContext(), (ImageButton) vButton);
 
 //        /*
 //            アニメーション処理
@@ -324,33 +323,25 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
 //        iButton.startAnimation(fadeOutAnime);
     }
 
-    private void animated(Context context, View target, final int imageResId, final int duraction)
+    private void animated(Context context, ImageButton target)
     {
-        final ImageButton iButton = (ImageButton)target;
+        System.out.println("animated");
+        final ImageButton iButton = target;
 
-        //アニメーションの読み込みとアニメーションにかける時間を設定
-        Animation fadeOutAnime = AnimationUtils.loadAnimation(context, R.anim.icon_fadeout);
-        fadeOutAnime.setDuration(duraction);
-        //リスナーを設定
-        fadeOutAnime.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation){}
-
-            //アニメーション終了時、ボタンの画像を変更しアニメーションをかける
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                iButton.setImageResource(imageResId);
-                Animation fadein_anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.icon_fadein);
-                fadein_anim.setDuration(duraction);
-                iButton.startAnimation(fadein_anim);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation){}
-        });
-        //アニメーションを開始
-        iButton.startAnimation(fadeOutAnime);
+        ViewCompat.animate(iButton)
+                .alpha(0.3f)
+                .setDuration(150)
+                .setListener(new ViewPropertyAnimatorListenerAdapter()
+                    {
+                        //アニメーション終了時、ボタンの画像を変更しアニメーションをかける
+                        @Override public void onAnimationEnd (View view)
+                        {
+                            ViewCompat.animate(iButton)
+                                    .alpha(1f)
+                                    .setDuration(150)
+                                    .start();
+                        }
+                    })
+                .start();
     }
 }
