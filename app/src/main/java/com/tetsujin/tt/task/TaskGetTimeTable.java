@@ -92,7 +92,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                 {
                     strBuilder.append(buf, 0, read);
                 }
-                
+
                 //JSONの配列構文かどうか判断して、正しくないなら正しい構文に整形する
                 if(!strBuilder.toString().matches(PATTERN_JSONARRAY))
                 {

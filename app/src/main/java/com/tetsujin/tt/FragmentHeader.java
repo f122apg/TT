@@ -158,12 +158,13 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
     {
         final ImageButton iButton = target;
 
+        //透明度を1fから0fに250ミリ秒かけて、アニメーションさせる
         ViewCompat.animate(iButton)
                 .alpha(0f)
                 .setDuration(250)
                 .setListener(new ViewPropertyAnimatorListenerAdapter()
                     {
-                        //アニメーション終了時、ボタンの画像を変更しアニメーションをかける
+                        //透明度を0fから1fに150ミリ秒かけて、アニメーションさせる
                         @Override public void onAnimationEnd (View view)
                         {
                             ViewCompat.animate(iButton)
