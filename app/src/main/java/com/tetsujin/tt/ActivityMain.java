@@ -27,8 +27,13 @@ import java.util.Locale;
 
 public class ActivityMain extends AppCompatActivity {
 
+    //Fragmentの画面管理
     private FragmentManager fm;
+    //activitymain
     public static ActivityMain activityMain;
+    //Fragmentの状態を管理
+    public static ManagementFragmentState state;
+    //DB関連
     public static MemoHelper memoHelper;
     public static TimeTableHelper timeTableHelper;
     public static SQLiteDatabase memoDB;
@@ -43,13 +48,15 @@ public class ActivityMain extends AppCompatActivity {
         //アプリ実行時１度だけ実行
         if(savedInstanceState == null)
         {
+            fm = getSupportFragmentManager();
             activityMain = this;
+            state = new ManagementFragmentState();
             memoHelper = new MemoHelper(activityMain);
             timeTableHelper = new TimeTableHelper(activityMain);
             //DBが存在していなかったらDBの作成がされる
             memoDB = memoHelper.getWritableDatabase();
             timeTableDB = timeTableHelper.getWritableDatabase();
-            fm = getSupportFragmentManager();
+
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
             //初回のみアニメーションをさせないようにshowFragmentメソッドを使わずに表示
