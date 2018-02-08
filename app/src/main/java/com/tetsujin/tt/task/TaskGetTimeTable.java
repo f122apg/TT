@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.tetsujin.tt.ActivityMain.timeTableDB;
+
 /***********************************************************************/
 //時間割データをネットワーク経由で取得し、ListViewアダプタにセットする非同期のクラス
 /***********************************************************************/
@@ -60,35 +62,35 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
     @Override
     protected TimeTable[] doInBackground(String... urlStr)
     {
-        HttpURLConnection httpConnect = null;
+        HttpURLConnection con = null;
         //返り値 時間割情報を返す
         TimeTable[] retValues = new TimeTable[0];
         //JsonArrayの構文として正しいかどうか正規表現でチェックする文
         final String PATTERN_JSONARRAY = "^\\{\\s*\"\\S+\"\\s*:";
-        String json_ArrayName = "data";
+        String jsonArrayName = "data";
 
         try {
             //StringからURLを生成
             final URL url = new URL(urlStr[0]);
             //URL先に接続
-            httpConnect = (HttpURLConnection) url.openConnection();
-            httpConnect.connect();
+            con = (HttpURLConnection) url.openConnection();
+            con.connect();
 
             //接続した結果のステータスを取得
-            final int httpStatus = httpConnect.getResponseCode();
+            final int httpStatus = con.getResponseCode();
             //ステータスが200 HTTP_OKの場合、JSONのparseを行う
             if (httpStatus == HttpURLConnection.HTTP_OK)
             {
                 //InputStreamを取得
-                InputStream inputSt = httpConnect.getInputStream();
+                InputStream inputStream = con.getInputStream();
                 //InputStreamReader、StringBuilderを用いて、InputStreamをStringに変換
-                InputStreamReader stReader = new InputStreamReader(inputSt);
+                InputStreamReader streamReader = new InputStreamReader(inputStream);
                 StringBuilder strBuilder = new StringBuilder();
 
                 //InputStreamReaderを読み込んで、StringBuilderに追記する
                 char[] buf = new char[1024];
                 int read;
-                while (0 <= (read = stReader.read(buf)))
+                while (0 <= (read = streamReader.read(buf)))
                 {
                     strBuilder.append(buf, 0, read);
                 }
@@ -96,14 +98,14 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                 //JSONの配列構文かどうか判断して、正しくないなら正しい構文に整形する
                 if(!strBuilder.toString().matches(PATTERN_JSONARRAY))
                 {
-                    strBuilder.insert(0, "{ \"" + json_ArrayName + "\" :");
+                    strBuilder.insert(0, "{ \"" + jsonArrayName + "\" :");
                     strBuilder.append("}");
                 }
                 else
                 {
                     //JSONの配列名を取得
                     String array = strBuilder.toString();
-                    json_ArrayName = array.substring(array.indexOf("\"") + 1, array.indexOf("\"", array.indexOf("\"") + 1));
+                    jsonArrayName = array.substring(array.indexOf("\"") + 1, array.indexOf("\"", array.indexOf("\"") + 1));
                 }
 
                 String timeTableJson = strBuilder.toString();
@@ -111,7 +113,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                 try {
                     JSONObject json = new JSONObject(timeTableJson);
                     //JSONの配列を取得
-                    JSONArray datas = json.getJSONArray(json_ArrayName);
+                    JSONArray datas = json.getJSONArray(jsonArrayName);
                     retValues = new TimeTable[datas.length()];
                     //JSONの配列の中にある値を返り値に挿入
                     for (int i = 0; i < datas.length(); i ++)
@@ -152,8 +154,8 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                     e.printStackTrace();
                 }
 
-                stReader.close();
-                inputSt.close();
+                streamReader.close();
+                inputStream.close();
             }
 
         } catch (IOException e)
@@ -162,9 +164,9 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
         }
         finally
         {
-            if (httpConnect != null)
+            if (con != null)
             {
-                httpConnect.disconnect();
+                con.disconnect();
             }
         }
 
@@ -180,7 +182,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
         Map<Integer, Object> data = new TreeMap<>();
         TimeTableHelper timeTableHelper = new TimeTableHelper(activityMain);
         //インサートする前にDBのレコードを全削除する
-        timeTableHelper.Clear();
+        timeTableHelper.Clear(timeTableDB);
 
         //取得されたデータをDBへインサートする
         for (TimeTable v:values)
@@ -197,7 +199,7 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
             data.put(9, v.getTeacherName());
             data.put(10, v.getDescription());
 
-            timeTableHelper.Insert(data);
+            timeTableHelper.Insert(timeTableDB, data);
         }
 
         ListView timetable_lv = (ListView)this.activityMain.findViewById(R.id.FrgMain_timetable_listview);

@@ -140,10 +140,10 @@ public class TimeTableHelper extends SQLiteOpenHelper
     }
     
     //レコードのインサートを行う
-    public boolean Insert(Map<Integer, Object> data)
+    public boolean Insert(SQLiteDatabase db, Map<Integer, Object> data)
     {
         //インサートしようとしているデータが既に存在する場合はインサートしない
-        if(!HasId((Integer)data.get(0)))
+//        if(!HasId((Integer)data.get(0)))
         {
             //インサートするデータを準備する
             ContentValues cv = new ContentValues();
@@ -162,7 +162,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
             try
             {
                 //エラーチェック 返り値が0でないならば、正しく処理されたとする
-                if (timeTableDB.insert(TimeTable.TABLE_NAME, null, cv) > 0)
+                if (db.insert(TimeTable.TABLE_NAME, null, cv) > 0)
                     return true;
                 else
                     return false;
@@ -172,12 +172,12 @@ public class TimeTableHelper extends SQLiteOpenHelper
                 return false;
             }
         }
-        else
-            return false;
+//        else
+//            return false;
     }
 
-    public void Clear()
+    public void Clear(SQLiteDatabase db)
     {
-        timeTableDB.execSQL("DELETE FROM " + TimeTable.TABLE_NAME);
+        db.execSQL("DELETE FROM " + TimeTable.TABLE_NAME);
     }
 }
