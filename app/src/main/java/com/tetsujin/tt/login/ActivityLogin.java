@@ -57,7 +57,6 @@ public class ActivityLogin extends AppCompatActivity
         activityLogin = this;
         ttDBHelper = new TimeTableHelper(activityLogin);
         ttDB = ttDBHelper.getWritableDatabase();
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
 
         try
         {
@@ -301,7 +300,6 @@ public class ActivityLogin extends AppCompatActivity
                 int weekDay = jsonChild.getInt("weekDayNumber");
                 String startTime = jsonChild.getString("startTime");
                 String endTime = jsonChild.getString("endTime");
-                int season = 0;
                 String description = "id:" + String.valueOf(i);
                 String classRoomName = jsonChild.getString("classroomName");
                 int teacherId = 0;
@@ -314,7 +312,6 @@ public class ActivityLogin extends AppCompatActivity
                         .WeekDay(weekDay)
                         .StartTime(startTime)
                         .EndTime(endTime)
-                        .Season(season)
                         .ClassRoomName(classRoomName)
                         .TeacherID(teacherId)
                         .TeacherName(teacherName)
@@ -335,11 +332,10 @@ public class ActivityLogin extends AppCompatActivity
                 data.put(3, v.getWeekDay());
                 data.put(4, v.getStartTime());
                 data.put(5, v.getEndTime());
-                data.put(6, v.getSeason());
-                data.put(7, v.getClassRoomName());
-                data.put(8, v.getTeacherID());
-                data.put(9, v.getTeacherName());
-                data.put(10, v.getDescription());
+                data.put(6, v.getClassRoomName());
+                data.put(7, v.getTeacherID());
+                data.put(8, v.getTeacherName());
+                data.put(9, v.getDescription());
 
                 ttDBHelper.Insert(ttDB, data);
             }

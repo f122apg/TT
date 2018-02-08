@@ -17,7 +17,6 @@ import static com.tetsujin.tt.database.TimeTable.COLUMN_DESCRIPTION;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_ENDTIME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_LESSONCODE;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_LESSONNAME;
-import static com.tetsujin.tt.database.TimeTable.COLUMN_SEASON;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_STARTTIME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_TEACHERID;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_TEACHERNAME;
@@ -128,7 +127,6 @@ public class TimeTableHelper extends SQLiteOpenHelper
                     .WeekDay(cr.getInt(cr.getColumnIndex(COLUMN_WEEKDAY)))
                     .StartTime(cr.getString(cr.getColumnIndex(COLUMN_STARTTIME)))
                     .EndTime(cr.getString(cr.getColumnIndex(COLUMN_ENDTIME)))
-                    .Season(cr.getInt(cr.getColumnIndex(COLUMN_SEASON)))
                     .ClassRoomName(cr.getString(cr.getColumnIndex(COLUMN_CLASSROOMNAME)))
                     .TeacherID(cr.getInt(cr.getColumnIndex(COLUMN_TEACHERID)))
                     .TeacherName(cr.getString(cr.getColumnIndex(COLUMN_TEACHERNAME)))
@@ -153,11 +151,10 @@ public class TimeTableHelper extends SQLiteOpenHelper
             cv.put(TimeTable.COLUMN_WEEKDAY, (Integer) data.get(3));
             cv.put(COLUMN_STARTTIME, (String) data.get(4));
             cv.put(TimeTable.COLUMN_ENDTIME, (String) data.get(5));
-            cv.put(TimeTable.COLUMN_SEASON, (Integer) data.get(6));
-            cv.put(TimeTable.COLUMN_CLASSROOMNAME, (String) data.get(7));
-            cv.put(TimeTable.COLUMN_TEACHERID, (Integer) data.get(8));
-            cv.put(TimeTable.COLUMN_TEACHERNAME, (String) data.get(9));
-            cv.put(TimeTable.COLUMN_DESCRIPTION, (String) data.get(10));
+            cv.put(TimeTable.COLUMN_CLASSROOMNAME, (String) data.get(6));
+            cv.put(TimeTable.COLUMN_TEACHERID, (Integer) data.get(7));
+            cv.put(TimeTable.COLUMN_TEACHERNAME, (String) data.get(8));
+            cv.put(TimeTable.COLUMN_DESCRIPTION, (String) data.get(9));
 
             try
             {

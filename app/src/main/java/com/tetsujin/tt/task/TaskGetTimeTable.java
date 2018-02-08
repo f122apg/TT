@@ -128,7 +128,6 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                         int weekDay = json.getInt("WeekDay");
                         String startTime = json.getString("StartTime");
                         String endTime = json.getString("EndTime");
-                        int season = 0;
                         String description = json.getString("Description");
                         String classRoomName = json.getString("ClassRoomName");
                         int teacherId = json.getInt("TeacherId");
@@ -141,7 +140,6 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
                                 .WeekDay(weekDay)
                                 .StartTime(startTime)
                                 .EndTime(endTime)
-                                .Season(season)
                                 .ClassRoomName(classRoomName)
                                 .TeacherID(teacherId)
                                 .TeacherName(teacherName)
@@ -193,11 +191,10 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, TimeTable[]>
             data.put(3, v.getWeekDay());
             data.put(4, v.getStartTime());
             data.put(5, v.getEndTime());
-            data.put(6, v.getSeason());
-            data.put(7, v.getClassRoomName());
-            data.put(8, v.getTeacherID());
-            data.put(9, v.getTeacherName());
-            data.put(10, v.getDescription());
+            data.put(6, v.getClassRoomName());
+            data.put(7, v.getTeacherID());
+            data.put(8, v.getTeacherName());
+            data.put(9, v.getDescription());
 
             timeTableHelper.Insert(timeTableDB, data);
         }

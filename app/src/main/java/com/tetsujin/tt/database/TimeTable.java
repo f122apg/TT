@@ -22,14 +22,23 @@ public class TimeTable implements Parcelable
     final static String COLUMN_WEEKDAY = "WeekDay";
     final static String COLUMN_STARTTIME = "StartTime";
     final static String COLUMN_ENDTIME = "EndTime";
-    final static String COLUMN_SEASON = "Season";
     final static String COLUMN_CLASSROOMNAME = "ClassRoomName";
     final static String COLUMN_TEACHERID = "TeacherID";
     final static String COLUMN_TEACHERNAME = "TeacherName";
     final static String COLUMN_DESCRIPTION = "Description";
 
     //テーブルを作成するクエリ
-    final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_TIMETABLEID + " INTEGER PRIMARY KEY," + COLUMN_LESSONCODE + " TEXT NOT NULL," + COLUMN_LESSONNAME + " TEXT NOT NULL," + COLUMN_WEEKDAY + " INTEGER NOT NULL," + COLUMN_STARTTIME + " TEXT NOT NULL," + COLUMN_ENDTIME + " TEXT NOT NULL," + COLUMN_SEASON + " INTEGER NOT NULL," + COLUMN_CLASSROOMNAME + " TEXT NOT NULL," + COLUMN_TEACHERID + " INTEGER NOT NULL," + COLUMN_TEACHERNAME + " TEXT NOT NULL," + COLUMN_DESCRIPTION + " TEXT" + ");";
+    final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" +
+            COLUMN_TIMETABLEID + " INTEGER PRIMARY KEY," +
+            COLUMN_LESSONCODE + " TEXT NOT NULL," +
+            COLUMN_LESSONNAME + " TEXT NOT NULL," +
+            COLUMN_WEEKDAY + " INTEGER NOT NULL," +
+            COLUMN_STARTTIME + " TEXT NOT NULL," +
+            COLUMN_ENDTIME + " TEXT NOT NULL," +
+            COLUMN_CLASSROOMNAME + " TEXT NOT NULL," +
+            COLUMN_TEACHERID + " INTEGER NOT NULL," +
+            COLUMN_TEACHERNAME + " TEXT NOT NULL," +
+            COLUMN_DESCRIPTION + " TEXT" + ");";
 
     //すべてのレコードを取得するクエリ
     final static String GET_RECORD_ALL = "SELECT * FROM " + TABLE_NAME + ";";
@@ -46,12 +55,9 @@ public class TimeTable implements Parcelable
     private String LessonCode;
     private String LessonName;
     //java.util.Calendarの形式に沿う
-    //-1でエラーとする
     private int WeekDay;
     private String StartTime;
     private String EndTime;
-    //前期 = 0 か後期 = 1 か
-    private int Season;
     private String ClassRoomName;
     private int TeacherID;
     private String TeacherName;
@@ -69,7 +75,6 @@ public class TimeTable implements Parcelable
         this.WeekDay = builder.WeekDay;
         this.StartTime = builder.StartTime;
         this.EndTime = builder.EndTime;
-        this.Season = builder.Season;
         this.ClassRoomName = builder.ClassRoomName;
         this.TeacherID = builder.TeacherID;
         this.TeacherName = builder.TeacherName;
@@ -85,7 +90,6 @@ public class TimeTable implements Parcelable
         this.WeekDay = in.readInt();
         this.StartTime = in.readString();
         this.EndTime = in.readString();
-        this.Season = in.readInt();
         this.ClassRoomName = in.readString();
         this.TeacherID = in.readInt();
         this.TeacherName = in.readString();
@@ -123,11 +127,6 @@ public class TimeTable implements Parcelable
     public String getEndTime()
     {
         return this.EndTime;
-    }
-
-    public int getSeason()
-    {
-        return this.Season;
     }
 
     public String getClassRoomName()
@@ -168,7 +167,6 @@ public class TimeTable implements Parcelable
         dest.writeInt(this.WeekDay);
         dest.writeString(this.StartTime);
         dest.writeString(this.EndTime);
-        dest.writeInt(this.Season);
         dest.writeString(this.ClassRoomName);
         dest.writeInt(this.TeacherID);
         dest.writeString(this.TeacherName);
@@ -205,8 +203,6 @@ public class TimeTable implements Parcelable
         private int WeekDay;
         private String StartTime;
         private String EndTime;
-        //前期 = 0 か後期 = 1 か
-        private int Season;
         private String ClassRoomName;
         private int TeacherID;
         private String TeacherName;
@@ -244,12 +240,6 @@ public class TimeTable implements Parcelable
         public Builder EndTime(String endTime)
         {
             EndTime = endTime;
-            return this;
-        }
-
-        public Builder Season(int season)
-        {
-            Season = season;
             return this;
         }
 
@@ -292,9 +282,6 @@ public class TimeTable implements Parcelable
             m = p.matcher(EndTime);
             if (m.find()) EndTime = m.group();
             else throw new IllegalStateException("EndTime内にHH:mmが存在しません。");
-
-            //Seasonが0または1じゃない場合は、throw
-            if (!(Season == 0) && !(Season == 1)) throw new IllegalStateException("Seasonの値が不正です。");
 
             //フィールドの値が正常ならばbuilderをコンストラクタに渡す
             return new TimeTable(this);
