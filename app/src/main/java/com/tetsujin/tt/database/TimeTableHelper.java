@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.Map;
 
+import static com.tetsujin.tt.ActivityMain.activityMain;
 import static com.tetsujin.tt.ActivityMain.timeTableDB;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_CLASSROOMNAME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_DESCRIPTION;
@@ -25,7 +26,18 @@ import static com.tetsujin.tt.database.TimeTable.COLUMN_WEEKDAY;
 
 public class TimeTableHelper extends SQLiteOpenHelper
 {
-    public TimeTableHelper(Context context)
+    private static TimeTableHelper singleton = null;
+
+    //シングルトン
+    public static synchronized TimeTableHelper getInstance(Context context)
+    {
+        if(singleton == null)
+            singleton = new TimeTableHelper(context);
+
+        return singleton;
+    }
+
+    private TimeTableHelper(Context context)
     {
         super(context, TimeTable.DB_NAME, null, 1);
     }

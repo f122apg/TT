@@ -57,7 +57,6 @@ public class ActivityMain extends AppCompatActivity {
             memoDB = memoHelper.getWritableDatabase();
             timeTableDB = timeTableHelper.getWritableDatabase();
 
-
             //ActivityMainに存在するcontainerにFragmentMainを表示する
             //初回のみアニメーションをさせないようにshowFragmentメソッドを使わずに表示
             FragmentHeader frgHead = new FragmentHeader();

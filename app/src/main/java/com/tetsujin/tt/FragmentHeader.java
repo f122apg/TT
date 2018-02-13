@@ -169,7 +169,7 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
                         {
                             ViewCompat.animate(iButton)
                                     .alpha(1f)
-                                    .setDuration(150)
+                                    .setDuration(250)
                                     .start();
                         }
                     })
