@@ -1,11 +1,18 @@
 package com.tetsujin.tt.database;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +30,6 @@ public class TimeTable implements Parcelable
     final static String COLUMN_STARTTIME = "StartTime";
     final static String COLUMN_ENDTIME = "EndTime";
     final static String COLUMN_CLASSROOMNAME = "ClassRoomName";
-    final static String COLUMN_TEACHERID = "TeacherID";
     final static String COLUMN_TEACHERNAME = "TeacherName";
     final static String COLUMN_DESCRIPTION = "Description";
 
@@ -36,7 +42,6 @@ public class TimeTable implements Parcelable
             COLUMN_STARTTIME + " TEXT NOT NULL," +
             COLUMN_ENDTIME + " TEXT NOT NULL," +
             COLUMN_CLASSROOMNAME + " TEXT NOT NULL," +
-            COLUMN_TEACHERID + " INTEGER NOT NULL," +
             COLUMN_TEACHERNAME + " TEXT NOT NULL," +
             COLUMN_DESCRIPTION + " TEXT" + ");";
 
@@ -59,7 +64,6 @@ public class TimeTable implements Parcelable
     private String StartTime;
     private String EndTime;
     private String ClassRoomName;
-    private int TeacherID;
     private String TeacherName;
     private String Description;
 
@@ -76,7 +80,6 @@ public class TimeTable implements Parcelable
         this.StartTime = builder.StartTime;
         this.EndTime = builder.EndTime;
         this.ClassRoomName = builder.ClassRoomName;
-        this.TeacherID = builder.TeacherID;
         this.TeacherName = builder.TeacherName;
         this.Description = builder.Description;
     }
@@ -91,7 +94,6 @@ public class TimeTable implements Parcelable
         this.StartTime = in.readString();
         this.EndTime = in.readString();
         this.ClassRoomName = in.readString();
-        this.TeacherID = in.readInt();
         this.TeacherName = in.readString();
         this.Description = in.readString();
     }
@@ -134,11 +136,6 @@ public class TimeTable implements Parcelable
         return this.ClassRoomName;
     }
 
-    public int getTeacherID()
-    {
-        return this.TeacherID;
-    }
-
     public String getTeacherName()
     {
         return this.TeacherName;
@@ -168,7 +165,6 @@ public class TimeTable implements Parcelable
         dest.writeString(this.StartTime);
         dest.writeString(this.EndTime);
         dest.writeString(this.ClassRoomName);
-        dest.writeInt(this.TeacherID);
         dest.writeString(this.TeacherName);
         dest.writeString(this.Description);
     }
@@ -204,7 +200,6 @@ public class TimeTable implements Parcelable
         private String StartTime;
         private String EndTime;
         private String ClassRoomName;
-        private int TeacherID;
         private String TeacherName;
         private String Description;
 
@@ -246,12 +241,6 @@ public class TimeTable implements Parcelable
         public Builder ClassRoomName(String classRoomName)
         {
             ClassRoomName = classRoomName;
-            return this;
-        }
-
-        public Builder TeacherID(int teacherID)
-        {
-            TeacherID = teacherID;
             return this;
         }
 
@@ -378,5 +367,72 @@ public class TimeTable implements Parcelable
         }
         
         return retValue;
+    }
+
+    //時間割データを含む、Jsonから時間割データを抜き出しデータベースへ挿入する
+    public void timeTableJsonParser(SQLiteDatabase db, TimeTableHelper dbhelper, String json)
+    {
+        try
+        {
+            //Jsonを読み込む
+            JSONObject jsonRoot = new JSONObject(json);
+            //Json内にある要素配列 lessons を取得
+            JSONArray jsonLesson = jsonRoot.getJSONArray("lessons");
+            //返り値を準備
+            TimeTable[] retValues = new TimeTable[jsonLesson.length()];
+
+            //Jsonから授業データを引き出して、データベースに登録
+            for(int i = 0; i < jsonLesson.length(); i ++)
+            {
+                JSONObject jsonChild = jsonLesson.getJSONObject(i);
+
+                //jsonの要素名から値を取得し、変数に一時保存させる
+                int timeTableId = i;
+                String lessonCode = jsonChild.getString("lessonCode");
+                String lessonName = jsonChild.getString("lessonName");
+                int weekDay = jsonChild.getInt("weekDayNumber");
+                String startTime = jsonChild.getString("startTime");
+                String endTime = jsonChild.getString("endTime");
+                String description = jsonChild.getString("description");
+                String classRoomName = jsonChild.getString("classroomName");
+                String teacherName = jsonChild.getString("teacherName");
+
+                //一時保存された変数からTimeTableのインスタンスを生成
+                retValues[i] = new TimeTable.Builder(timeTableId)
+                        .LessonCode(lessonCode)
+                        .LessonName(lessonName)
+                        .WeekDay(weekDay)
+                        .StartTime(startTime)
+                        .EndTime(endTime)
+                        .ClassRoomName(classRoomName)
+                        .TeacherName(teacherName)
+                        .Description(description)
+                        .build();
+            }
+
+            Map<Integer, Object> data = new TreeMap<>();
+            //インサートする前にDBのレコードを全削除する
+            dbhelper.Clear(db);
+
+            //取得されたデータをDBへインサートする
+            for (TimeTable v:retValues)
+            {
+                data.put(0, v.getTimeTableID());
+                data.put(1, v.getLessonCode());
+                data.put(2, v.getLessonName());
+                data.put(3, v.getWeekDay());
+                data.put(4, v.getStartTime());
+                data.put(5, v.getEndTime());
+                data.put(6, v.getClassRoomName());
+                data.put(7, v.getTeacherName());
+                data.put(8, v.getDescription());
+
+                dbhelper.Insert(db, data);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("TTAPP", e.getMessage());
+        }
     }
 }

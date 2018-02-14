@@ -19,7 +19,6 @@ import static com.tetsujin.tt.database.TimeTable.COLUMN_ENDTIME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_LESSONCODE;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_LESSONNAME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_STARTTIME;
-import static com.tetsujin.tt.database.TimeTable.COLUMN_TEACHERID;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_TEACHERNAME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_TIMETABLEID;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_WEEKDAY;
@@ -37,6 +36,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
         return singleton;
     }
 
+    //コンストラクタ シングルトンによってprivateにしている
     private TimeTableHelper(Context context)
     {
         super(context, TimeTable.DB_NAME, null, 1);
@@ -54,14 +54,14 @@ public class TimeTableHelper extends SQLiteOpenHelper
     }
 
     //TimeTableIDの存在チェックを行う
-    private boolean HasId(int id)
+    private boolean HasId(SQLiteDatabase db, int id)
     {
         Cursor result;
 
         //データベースが存在するが行がない場合、SQLiteExceptionがthrowされる模様
         try
         {
-            result = timeTableDB.rawQuery(TimeTable.GET_RECORD_ID_QUERY, new String[]{ String.valueOf(id) });
+            result = db.rawQuery(TimeTable.GET_RECORD_ID_QUERY, new String[]{ String.valueOf(id) });
         }
         catch (SQLiteException e)
         {
@@ -85,9 +85,9 @@ public class TimeTableHelper extends SQLiteOpenHelper
     }
     
     //データベース内にあるレコードすべて取得する
-    public TimeTable[] GetRecordAll()
+    public TimeTable[] GetRecordAll(SQLiteDatabase db)
     {
-        Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_ALL, null);
+        Cursor result = db.rawQuery(TimeTable.GET_RECORD_ALL, null);
 
         try
         {
@@ -106,9 +106,9 @@ public class TimeTableHelper extends SQLiteOpenHelper
     
     
     //特定の曜日の時間割データだけを取得する
-    public TimeTable[] GetRecordAtWeekDay(int weekday)
+    public TimeTable[] GetRecordAtWeekDay(SQLiteDatabase db, int weekday)
     {
-        Cursor result = timeTableDB.rawQuery(TimeTable.GET_RECORD_AT_WEEKDAY_QUERY, new String[]{ String.valueOf(weekday) });
+        Cursor result = db.rawQuery(TimeTable.GET_RECORD_AT_WEEKDAY_QUERY, new String[]{ String.valueOf(weekday) });
 
         try
         {
@@ -140,7 +140,6 @@ public class TimeTableHelper extends SQLiteOpenHelper
                     .StartTime(cr.getString(cr.getColumnIndex(COLUMN_STARTTIME)))
                     .EndTime(cr.getString(cr.getColumnIndex(COLUMN_ENDTIME)))
                     .ClassRoomName(cr.getString(cr.getColumnIndex(COLUMN_CLASSROOMNAME)))
-                    .TeacherID(cr.getInt(cr.getColumnIndex(COLUMN_TEACHERID)))
                     .TeacherName(cr.getString(cr.getColumnIndex(COLUMN_TEACHERNAME)))
                     .Description(cr.getString(cr.getColumnIndex(COLUMN_DESCRIPTION)))
                     .build();
@@ -153,7 +152,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
     public boolean Insert(SQLiteDatabase db, Map<Integer, Object> data)
     {
         //インサートしようとしているデータが既に存在する場合はインサートしない
-//        if(!HasId((Integer)data.get(0)))
+        if(!HasId(db, (Integer)data.get(0)))
         {
             //インサートするデータを準備する
             ContentValues cv = new ContentValues();
@@ -164,9 +163,8 @@ public class TimeTableHelper extends SQLiteOpenHelper
             cv.put(COLUMN_STARTTIME, (String) data.get(4));
             cv.put(TimeTable.COLUMN_ENDTIME, (String) data.get(5));
             cv.put(TimeTable.COLUMN_CLASSROOMNAME, (String) data.get(6));
-            cv.put(TimeTable.COLUMN_TEACHERID, (Integer) data.get(7));
-            cv.put(TimeTable.COLUMN_TEACHERNAME, (String) data.get(8));
-            cv.put(TimeTable.COLUMN_DESCRIPTION, (String) data.get(9));
+            cv.put(TimeTable.COLUMN_TEACHERNAME, (String) data.get(7));
+            cv.put(TimeTable.COLUMN_DESCRIPTION, (String) data.get(8));
 
             try
             {
@@ -181,8 +179,8 @@ public class TimeTableHelper extends SQLiteOpenHelper
                 return false;
             }
         }
-//        else
-//            return false;
+        else
+            return false;
     }
 
     public void Clear(SQLiteDatabase db)

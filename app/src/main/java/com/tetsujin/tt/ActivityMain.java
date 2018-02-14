@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -52,7 +54,7 @@ public class ActivityMain extends AppCompatActivity {
             activityMain = this;
             state = new ManagementFragmentState();
             memoHelper = new MemoHelper(activityMain);
-            timeTableHelper = new TimeTableHelper(activityMain);
+            timeTableHelper = TimeTableHelper.getInstance(activityMain);
             //DBが存在していなかったらDBの作成がされる
             memoDB = memoHelper.getWritableDatabase();
             timeTableDB = timeTableHelper.getWritableDatabase();

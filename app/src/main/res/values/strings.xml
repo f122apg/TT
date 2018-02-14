@@ -3,15 +3,14 @@
 
     <!-- login -->
     <string name="login">ログイン</string>
-    <string name="student_id">学籍番号</string>
+    <string name="email">メールアドレス</string>
     <string name="password">パスワード</string>
-    <string name="hint_student_id">K000C9999</string>
     <!-- &#8230 = ... -->
-    <string name="forget_input_all">学籍番号と\nパスワードを入力してください！</string>
-    <string name="forget_input_number">学籍番号を入力してください！</string>
+    <string name="forget_input_all">メールアドレスと\nパスワードを入力してください！</string>
+    <string name="forget_input_email">メールアドレスを入力してください！</string>
     <string name="forget_input_password">パスワードを入力してください！</string>
     <string name="logging_in">ログイン中&#8230;</string>
-    <string name="wrong_number_or_password">学籍番号または\nパスワードが間違っています。</string>
+    <string name="wrong_email_or_password">メールアドレスまたは\nパスワードが間違っています。</string>
     <string name="failed_login">ログインに失敗しました。</string>
 
     <!-- register -->

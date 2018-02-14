@@ -4,6 +4,7 @@
               android:fitsSystemWindows="true"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:weightSum="10"
               android:orientation="vertical"
               tools:context="com.tetsujin.tt.FragmentMain">
     
@@ -17,7 +18,8 @@
         <TextView
             android:id="@+id/FrgMain_date_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
             android:layout_gravity="center_horizontal"
             android:text="MM/dd(E)"
             android:textSize="30sp"/>
@@ -25,7 +27,8 @@
         <!-- ListViewのヘッダー部 -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="0.4">
     
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,13 +50,14 @@
             </LinearLayout>
     
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
                 android:orientation="horizontal">
         
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="授業名"
                     android:textSize="25sp" />
@@ -65,14 +69,16 @@
         <ListView
             android:id="@+id/FrgMain_timetable_listview"
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginTop="20dp" />
     
         <!-- 下部 MEMO欄 -->
         <LinearLayout
             android:id="@+id/bottomLinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@drawable/border"
             android:orientation="vertical"
             android:focusable="true"
@@ -86,9 +92,9 @@
             <EditText
                 android:id="@+id/FrgMain_memo_edittext"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:height="90dp"
-                android:gravity="top|left"
+                android:layout_height="wrap_content"
+                android:height="150dp"
+                android:gravity="start"
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollbars="vertical"/>
 

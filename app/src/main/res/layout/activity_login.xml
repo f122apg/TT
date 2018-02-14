@@ -20,9 +20,10 @@
         android:text="@string/student_id"/>
     
     <EditText
-        android:id="@+id/AyLogin_studentid_edittext"
+        android:id="@+id/AyLogin_email_edittext"
         style="@style/inputform"
-        android:hint="@string/hint_student_id"/>
+        android:inputType="textEmailAddress"
+        android:hint="@string/hint_mailaddress"/>
     
     <TextView
         style="@style/inputdesc"
