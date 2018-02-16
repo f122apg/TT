@@ -2,67 +2,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_weight="1"
     android:orientation="horizontal"
     tools:context="com.tetsujin.tt.FragmentHeader">
     
     <!-- 上部 Button群 -->
     <ImageButton
         android:id="@+id/FrgHeader_week_button"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_weight="1"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/icon_week"/>
-    
+
+    <!-- メイン画面に行くボタンだけ画像が小さい？のでheightを高く、gravityにbottomを設定 -->
     <ImageButton
         android:id="@+id/FrgHeader_main_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="5dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/icon_home"/>
     
     <ImageButton
         android:id="@+id/FrgHeader_month_button"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="5dp"
+        android:layout_weight="1"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/icon_month"/>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <!-- weightをかけるために空のTextViewを設定 -->
+    <TextView
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:gravity="right">
+        android:layout_weight="5"/>
 
-        <Button
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:text="DB削除"
-            android:id="@+id/debug_dbrm_button"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="end">
 
-        <Button
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:text="Tablelist"
-            android:id="@+id/debug_dbcreate_button"/>
+        <!--<Button-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="DB削除"-->
+            <!--android:id="@+id/debug_dbrm_button"-->
+            <!--android:visibility="invisible"/>-->
 
-        <Button
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:text="データ取得"
-            android:id="@+id/debug_getdata_button"/>
+        <!--<Button-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Tablelist"-->
+            <!--android:id="@+id/debug_dbcreate_button"-->
+            <!--android:visibility="invisible"/>-->
+
+        <!--<Button-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="データ取得"-->
+            <!--android:id="@+id/debug_getdata_button"-->
+            <!--android:visibility="invisible"/>-->
         
         <ImageButton
-            android:id="@+id/FrgHeader_B2_button"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/FrgHeader_notification_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:background="@null"
+            android:layout_weight="1"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_notification"/>
-        
+
         </LinearLayout>
 </LinearLayout>

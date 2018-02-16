@@ -1,7 +1,6 @@
 package com.tetsujin.tt;
 
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,18 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.tetsujin.tt.database.TimeTable;
-import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
 import static com.tetsujin.tt.ActivityMain.getToDay;
 import static com.tetsujin.tt.ActivityMain.state;
 import static com.tetsujin.tt.ActivityMain.timeTable;
 import static com.tetsujin.tt.ActivityMain.timeTableHelper;
-import static com.tetsujin.tt.ManagementFragmentState.stateList;
 import static com.tetsujin.tt.FragmentMain.todaydate;
+import static com.tetsujin.tt.ManagementFragmentState.stateList;
 
 public class FragmentHeader extends Fragment implements View.OnClickListener
 {
@@ -41,22 +38,52 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
         v.findViewById(R.id.FrgHeader_week_button).setOnClickListener(this);
         v.findViewById(R.id.FrgHeader_month_button).setOnClickListener(this);
 
-        v.findViewById(R.id.debug_dbcreate_button).setVisibility(View.INVISIBLE);
-        v.findViewById(R.id.debug_dbrm_button).setVisibility(View.INVISIBLE);
-        v.findViewById(R.id.debug_getdata_button).setVisibility(View.INVISIBLE);
+//        v.findViewById(R.id.debug_dbcreate_button).setVisibility(View.INVISIBLE);
+//        v.findViewById(R.id.debug_dbrm_button).setVisibility(View.INVISIBLE);
+//        v.findViewById(R.id.debug_getdata_button).setVisibility(View.INVISIBLE);
 
         /*************************************************************/
         /* デバッグ用 */
         /*************************************************************/
-        v.findViewById(R.id.debug_getdata_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-
-                TaskGetTimeTable t = new TaskGetTimeTable();
-                t.execute("http://tetsujintimes.azurewebsites.net/api/TimeTables/cd/2/4");
-
+//        v.findViewById(R.id.debug_getdata_button).setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//
+//                TaskGetTimeTable t = new TaskGetTimeTable();
+//                t.execute("http://tetsujintimes.azurewebsites.net/api/TimeTables/cd/2/4");
+//
+////                //Tableの行一覧表示
+////                if(!isChangeFragment)
+////                {
+////                    FragmentDebug f = new FragmentDebug();
+////                    activityMain.showFragment(f);
+////                    isChangeFragment = !isChangeFragment;
+////                }
+////                else
+////                {
+////                    FragmentMain frgmain = new FragmentMain();
+////                    activityMain.showFragment(frgmain);
+////                    isChangeFragment = !isChangeFragment;
+////                }
+//            }
+//        });
+//
+//        v.findViewById(R.id.debug_dbrm_button).setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                activityMain.deleteDatabase("TimeTableDB");
+//            }
+//        });
+//
+//        v.findViewById(R.id.debug_dbcreate_button).setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
 //                //Tableの行一覧表示
 //                if(!isChangeFragment)
 //                {
@@ -70,38 +97,8 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
 //                    activityMain.showFragment(frgmain);
 //                    isChangeFragment = !isChangeFragment;
 //                }
-            }
-        });
-
-        v.findViewById(R.id.debug_dbrm_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                activityMain.deleteDatabase("TimeTableDB");
-            }
-        });
-
-        v.findViewById(R.id.debug_dbcreate_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                //Tableの行一覧表示
-                if(!isChangeFragment)
-                {
-                    FragmentDebug f = new FragmentDebug();
-                    activityMain.showFragment(f);
-                    isChangeFragment = !isChangeFragment;
-                }
-                else
-                {
-                    FragmentMain frgmain = new FragmentMain();
-                    activityMain.showFragment(frgmain);
-                    isChangeFragment = !isChangeFragment;
-                }
-            }
-        });
+//            }
+//        });
 
         return v;
     }

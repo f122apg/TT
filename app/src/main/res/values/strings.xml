@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TT</string>
+    <string name="app_name">TetsujinTime</string>
 
     <!-- login -->
     <string name="login">ログイン</string>
