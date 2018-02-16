@@ -280,8 +280,10 @@ public class TimeTable implements Parcelable
     //授業の詳細を表示する関数
     public String showDescription()
     {
-        if (!getDescription().equals("null")) return getDescription();
-        else return "なし";
+        if (!getDescription().equals("null"))
+            return getDescription();
+        else
+            return "なし";
     }
     
     private static Boolean isNull(Object object)

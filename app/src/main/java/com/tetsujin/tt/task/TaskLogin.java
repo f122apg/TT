@@ -25,6 +25,9 @@ public class TaskLogin extends AsyncTask<String, Void, String>
         return getToken(userparam[0], userparam[1]);
     }
 
+    @Override
+    protected void onPostExecute(String result) {
+    }
 
     private String getToken(String username, String password)
     {

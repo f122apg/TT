@@ -1,5 +1,7 @@
 package com.tetsujin.tt.login;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,17 +9,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tetsujin.tt.ActivityMain;
 import com.tetsujin.tt.R;
 import com.tetsujin.tt.database.TimeTableHelper;
 import com.tetsujin.tt.task.TaskGetTimeTable;
 import com.tetsujin.tt.task.TaskLogin;
 
-public class ActivityLogin extends AppCompatActivity
+public class ActivityLogin extends AppCompatActivity implements Runnable
 {
     private String loginId;
     private SQLiteDatabase timeTableDB;
     private TimeTableHelper timeTableHelper;
     public ActivityLogin activityLogin;
+    Thread thread;
+    ProgressDialog pdialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,24 +60,44 @@ public class ActivityLogin extends AppCompatActivity
                     return;
                 }
 
-                TaskLogin taskLogin = new TaskLogin();
-                TaskGetTimeTable taskGetTimeTable = new TaskGetTimeTable();
-                String modoriti = taskLogin.execute(new String[]{ email.getText().toString(), password.getText().toString() });
-                taskGetTimeTable.execute();
-//                AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>()
+                pdialog = new ProgressDialog(activityLogin);
+                pdialog.setMessage("ログイン中...");
+                pdialog.show();
+
+                thread = new Thread(activityLogin);
+                thread.start();
+
+                Intent intent = new Intent(ActivityLogin.this, ActivityMain.class);
+                startActivity(intent);
+
+
+//                TaskLogin taskLogin = new TaskLogin()
 //                {
 //                    @Override
-//                    protected String doInBackground(Void... voids)
+//                    public void callBack(String result)
 //                    {
-//                        login();
-//                        return null;
+//                        TaskGetTimeTable taskGetTimeTable = new TaskGetTimeTable()
+//                        {
+//                            @Override
+//                            public void callBack(String result)
+//                            {
+//
+//                            }
+//                        };
 //                    }
 //                };
-
-                //task.execute();
             }
         });
     }
+
+    @Override
+    public void run() {
+        try {
+            thread.sleep(5000);
+        } catch (InterruptedException e) { }
+        pdialog.dismiss();
+    }
+}
 
 //    private void login()
 //    {
@@ -109,4 +134,3 @@ public class ActivityLogin extends AppCompatActivity
 //
 //        //Log.d("LOGIN_TT", getTimeTable(getToken("taro@it-neec.jp", "taro@it-neec.jp")));
 //    }
-}

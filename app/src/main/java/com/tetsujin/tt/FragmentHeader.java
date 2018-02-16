@@ -2,6 +2,7 @@ package com.tetsujin.tt;
 
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -16,25 +17,33 @@ import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.task.TaskGetTimeTable;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
+import static com.tetsujin.tt.ActivityMain.getToDay;
 import static com.tetsujin.tt.ActivityMain.state;
 import static com.tetsujin.tt.ActivityMain.timeTable;
 import static com.tetsujin.tt.ActivityMain.timeTableHelper;
 import static com.tetsujin.tt.ManagementFragmentState.stateList;
+import static com.tetsujin.tt.FragmentMain.todaydate;
 
 public class FragmentHeader extends Fragment implements View.OnClickListener
 {
     private boolean isChangeFragment = false;
     private View v;
+    private SQLiteDatabase timeTableDB;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_header, container, false);
+        timeTableDB = timeTableHelper.getWritableDatabase();
 
         //各ImageButtonにonclicklistenerを設定
         v.findViewById(R.id.FrgHeader_main_button).setOnClickListener(this);
         v.findViewById(R.id.FrgHeader_week_button).setOnClickListener(this);
         v.findViewById(R.id.FrgHeader_month_button).setOnClickListener(this);
+
+        v.findViewById(R.id.debug_dbcreate_button).setVisibility(View.INVISIBLE);
+        v.findViewById(R.id.debug_dbrm_button).setVisibility(View.INVISIBLE);
+        v.findViewById(R.id.debug_getdata_button).setVisibility(View.INVISIBLE);
 
         /*************************************************************/
         /* デバッグ用 */
@@ -45,7 +54,7 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
             public void onClick(View view)
             {
 
-                TaskGetTimeTable t = new TaskGetTimeTable(activityMain);
+                TaskGetTimeTable t = new TaskGetTimeTable();
                 t.execute("http://tetsujintimes.azurewebsites.net/api/TimeTables/cd/2/4");
 
 //                //Tableの行一覧表示
@@ -105,12 +114,10 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
         switch (vButton.getId())
         {
             case R.id.FrgHeader_main_button:
-                //stateがメインの画面ではなかったら、メインの画面にする
-                if(!state.equal(stateList.MAIN))
+                //stateがメインの画面ではない または 今日の日付ではない場合、メインの画面にする
+                if(!state.equal(stateList.MAIN) || !todaydate.equals(getToDay()) )
                 {
                     fragment = new FragmentMain();
-                    //stateをmainに設定
-                    state.setState(stateList.MAIN);
                 }
                 break;
             case R.id.FrgHeader_week_button:
@@ -120,7 +127,7 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
                     Bundle bundle = new Bundle();
 
                     //Fragmentに渡すデータを準備する
-                    TimeTable[] timeTableAll = timeTableHelper.GetRecordAll();
+                    TimeTable[] timeTableAll = timeTableHelper.GetRecordAll(timeTableDB);
 
                     //FragmentWeekContainerに時間割データを渡す
                     if (timeTable != null)
@@ -132,8 +139,6 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
                     //FragmentWeekContainerに値を渡し、表示する
                     fragment = new FragmentWeekContainer();
                     fragment.setArguments(bundle);
-                    //stateをweekに設定
-                    state.setState(stateList.WEEK);
                 }
                 break;
             case R.id.FrgHeader_month_button:
@@ -141,8 +146,6 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
                 if(!state.equal(stateList.MONTH))
                 {
                     fragment = new FragmentMonth();
-                    //stateをmonthに設定
-                    state.setState(stateList.MONTH);
                 }
                 break;
         }

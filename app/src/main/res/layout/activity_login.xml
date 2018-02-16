@@ -17,7 +17,7 @@
     
     <TextView
         style="@style/inputdesc"
-        android:text="@string/student_id"/>
+        android:text="@string/email"/>
     
     <EditText
         android:id="@+id/AyLogin_email_edittext"
@@ -56,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:text="@string/sign_up"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="invisible"/>
 
 </LinearLayout>

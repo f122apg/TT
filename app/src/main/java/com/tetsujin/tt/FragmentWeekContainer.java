@@ -17,12 +17,15 @@ import com.tetsujin.tt.database.TimeTable;
 
 import java.util.Calendar;
 
+import static com.tetsujin.tt.ActivityMain.state;
+
 public class FragmentWeekContainer extends Fragment
 {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View v = inflater.inflate(R.layout.fragment_weekcontainer, container, false);
+        state.setState(ManagementFragmentState.stateList.WEEK);
         //FragmentMainから時間割データを受け取る
         Bundle args = getArguments();
         TimeTable[] timeTable = new TimeTable[0];

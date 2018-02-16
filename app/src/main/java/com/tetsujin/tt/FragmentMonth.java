@@ -16,6 +16,8 @@ import com.tetsujin.tt.adapter.MonthAdapter;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import static com.tetsujin.tt.ActivityMain.state;
+
 public class FragmentMonth extends Fragment implements View.OnClickListener
 {
     private View view;
@@ -27,6 +29,7 @@ public class FragmentMonth extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_month, container, false);
+        state.setState(ManagementFragmentState.stateList.MONTH);
     
         Calendar cal = Calendar.getInstance();
         year = cal.get(Calendar.YEAR);

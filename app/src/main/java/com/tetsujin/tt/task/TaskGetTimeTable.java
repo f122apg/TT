@@ -49,6 +49,10 @@ public class TaskGetTimeTable extends AsyncTask<String, Void, String>
         return getTimeTableJson(token[0]);
     }
 
+    @Override
+    protected void onPostExecute(String result) {
+    }
+
     private String getTimeTableJson(String token)
     {
         HttpURLConnection con = null;

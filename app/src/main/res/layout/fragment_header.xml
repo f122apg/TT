@@ -39,19 +39,19 @@
         android:gravity="right">
 
         <Button
-            android:layout_width="70dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:text="DB削除"
             android:id="@+id/debug_dbrm_button"/>
 
         <Button
-            android:layout_width="70dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:text="Tablelist"
             android:id="@+id/debug_dbcreate_button"/>
 
         <Button
-            android:layout_width="100dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:text="データ取得"
             android:id="@+id/debug_getdata_button"/>

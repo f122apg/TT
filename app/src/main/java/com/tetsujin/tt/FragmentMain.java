@@ -25,7 +25,9 @@ import static com.tetsujin.tt.ActivityMain.getToDay;
 import static com.tetsujin.tt.ActivityMain.getWeekDay;
 import static com.tetsujin.tt.ActivityMain.memoHelper;
 import static com.tetsujin.tt.ActivityMain.timeTable;
+import static com.tetsujin.tt.ActivityMain.timeTableDB;
 import static com.tetsujin.tt.ActivityMain.timeTableHelper;
+import static com.tetsujin.tt.ActivityMain.state;
 
 public class FragmentMain extends Fragment {
 
@@ -35,7 +37,8 @@ public class FragmentMain extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_main, container, false);
-        
+        state.setState(ManagementFragmentState.stateList.MAIN);
+
         Bundle bundle = getArguments();
         try
         {
@@ -57,7 +60,8 @@ public class FragmentMain extends Fragment {
         /*****   ListView(時間割表示用)    *****/
         /*************************************/
         //指定した曜日の時間割データをTimeTableDBから取得し、static変数に入れる
-        timeTable = timeTableHelper.GetRecordAtWeekDay(getWeekDay(todaydate));
+        //TODO:timeTableDBをちゃんと定義すること
+        timeTable = timeTableHelper.GetRecordAtWeekDay(timeTableDB, getWeekDay(todaydate));
          ListView timetable_lv = (ListView)v.findViewById(R.id.FrgMain_timetable_listview);
         //時間割データをアダプタに渡し、表示を行う
         LessonListAdapter ca = new LessonListAdapter(getContext(), timeTable, getWeekDay(todaydate), true, false);

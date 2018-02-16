@@ -176,6 +176,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
             }
             catch (SQLException e)
             {
+                e.printStackTrace();
                 return false;
             }
         }

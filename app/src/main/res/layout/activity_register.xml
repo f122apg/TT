@@ -21,16 +21,6 @@
 
         <TextView
             style="@style/inputdesc"
-            android:text="@string/student_id"/>
-        
-        <EditText
-            android:id="@+id/AyRegister_studentid_edittext"
-            style="@style/inputform"
-            android:maxLength="9"
-            android:hint="@string/hint_student_id"/>
-        
-        <TextView
-            style="@style/inputdesc"
             android:text="@string/mailaddress"/>
         
         <EditText
