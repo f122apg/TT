@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -372,7 +373,7 @@ public class TimeTable implements Parcelable
     }
 
     //時間割データを含む、Jsonから時間割データを抜き出しデータベースへ挿入する
-    public void timeTableJsonParser(SQLiteDatabase db, TimeTableHelper dbhelper, String json)
+    public String timeTableJsonParser(SQLiteDatabase db, TimeTableHelper dbhelper, String json)
     {
         try
         {
@@ -431,10 +432,13 @@ public class TimeTable implements Parcelable
 
                 dbhelper.Insert(db, data);
             }
+
+            return "true";
         }
-        catch (Exception e)
+        //JSONException発生時、ログイン失敗をしているということなので、
+        catch (JSONException e)
         {
-            Log.e("TTAPP", e.getMessage());
+            return json;
         }
     }
 }

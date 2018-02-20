@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.tetsujin.tt.ActivityMain;
 import com.tetsujin.tt.R;
 import com.tetsujin.tt.database.TimeTableHelper;
+import com.tetsujin.tt.task.TaskGetTimeTable;
+import com.tetsujin.tt.task.TaskLogin;
 
 public class ActivityLogin extends AppCompatActivity implements Runnable
 {
@@ -65,25 +67,22 @@ public class ActivityLogin extends AppCompatActivity implements Runnable
                 pdialog = new ProgressDialog(activityLogin);
                 pdialog.setMessage("ログイン中...");
                 pdialog.show();
-
-                thread = new Thread(activityLogin);
-                thread.start();
                 
-//                TaskLogin taskLogin = new TaskLogin()
-//                {
-//                    @Override
-//                    public void callBack(String result)
-//                    {
-//                        TaskGetTimeTable taskGetTimeTable = new TaskGetTimeTable()
-//                        {
-//                            @Override
-//                            public void callBack(String result)
-//                            {
-//
-//                            }
-//                        };
-//                    }
-//                };
+                TaskLogin taskLogin = new TaskLogin(email.getText().toString(), password.getText().toString())
+                {
+                    @Override
+                    public void callBack(String result)
+                    {
+                        TaskGetTimeTable taskGetTimeTable = new TaskGetTimeTable()
+                        {
+                            @Override
+                            public void callBack(String result)
+                            {
+
+                            }
+                        };
+                    }
+                };
             }
         });
     }

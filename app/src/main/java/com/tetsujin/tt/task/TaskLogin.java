@@ -3,6 +3,7 @@ package com.tetsujin.tt.task;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
 import com.tetsujin.tt.database.TimeTable;
 
 import org.json.JSONArray;
@@ -16,20 +17,37 @@ import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class TaskLogin extends AsyncTask<String, Void, String>
+public class TaskLogin extends AsyncTask<Void, Void, JSONObject>
 {
-    @Override
-    protected String doInBackground(String... userparam)
+    private final String email;
+    private final String password;
+
+    public interface TaskLoginCallbacks
     {
-        //[0] = username, [1] = password
-        return getToken(userparam[0], userparam[1]);
+        void onTaskFinished();
+        void onTaskCancelled();
+    }
+
+    TaskLogin(String Email, String Password)
+    {
+        email = Email;
+        password = Password;
     }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected JSONObject doInBackground(Void... param)
+    {
+        return getToken(email, password);
     }
 
-    private String getToken(String username, String password)
+    @Override
+    protected void onPostExecute(JSONObject json)
+    {
+        json.
+    }
+
+    //メールアドレスとパスワードを指定のURLに投げて、トークンを取得する
+    private JSONObject getToken(String Email, String Password)
     {
         HttpURLConnection con = null;
         String urlStr = "https:/tetsujintimes.azurewebsites.net/token";
@@ -37,8 +55,8 @@ public class TaskLogin extends AsyncTask<String, Void, String>
 
         //POSTするデータを作成
         postDataBuilder.append("grant_type=password&");
-        postDataBuilder.append("UserName=" + username + "&");
-        postDataBuilder.append("Password=" + password);
+        postDataBuilder.append("UserName=" + Email + "&");
+        postDataBuilder.append("Password=" + Password);
 
         try
         {
@@ -82,18 +100,19 @@ public class TaskLogin extends AsyncTask<String, Void, String>
                 streamReader.close();
                 streamInput.close();
 
-                //jsonの読み込み
-                JSONObject json = new JSONObject(jsonStr);
-                //トークンを取得する
-                return json.getString("access_token");
+                //取得したjsonを返す
+                return new JSONObject(jsonStr);
             }
             else
             {
-                return null;
+                //TODO:エラーメッセージを明確にする
+                return new JSONObject("{ error : \"ネットワークエラーです。\" }");
             }
         }
         catch(Exception e)
         {
+            //TODO:エラーメッセージを明確にする
+            e.printStackTrace();
             return null;
         }
     }

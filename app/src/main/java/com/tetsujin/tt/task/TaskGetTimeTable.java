@@ -38,32 +38,42 @@ import static com.tetsujin.tt.ActivityMain.timeTableDB;
 //    doInBackgroundの戻り値
 //    onPostExecuteの引数
 //                                              param1 param2 param3
-public class TaskGetTimeTable extends AsyncTask<String, Void, String>
+public class TaskGetTimeTable extends AsyncTask<Void, Void, String>
 {
+    private final JSONObject json;
+
+    TaskGetTimeTable(JSONObject Json)
+    {
+        json = Json;
+    }
+
     //非同期処理
     //...は可変長引数の意味
     @Override
-    protected String doInBackground(String... token)
+    protected String doInBackground(Void... param)
     {
         //トークンを用いて、特定ユーザーのJsonを取得
-        return getTimeTableJson(token[0]);
+        return getTimeTableJson(json);
     }
 
     @Override
     protected void onPostExecute(String result) {
     }
 
-    private String getTimeTableJson(String token)
+    private String getTimeTableJson(JSONObject json)
     {
-        HttpURLConnection con = null;
-        String urlStr = "https:/tetsujintimes.azurewebsites.net/api/schedules";
-
-        //リクエストするデータを準備する
-        String requestHeaderName = "Authorization";
-        String requestHeaderValue = "Bearer " + token;
-
         try
         {
+            //トークンを取得
+            final String token = json.getString("access_token");
+
+            HttpURLConnection con = null;
+            String urlStr = "https:/tetsujintimes.azurewebsites.net/api/schedules";
+
+            //リクエストするデータを準備する
+            String requestHeaderName = "Authorization";
+            String requestHeaderValue = "Bearer " + token;
+
             URL url = new URL(urlStr);
 
             //トークンを用いて認証を始める
