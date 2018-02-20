@@ -6,14 +6,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tetsujin.tt.ActivityMain;
 import com.tetsujin.tt.R;
 import com.tetsujin.tt.database.TimeTableHelper;
-import com.tetsujin.tt.task.TaskGetTimeTable;
-import com.tetsujin.tt.task.TaskLogin;
 
 public class ActivityLogin extends AppCompatActivity implements Runnable
 {
@@ -23,7 +23,8 @@ public class ActivityLogin extends AppCompatActivity implements Runnable
     public ActivityLogin activityLogin;
     Thread thread;
     ProgressDialog pdialog;
-
+    ViewGroup.LayoutParams param;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -34,14 +35,15 @@ public class ActivityLogin extends AppCompatActivity implements Runnable
         timeTableHelper = TimeTableHelper.getInstance(activityLogin);
         timeTableDB = timeTableHelper.getWritableDatabase();
         
+        final EditText email = (EditText) findViewById(R.id.AyLogin_email_edittext);
+        final EditText password = (EditText) findViewById(R.id.AyLogin_password_edittext);
+        
         //ログインボタンのクリックイベント
         findViewById(R.id.AyLogin_login_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                EditText email = (EditText) findViewById(R.id.AyLogin_email_edittext);
-                EditText password = (EditText) findViewById(R.id.AyLogin_password_edittext);
                 TextView notice = (TextView) findViewById(R.id.AyLogin_notice_textview);
 
                 //入力チェック チェックが済んだらログイン処理を実行
@@ -66,11 +68,7 @@ public class ActivityLogin extends AppCompatActivity implements Runnable
 
                 thread = new Thread(activityLogin);
                 thread.start();
-
-                Intent intent = new Intent(ActivityLogin.this, ActivityMain.class);
-                startActivity(intent);
-
-
+                
 //                TaskLogin taskLogin = new TaskLogin()
 //                {
 //                    @Override
@@ -89,12 +87,33 @@ public class ActivityLogin extends AppCompatActivity implements Runnable
             }
         });
     }
+    
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
+        if(hasFocus)
+        {
+            //RootであるLinearLayoutの幅を取得して、それを元にEditTextの幅を設定する
+            LinearLayout ll = (LinearLayout) findViewById(R.id.AyLogin_parent_linearlayout);
+            EditText email = (EditText) findViewById(R.id.AyLogin_email_edittext);
+            EditText password = (EditText) findViewById(R.id.AyLogin_password_edittext);
+            
+            //LinearLayoutを5で割った値をLinearLayoutのサイズで引いて設定する
+            email.setWidth(ll.getWidth() - ll.getWidth() / 5);
+            password.setWidth(ll.getWidth() - ll.getWidth() / 5);
+        }
+    }
 
     @Override
     public void run() {
-        try {
-            thread.sleep(5000);
-        } catch (InterruptedException e) { }
+        try
+        {
+            thread.sleep(1000);
+        }
+        catch (InterruptedException e) { }
+    
+        Intent intent = new Intent(ActivityLogin.this, ActivityMain.class);
+        startActivity(intent);
         pdialog.dismiss();
     }
 }

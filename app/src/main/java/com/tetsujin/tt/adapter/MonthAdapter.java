@@ -1,6 +1,9 @@
 package com.tetsujin.tt.adapter;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Gravity;
@@ -13,8 +16,11 @@ import android.widget.TextView;
 import com.tetsujin.tt.FragmentMain;
 import com.tetsujin.tt.R;
 
+import java.util.Calendar;
+
 import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 import static com.tetsujin.tt.ActivityMain.activityMain;
+import static java.util.Calendar.DAY_OF_MONTH;
 
 public class MonthAdapter extends BaseAdapter {
 
@@ -54,7 +60,9 @@ public class MonthAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
-        TextView tv;
+        final TextView tv;
+        //カレンダーにおける日
+        String dayStr = (String) getItem(position);
     
         //Viewが再利用できるならばそれを利用する
         if (convertView == null)
@@ -62,7 +70,7 @@ public class MonthAdapter extends BaseAdapter {
         else
             tv = (TextView)convertView;
         
-        tv.setText((String) getItem(position));
+        tv.setText(dayStr);
         tv.setTextSize(COMPLEX_UNIT_DIP, 15);
         //TextViewのサイズをwrap_contentに設定
         tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -72,18 +80,42 @@ public class MonthAdapter extends BaseAdapter {
         tv.setGravity(Gravity.CENTER);
     
         //日付がMemoDBに存在していたらTextViewに印をつける
-        if(dayCheck((String) getItem(position)))
+        if(dayCheck(dayStr))
             tv.setBackgroundResource(R.drawable.calendar_day_checkmark);
     
-        //click処理
+        //click処理及び、今日の日付だけを赤い文字にする処理
         if(((String) getItem(position)).matches("[0-9]+"))
         {
+            //現在の日付を取得し、その日付が今現在処理しているitemと同一だったら文字を赤くする
+            Calendar cal = Calendar.getInstance();
+            //get(MONTH)で得られる値は0～11なので1足す
+            if(month == (cal.get(Calendar.MONTH) + 1) &&
+                    //日の比較
+                    dayStr.equals(String.valueOf(cal.get(DAY_OF_MONTH))))
+                tv.setTextColor(Color.RED);
+            
             tv.setClickable(true);
             tv.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
+                    //クリックアニメーションとしてTextViewの背景色を
+                    //白からライトグレーに変えていくアニメーションを設定
+                    int colorFrom = Color.WHITE;
+                    int colorTo = Color.LTGRAY;
+                    ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+                    colorAnimation.setDuration(50);
+                    colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animator) {
+                            tv.setBackgroundColor((int) animator.getAnimatedValue());
+                        }
+        
+                    });
+                    colorAnimation.start();
+                    
                     String dayStr = (String) getItem(position);
                     String monthStr = String.valueOf(month);
                     
@@ -98,6 +130,7 @@ public class MonthAdapter extends BaseAdapter {
                     if(monthStr.length() == 1)
                         monthStr = "0" + monthStr;
                     
+                    //メイン画面にクリックされた年月日をフォーマットして送信
                     Bundle bundle = new Bundle();
                     bundle.putString("date", String.valueOf(year) + "-" + monthStr + "-" + dayStr);
                     
