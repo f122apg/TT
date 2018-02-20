@@ -5,58 +5,67 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_marginTop="50dp"
+    android:weightSum="5"
     tools:context="com.tetsujin.tt.login.ActivityLogin">
         
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="30dp"
         android:text="@string/login"
-        android:textSize="50sp"/>
+        android:textSize="50sp"
+        android:layout_weight="1"/>
     
     <TextView
         style="@style/inputdesc"
-        android:text="@string/email"/>
+        android:text="@string/email"
+        android:layout_weight="0.5"/>
     
     <EditText
         android:id="@+id/AyLogin_email_edittext"
         style="@style/inputform"
         android:inputType="textEmailAddress"
-        android:hint="@string/hint_mailaddress"/>
+        android:hint="@string/hint_mailaddress"
+        android:layout_weight="0.5"/>
     
     <TextView
         style="@style/inputdesc"
-        android:text="@string/password"/>
+        android:layout_marginTop="10dp"
+        android:text="@string/password"
+        android:layout_weight="0.5"/>
     
     <EditText
         android:id="@+id/AyLogin_password_edittext"
         style="@style/inputform"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:layout_weight="0.5"/>
     
     <TextView
         android:id="@+id/AyLogin_notice_textview"
         style="@style/inputdesc"
         android:layout_marginTop="10dp"
         android:textSize="20sp"
-        android:textColor="#FF0000"/>
+        android:textColor="#FF0000"
+        android:layout_weight="0.5"/>
     
     <Button
         android:id="@+id/AyLogin_login_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:text="@string/login"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_weight="0.5"/>
     
     <Button
         android:id="@+id/AyLogin_signup_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="end"
         android:text="@string/sign_up"
         android:textSize="20sp"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:layout_weight="0.5"/>
 
 </LinearLayout>
