@@ -3,10 +3,8 @@ package com.tetsujin.tt.database;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -25,21 +23,20 @@ public class TimeTable implements Parcelable
     final static String TABLE_NAME = "TimeTable";
     //テーブルの列名
     final static String COLUMN_TIMETABLEID = "TimeTableID";
-    final static String COLUMN_LESSONCODE = "LessonCode";
-    final static String COLUMN_LESSONNAME = "LessonName";
-    final static String COLUMN_WEEKDAY = "WeekDay";
-    final static String COLUMN_STARTTIME = "StartTime";
-    final static String COLUMN_ENDTIME = "EndTime";
-    final static String COLUMN_CLASSROOMNAME = "ClassRoomName";
-    final static String COLUMN_TEACHERNAME = "TeacherName";
-    final static String COLUMN_DESCRIPTION = "Description";
+    final static String COLUMN_LESSONCODE = "lessonCode";
+    final static String COLUMN_LESSONNAME = "lessonName";
+    final static String COLUMN_WEEKDAYNUMBER = "weekDayNumber";
+    final static String COLUMN_STARTTIME = "startTime";
+    final static String COLUMN_ENDTIME = "endTime";
+    final static String COLUMN_CLASSROOMNAME = "classroomName";
+    final static String COLUMN_TEACHERNAME = "teacherName";
+    final static String COLUMN_DESCRIPTION = "description";
 
     //テーブルを作成するクエリ
     final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" +
             COLUMN_TIMETABLEID + " INTEGER PRIMARY KEY," +
             COLUMN_LESSONCODE + " TEXT NOT NULL," +
-            COLUMN_LESSONNAME + " TEXT NOT NULL," +
-            COLUMN_WEEKDAY + " INTEGER NOT NULL," +
+            COLUMN_LESSONNAME + " TEXT NOT NULL," + COLUMN_WEEKDAYNUMBER + " INTEGER NOT NULL," +
             COLUMN_STARTTIME + " TEXT NOT NULL," +
             COLUMN_ENDTIME + " TEXT NOT NULL," +
             COLUMN_CLASSROOMNAME + " TEXT NOT NULL," +
@@ -53,7 +50,7 @@ public class TimeTable implements Parcelable
     final static String GET_RECORD_ID_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TIMETABLEID + " = ?;";
 
     //特定の曜日に合致するすべてのレコードを取得するクエリ
-    final static String GET_RECORD_AT_WEEKDAY_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_WEEKDAY + " = ?;";
+    final static String GET_RECORD_AT_WEEKDAY_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_WEEKDAYNUMBER + " = ?;";
 
     //時間割のID
     private int TimeTableID;
@@ -61,7 +58,7 @@ public class TimeTable implements Parcelable
     private String LessonCode;
     private String LessonName;
     //java.util.Calendarの形式に沿う
-    private int WeekDay;
+    private int WeekDayNumber;
     private String StartTime;
     private String EndTime;
     private String ClassRoomName;
@@ -77,7 +74,7 @@ public class TimeTable implements Parcelable
         this.TimeTableID = builder.TimeTableID;
         this.LessonCode = builder.LessonCode;
         this.LessonName = builder.LessonName;
-        this.WeekDay = builder.WeekDay;
+        this.WeekDayNumber = builder.WeekDay;
         this.StartTime = builder.StartTime;
         this.EndTime = builder.EndTime;
         this.ClassRoomName = builder.ClassRoomName;
@@ -91,7 +88,7 @@ public class TimeTable implements Parcelable
         this.TimeTableID = in.readInt();
         this.LessonCode = in.readString();
         this.LessonName = in.readString();
-        this.WeekDay = in.readInt();
+        this.WeekDayNumber = in.readInt();
         this.StartTime = in.readString();
         this.EndTime = in.readString();
         this.ClassRoomName = in.readString();
@@ -117,9 +114,9 @@ public class TimeTable implements Parcelable
         return this.LessonName;
     }
 
-    public int getWeekDay()
+    public int getWeekDayNumber()
     {
-        return this.WeekDay;
+        return this.WeekDayNumber;
     }
 
     public String getStartTime()
@@ -162,7 +159,7 @@ public class TimeTable implements Parcelable
         dest.writeInt(this.TimeTableID);
         dest.writeString(this.LessonCode);
         dest.writeString(this.LessonName);
-        dest.writeInt(this.WeekDay);
+        dest.writeInt(this.WeekDayNumber);
         dest.writeString(this.StartTime);
         dest.writeString(this.EndTime);
         dest.writeString(this.ClassRoomName);
@@ -310,7 +307,7 @@ public class TimeTable implements Parcelable
         //各曜日の時間割データを各配列に挿入する
         for (TimeTable value : data)
         {
-            switch (value.getWeekDay())
+            switch (value.getWeekDayNumber())
             {
                 case Calendar.MONDAY:
                     retValue[0].add(value);
@@ -373,7 +370,7 @@ public class TimeTable implements Parcelable
     }
 
     //時間割データを含む、Jsonから時間割データを抜き出しデータベースへ挿入する
-    public String timeTableJsonParser(SQLiteDatabase db, TimeTableHelper dbhelper, String json)
+    public static void timeTableJsonParser(SQLiteDatabase db, TimeTableHelper dbhelper, String json)
     {
         try
         {
@@ -388,23 +385,23 @@ public class TimeTable implements Parcelable
             for(int i = 0; i < jsonLesson.length(); i ++)
             {
                 JSONObject jsonChild = jsonLesson.getJSONObject(i);
-
+                
                 //jsonの要素名から値を取得し、変数に一時保存させる
-                int timeTableId = i;
-                String lessonCode = jsonChild.getString("lessonCode");
-                String lessonName = jsonChild.getString("lessonName");
-                int weekDay = jsonChild.getInt("weekDayNumber");
-                String startTime = jsonChild.getString("startTime");
-                String endTime = jsonChild.getString("endTime");
-                String description = jsonChild.getString("description");
-                String classRoomName = jsonChild.getString("classroomName");
-                String teacherName = jsonChild.getString("teacherName");
-
+                int timetableId = i;
+                String lessonCode = jsonChild.getString(COLUMN_LESSONCODE);
+                String lessonName = jsonChild.getString(COLUMN_LESSONNAME);
+                int weekDayNumber = jsonChild.getInt(COLUMN_WEEKDAYNUMBER);
+                String startTime = jsonChild.getString(COLUMN_STARTTIME);
+                String endTime = jsonChild.getString(COLUMN_ENDTIME);
+                String description = jsonChild.getString(COLUMN_DESCRIPTION);
+                String classRoomName = jsonChild.getString(COLUMN_CLASSROOMNAME);
+                String teacherName = jsonChild.getString(COLUMN_TEACHERNAME);
+    
                 //一時保存された変数からTimeTableのインスタンスを生成
-                retValues[i] = new TimeTable.Builder(timeTableId)
+                retValues[i] = new TimeTable.Builder(timetableId)
                         .LessonCode(lessonCode)
                         .LessonName(lessonName)
-                        .WeekDay(weekDay)
+                        .WeekDay(weekDayNumber)
                         .StartTime(startTime)
                         .EndTime(endTime)
                         .ClassRoomName(classRoomName)
@@ -423,7 +420,7 @@ public class TimeTable implements Parcelable
                 data.put(0, v.getTimeTableID());
                 data.put(1, v.getLessonCode());
                 data.put(2, v.getLessonName());
-                data.put(3, v.getWeekDay());
+                data.put(3, v.getWeekDayNumber());
                 data.put(4, v.getStartTime());
                 data.put(5, v.getEndTime());
                 data.put(6, v.getClassRoomName());
@@ -432,13 +429,10 @@ public class TimeTable implements Parcelable
 
                 dbhelper.Insert(db, data);
             }
-
-            return "true";
         }
-        //JSONException発生時、ログイン失敗をしているということなので、
-        catch (JSONException e)
+        catch (Exception e)
         {
-            return json;
+            e.printStackTrace();
         }
     }
 }

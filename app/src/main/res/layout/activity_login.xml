@@ -18,32 +18,32 @@
         android:layout_weight="1"/>
     
     <TextView
-        style="@style/inputdesc"
+        style="@style/formDesc"
         android:text="@string/email"
         android:layout_weight="0.5"/>
     
     <EditText
         android:id="@+id/AyLogin_email_edittext"
-        style="@style/inputform"
+        style="@style/form"
         android:inputType="textEmailAddress"
         android:hint="@string/hint_mailaddress"
         android:layout_weight="0.5"/>
     
     <TextView
-        style="@style/inputdesc"
+        style="@style/formDesc"
         android:layout_marginTop="10dp"
         android:text="@string/password"
         android:layout_weight="0.5"/>
     
     <EditText
         android:id="@+id/AyLogin_password_edittext"
-        style="@style/inputform"
+        style="@style/form"
         android:inputType="textPassword"
         android:layout_weight="0.5"/>
     
     <TextView
         android:id="@+id/AyLogin_notice_textview"
-        style="@style/inputdesc"
+        style="@style/formDesc"
         android:layout_marginTop="10dp"
         android:textSize="20sp"
         android:textColor="#FF0000"

@@ -24,8 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -58,87 +56,6 @@ public class ActivityMain extends AppCompatActivity {
             //DBが存在していなかったらDBの作成がされる
             memoDB = memoHelper.getWritableDatabase();
             timeTableDB = timeTableHelper.getWritableDatabase();
-
-            TimeTable[] a = new TimeTable[6];
-            a[0] = new TimeTable.Builder(0)
-                    .LessonCode("a")
-                    .LessonName("合同資格対策講座")
-                    .WeekDay(2)
-                    .StartTime("09:00")
-                    .EndTime("14:30")
-                    .ClassRoomName("30718")
-                    .TeacherName("田中太郎")
-                    .Description("null")
-                    .build();
-            a[1] = new TimeTable.Builder(1)
-                    .LessonCode("b")
-                    .LessonName("卒業制作")
-                    .WeekDay(3)
-                    .StartTime("13:00")
-                    .EndTime("16:10")
-                    .ClassRoomName("30717")
-                    .TeacherName("鈴木太郎")
-                    .Description("ノートパソコン持参の事")
-                    .build();
-            a[2] = new TimeTable.Builder(2)
-                    .LessonCode("c")
-                    .LessonName("オブジェクト指向プログラミング2 S1")
-                    .WeekDay(4)
-                    .StartTime("09:00")
-                    .EndTime("12:10")
-                    .ClassRoomName("30713")
-                    .TeacherName("佐藤太郎")
-                    .Description("ノートパソコンとテキスト持参の事")
-                    .build();
-            a[3] = new TimeTable.Builder(3)
-                    .LessonCode("d")
-                    .LessonName("卒業制作")
-                    .WeekDay(4)
-                    .StartTime("13:00")
-                    .EndTime("16:10")
-                    .ClassRoomName("30713")
-                    .TeacherName("鈴木太郎")
-                    .Description("null")
-                    .build();
-            a[4] = new TimeTable.Builder(4)
-                    .LessonCode("e")
-                    .LessonName("卒業制作")
-                    .WeekDay(5)
-                    .StartTime("13:00")
-                    .EndTime("16:10")
-                    .ClassRoomName("30713")
-                    .TeacherName("鈴木太郎")
-                    .Description("null")
-                    .build();
-            a[5] = new TimeTable.Builder(5)
-                    .LessonCode("f")
-                    .LessonName("キャリアデザイン4")
-                    .WeekDay(6)
-                    .StartTime("09:00")
-                    .EndTime("14:30")
-                    .ClassRoomName("30718")
-                    .TeacherName("田中太郎")
-                    .Description("キャッシュフローの冊子持参の事")
-                    .build();
-
-            Map<Integer, Object> data = new TreeMap<>();
-            //インサートする前にDBのレコードを全削除する
-            timeTableHelper.Clear(timeTableDB);
-
-            for (TimeTable v:a)
-            {
-                data.put(0, v.getTimeTableID());
-                data.put(1, v.getLessonCode());
-                data.put(2, v.getLessonName());
-                data.put(3, v.getWeekDay());
-                data.put(4, v.getStartTime());
-                data.put(5, v.getEndTime());
-                data.put(6, v.getClassRoomName());
-                data.put(7, v.getTeacherName());
-                data.put(8, v.getDescription());
-
-                timeTableHelper.Insert(timeTableDB, data);
-            }
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
             //初回のみアニメーションをさせないようにshowFragmentメソッドを使わずに表示

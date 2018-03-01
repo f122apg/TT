@@ -1,63 +1,59 @@
 package com.tetsujin.tt.task;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.annotations.Expose;
-import com.tetsujin.tt.database.TimeTable;
+import com.tetsujin.tt.R;
+import com.tetsujin.tt.login.WebAPIInfo;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
-import java.util.TreeMap;
+import java.net.UnknownHostException;
 
-public class TaskLogin extends AsyncTask<Void, Void, JSONObject>
+public class TaskLogin extends AsyncTask<Void, Void, String>
 {
+    private Context context;
     private final String email;
     private final String password;
+    private Callback callback;
 
-    public interface TaskLoginCallbacks
+    public interface Callback
     {
-        void onTaskFinished();
-        void onTaskCancelled();
+        void onTaskFinished(String result);
     }
 
-    TaskLogin(String Email, String Password)
+    public TaskLogin(Context context, String email, String password, Callback callback)
     {
-        email = Email;
-        password = Password;
+        this.context = context;
+        this.email = email;
+        this.password = password;
+        this.callback = callback;
     }
 
     @Override
-    protected JSONObject doInBackground(Void... param)
+    protected String doInBackground(Void... param)
     {
         return getToken(email, password);
     }
 
     @Override
-    protected void onPostExecute(JSONObject json)
+    protected void onPostExecute(String json)
     {
-        json.
+        super.onPostExecute(json);
+        callback.onTaskFinished(json);
     }
 
     //メールアドレスとパスワードを指定のURLに投げて、トークンを取得する
-    private JSONObject getToken(String Email, String Password)
+    private String getToken(String Email, String Password)
     {
         HttpURLConnection con = null;
-        String urlStr = "https:/tetsujintimes.azurewebsites.net/token";
-        StringBuilder postDataBuilder = new StringBuilder();
-
+        String urlStr = WebAPIInfo.GET_TOKEN_URL;
         //POSTするデータを作成
-        postDataBuilder.append("grant_type=password&");
-        postDataBuilder.append("UserName=" + Email + "&");
-        postDataBuilder.append("Password=" + Password);
-
+        String postData = WebAPIInfo.createPostData(Email, Password);
+    
         try
         {
             URL url = new URL(urlStr);
@@ -71,49 +67,44 @@ public class TaskLogin extends AsyncTask<Void, Void, JSONObject>
             //フォームエンコード形式に設定
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             //POSTするデータの長さを設定
-            con.setRequestProperty("Content-Length", String.valueOf(postDataBuilder.length()));
+            con.setRequestProperty("Content-Length", String.valueOf(postData.length()));
             //リクエストボディにPOSTするデータを書き込む
             OutputStreamWriter requestBody = new OutputStreamWriter(con.getOutputStream());
-            requestBody.write(postDataBuilder.toString());
+            requestBody.write(postData);
             requestBody.flush();
+            System.out.println("connecting...");
             //URL先に接続
             con.connect();
-
-            final int status = con.getResponseCode();
-            if (status == HttpURLConnection.HTTP_OK)
-            {
-                //InputStreamを取得
-                InputStream streamInput = con.getInputStream();
-                //InputStreamReader、StringBuilderを用いて、InputStreamをStringに変換
-                InputStreamReader streamReader = new InputStreamReader(streamInput);
-                StringBuilder strBuilder = new StringBuilder();
-
-                //InputStreamReaderを読み込んで、StringBuilderに追記する
-                char[] buf = new char[1024];
-                int read;
-                while (0 <= (read = streamReader.read(buf)))
-                {
-                    strBuilder.append(buf, 0, read);
-                }
-
-                String jsonStr = strBuilder.toString();
-                streamReader.close();
-                streamInput.close();
-
-                //取得したjsonを返す
-                return new JSONObject(jsonStr);
-            }
+            
+            //レスポンスボディを受け取る
+            String result = WebAPIInfo.getResponseBody(context, con);
+            JSONObject json = new JSONObject(result);
+            
+            //jsonがトークンを持っていたらトークンを抜き取る作業をする
+            if(json.has(WebAPIInfo.JSON_ACCESS_TOKEN))
+                return json.getString(WebAPIInfo.JSON_ACCESS_TOKEN);
+            //認証が正しく行かない場合、サーバーから渡されたエラーメッセージをそのまま返す
+            else if(json.has(WebAPIInfo.JSON_ERROR_DESCRIPTION))
+                return result;
+            //jsonが正常でない場合、固定のエラーメッセージを返す
             else
-            {
-                //TODO:エラーメッセージを明確にする
-                return new JSONObject("{ error : \"ネットワークエラーです。\" }");
-            }
+                return WebAPIInfo.createErrorMessage(context, context.getString(R.string.error_something));
         }
-        catch(Exception e)
+        //ネットワークが不安定または、できないときに発生
+        catch (UnknownHostException unknownHostEx)
         {
-            //TODO:エラーメッセージを明確にする
+            unknownHostEx.printStackTrace();
+            return WebAPIInfo.createErrorMessage(context, context.getString(R.string.error_cannot_connected_network));
+        }
+        //何かのエラー時、固定のエラーメッセージを返す
+        catch (Exception e)
+        {
             e.printStackTrace();
-            return null;
+            return WebAPIInfo.createErrorMessage(context, context.getString(R.string.error_something));
+        }
+        finally
+        {
+            con.disconnect();
         }
     }
 }

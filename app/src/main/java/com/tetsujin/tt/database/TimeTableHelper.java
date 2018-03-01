@@ -11,8 +11,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.Map;
 
-import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.ActivityMain.timeTableDB;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_CLASSROOMNAME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_DESCRIPTION;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_ENDTIME;
@@ -21,7 +19,7 @@ import static com.tetsujin.tt.database.TimeTable.COLUMN_LESSONNAME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_STARTTIME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_TEACHERNAME;
 import static com.tetsujin.tt.database.TimeTable.COLUMN_TIMETABLEID;
-import static com.tetsujin.tt.database.TimeTable.COLUMN_WEEKDAY;
+import static com.tetsujin.tt.database.TimeTable.COLUMN_WEEKDAYNUMBER;
 
 public class TimeTableHelper extends SQLiteOpenHelper
 {
@@ -136,7 +134,7 @@ public class TimeTableHelper extends SQLiteOpenHelper
                     new TimeTable.Builder(cr.getInt(cr.getColumnIndex(COLUMN_TIMETABLEID)))
                     .LessonCode(cr.getString(cr.getColumnIndex(COLUMN_LESSONCODE)))
                     .LessonName(cr.getString(cr.getColumnIndex(COLUMN_LESSONNAME)))
-                    .WeekDay(cr.getInt(cr.getColumnIndex(COLUMN_WEEKDAY)))
+                    .WeekDay(cr.getInt(cr.getColumnIndex(COLUMN_WEEKDAYNUMBER)))
                     .StartTime(cr.getString(cr.getColumnIndex(COLUMN_STARTTIME)))
                     .EndTime(cr.getString(cr.getColumnIndex(COLUMN_ENDTIME)))
                     .ClassRoomName(cr.getString(cr.getColumnIndex(COLUMN_CLASSROOMNAME)))
@@ -154,12 +152,15 @@ public class TimeTableHelper extends SQLiteOpenHelper
         //インサートしようとしているデータが既に存在する場合はインサートしない
         if(!HasId(db, (Integer)data.get(0)))
         {
+            //トランザクションを開始
+            db.beginTransaction();
+            
             //インサートするデータを準備する
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_TIMETABLEID, (Integer) data.get(0));
             cv.put(TimeTable.COLUMN_LESSONCODE, (String) data.get(1));
             cv.put(TimeTable.COLUMN_LESSONNAME, (String) data.get(2));
-            cv.put(TimeTable.COLUMN_WEEKDAY, (Integer) data.get(3));
+            cv.put(TimeTable.COLUMN_WEEKDAYNUMBER, (Integer) data.get(3));
             cv.put(COLUMN_STARTTIME, (String) data.get(4));
             cv.put(TimeTable.COLUMN_ENDTIME, (String) data.get(5));
             cv.put(TimeTable.COLUMN_CLASSROOMNAME, (String) data.get(6));
@@ -168,20 +169,27 @@ public class TimeTableHelper extends SQLiteOpenHelper
 
             try
             {
-                //エラーチェック 返り値が0でないならば、正しく処理されたとする
-                if (db.insert(TimeTable.TABLE_NAME, null, cv) > 0)
+                //エラーチェック 返り値が-1でないならば、正しく処理されたとする
+                if ( db.insert(TimeTable.TABLE_NAME, null, cv) > -1)
+                {
+                    //トランザクション成功
+                    db.setTransactionSuccessful();
                     return true;
-                else
-                    return false;
+                }
             }
             catch (SQLException e)
             {
                 e.printStackTrace();
                 return false;
             }
+            finally
+            {
+                //トランザクションを終了
+                db.endTransaction();
+            }
         }
-        else
-            return false;
+        
+        return false;
     }
 
     public void Clear(SQLiteDatabase db)

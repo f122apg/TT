@@ -1,32 +1,16 @@
 package com.tetsujin.tt.task;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ListView;
 
 import com.tetsujin.tt.R;
-import com.tetsujin.tt.adapter.LessonListAdapter;
-import com.tetsujin.tt.database.TimeTable;
-import com.tetsujin.tt.database.TimeTableHelper;
+import com.tetsujin.tt.login.WebAPIInfo;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
-import java.util.TreeMap;
-
-import static com.tetsujin.tt.ActivityMain.timeTableDB;
-
-/***********************************************************************/
-//トークンを用いて、Jsonを取得しそのまま返す非同期クラス
-/***********************************************************************/
+import java.net.UnknownHostException;
 
 //引数の意味
 //param1 = Activityからスレッドへ渡す変数の型
@@ -40,11 +24,20 @@ import static com.tetsujin.tt.ActivityMain.timeTableDB;
 //                                              param1 param2 param3
 public class TaskGetTimeTable extends AsyncTask<Void, Void, String>
 {
-    private final JSONObject json;
-
-    TaskGetTimeTable(JSONObject Json)
+    private Context context;
+    private final String token;
+    private Callback callback;
+    
+    public interface Callback
     {
-        json = Json;
+        void onTaskFinished(String result);
+    }
+
+    public TaskGetTimeTable(Context context, String token, Callback callback)
+    {
+        this.context = context;
+        this.token = token;
+        this.callback = callback;
     }
 
     //非同期処理
@@ -53,26 +46,23 @@ public class TaskGetTimeTable extends AsyncTask<Void, Void, String>
     protected String doInBackground(Void... param)
     {
         //トークンを用いて、特定ユーザーのJsonを取得
-        return getTimeTableJson(json);
+        return getTimeTableJson(token);
     }
-
+    
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(String result)
+    {
+        super.onPostExecute(result);
+        callback.onTaskFinished(result);
     }
 
-    private String getTimeTableJson(JSONObject json)
+    private String getTimeTableJson(String token)
     {
+        HttpURLConnection con = null;
+        
         try
         {
-            //トークンを取得
-            final String token = json.getString("access_token");
-
-            HttpURLConnection con = null;
-            String urlStr = "https:/tetsujintimes.azurewebsites.net/api/schedules";
-
-            //リクエストするデータを準備する
-            String requestHeaderName = "Authorization";
-            String requestHeaderValue = "Bearer " + token;
+            String urlStr = WebAPIInfo.GET_TIMETABLE_URL;
 
             URL url = new URL(urlStr);
 
@@ -80,42 +70,35 @@ public class TaskGetTimeTable extends AsyncTask<Void, Void, String>
             con = (HttpURLConnection) url.openConnection();
             //GET形式でリクエストを投げる
             con.setRequestMethod("GET");
-            //リクエストヘッダにAuthorization：トークンを追加
-            con.setRequestProperty(requestHeaderName, requestHeaderValue);
+            //リクエストヘッダに「Authorization：トークン」を追加
+            con.setRequestProperty(WebAPIInfo.REQUEST_HEADER_NAME, WebAPIInfo.createRequestHeaderData(token));
             //URL先に接続
             con.connect();
-
-            final int status = con.getResponseCode();
-            if (status == HttpURLConnection.HTTP_OK)
-            {
-                //InputStreamを取得
-                InputStream streamInput = con.getInputStream();
-                //InputStreamReader、StringBuilderを用いて、InputStreamをStringに変換
-                InputStreamReader streamReader = new InputStreamReader(streamInput);
-                StringBuilder strBuilder = new StringBuilder();
-
-                //InputStreamReaderを読み込んで、StringBuilderに追記する
-                char[] buf = new char[1024];
-                int read;
-                while (0 <= (read = streamReader.read(buf)))
-                {
-                    strBuilder.append(buf, 0, read);
-                }
-
-                String jsonStr = strBuilder.toString();
-                streamReader.close();
-                streamInput.close();
-
-                return jsonStr;
-            }
+    
+            //レスポンスボディを受け取る
+            String result = WebAPIInfo.getResponseBody(context, con);
+            JSONObject json = new JSONObject(result);
+            //jsonにエラーがなければ時間割を含んだjsonを返す
+            if(!json.has(WebAPIInfo.JSON_ERROR_DESCRIPTION))
+                return result;
             else
-            {
-                return null;
-            }
+                return WebAPIInfo.createErrorMessage(context, context.getString(R.string.error_something));
         }
-        catch(Exception e)
+        //ネットワークが不安定または、できないときに発生
+        catch (UnknownHostException unknownHostEx)
         {
+            unknownHostEx.printStackTrace();
+            return WebAPIInfo.createErrorMessage(context, context.getString(R.string.error_cannot_connected_network));
+        }
+        //何かのエラー時
+        catch (Exception e)
+        {
+            e.printStackTrace();
             return null;
+        }
+        finally
+        {
+            con.disconnect();
         }
     }
 }

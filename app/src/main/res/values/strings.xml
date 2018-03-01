@@ -39,7 +39,12 @@
 
     <!-- error -->
     <string name="error">エラー</string>
-    <string name="memo_cannot_save">メモを保存できませんでした。</string>
+    <string name="error_memo_cannot_save">メモを保存できませんでした。</string>
+    <string name="error_server_unavailable">数分後にまたやり直してください。</string>
+    <string name="error_cannot_connected_network">ネットワークに接続できません。\nネットワークの設定を見直してください。</string>
+    <string name="error_something">何かのエラーが発生しました。\nもう一度ログインしてください。</string>
+    <string name="error_json_template">{ error_description : REPLACE_HERE }</string>
+    <string name="error_json_template_replace_text">REPLACE_HERE</string>
 
     <!-- fragmentmain -->
     <string name="getdata">時間割のデータを取得しています&#8230;</string>

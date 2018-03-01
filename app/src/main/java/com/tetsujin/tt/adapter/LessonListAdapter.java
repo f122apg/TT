@@ -39,7 +39,7 @@ public class LessonListAdapter extends BaseAdapter
                 for (TimeTable value : objects)
                 {
                     //時間割データが現在の曜日と一致していたら"今日"の時間割データとして追加する
-                    if (value.getWeekDay() == Integer.parseInt(ActivityMain.getTodayWeekDay(true)))
+                    if (value.getWeekDayNumber() == Integer.parseInt(ActivityMain.getTodayWeekDay(true)))
                         list.add(value);
                 }
     
@@ -54,7 +54,7 @@ public class LessonListAdapter extends BaseAdapter
                 for (TimeTable value : objects)
                 {
                     //時間割データが指定した曜日と一致していたら"過去"の時間割データとして追加する
-                    if (value.getWeekDay() == weekday)
+                    if (value.getWeekDayNumber() == weekday)
                         list.add(value);
                 }
     
