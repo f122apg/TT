@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import com.tetsujin.tt.database.TimeTable;
 
 import static com.tetsujin.tt.ActivityMain.activityMain;
-import static com.tetsujin.tt.ActivityMain.getToDay;
 import static com.tetsujin.tt.ActivityMain.state;
 import static com.tetsujin.tt.ActivityMain.timeTable;
 import static com.tetsujin.tt.ActivityMain.timeTableHelper;
@@ -112,7 +111,7 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
         {
             case R.id.FrgHeader_main_button:
                 //stateがメインの画面ではない または 今日の日付ではない場合、メインの画面にする
-                if(!state.equal(stateList.MAIN) || !todaydate.equals(getToDay()) )
+                if(!state.equal(stateList.MAIN) || !todaydate.equals(FragmentMain.getToDay()) )
                 {
                     fragment = new FragmentMain();
                 }

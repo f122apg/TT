@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.tetsujin.tt.ActivityMain;
+import com.tetsujin.tt.FragmentMain;
 import com.tetsujin.tt.R;
 import com.tetsujin.tt.database.TimeTable;
 
@@ -19,7 +19,7 @@ public class LessonListAdapter extends BaseAdapter
     private LayoutInflater inflater;
     private TimeTable[] items;
 
-    public LessonListAdapter(Context context, TimeTable[] objects, int weekday, boolean setPastTimeTable, boolean calledFromCFPAdapter)
+    public LessonListAdapter(Context context, TimeTable[] objects, String todaydate, int weekday, boolean setPastTimeTable, boolean calledFromCFPAdapter)
     {
         super();
         this.context = context;
@@ -39,7 +39,7 @@ public class LessonListAdapter extends BaseAdapter
                 for (TimeTable value : objects)
                 {
                     //時間割データが現在の曜日と一致していたら"今日"の時間割データとして追加する
-                    if (value.getWeekDayNumber() == Integer.parseInt(ActivityMain.getTodayWeekDay(true)))
+                    if (value.getWeekDayNumber() == Integer.parseInt(FragmentMain.getWeekDay(todaydate, true, false)))
                         list.add(value);
                 }
     
