@@ -12,11 +12,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 import com.tetsujin.tt.database.MemoHelper;
+import com.tetsujin.tt.database.NotificationHelper;
 import com.tetsujin.tt.database.TimeTable;
 import com.tetsujin.tt.database.TimeTableHelper;
 import com.tetsujin.tt.notification.NotificationHandler;
 import com.tetsujin.tt.notification.NotificationSettings;
 import com.tetsujin.tt.notification.RegistrationIntentService;
+
+import static com.tetsujin.tt.notification.NotificationHandler.notificationDB;
+import static com.tetsujin.tt.notification.NotificationHandler.notificationHelper;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -44,11 +48,14 @@ public class ActivityMain extends AppCompatActivity {
             fm = getSupportFragmentManager();
             activityMain = this;
             state = new ManagementFragmentState();
+            //DBHelperを生成
             memoHelper = new MemoHelper(activityMain);
             timeTableHelper = TimeTableHelper.getInstance(activityMain);
+            notificationHelper = new NotificationHelper(activityMain);
             //DBが存在していなかったらDBの作成がされる
             memoDB = memoHelper.getWritableDatabase();
             timeTableDB = timeTableHelper.getWritableDatabase();
+            notificationDB = notificationHelper.getWritableDatabase();
 
             //ActivityMainに存在するcontainerにFragmentMainを表示する
             //初回のみアニメーションをさせないようにshowFragmentメソッドを使わずに表示

@@ -33,9 +33,9 @@
     <string name="week_saturday">土</string>
     <string name="week_sunday">日</string>
 
-    <!-- notification title -->
-    <string name="notification_title">お知らせ</string>
-    <string name="notification_receive_num">件のお知らせが来ています</string>
+    <!-- notification -->
+    <string name="notification_sender">送信者：</string>
+    <string name="notification_receive_date">受信日時：</string>
 
     <!-- error -->
     <string name="error">エラー</string>
@@ -55,7 +55,7 @@
     <string name="endtime">終了時間：</string>
     <string name="teacher">講師：</string>
     <string name="description">詳細：</string>
-    <string name="ok">OK</string>
+    <string name="ok">閉じる</string>
     <string name="format_yyyy_MM_dd">yyyy-MM-dd</string>
     <string name="format_MM_dd_E">MM/dd(E)</string>
 

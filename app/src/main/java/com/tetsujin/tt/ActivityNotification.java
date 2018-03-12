@@ -1,28 +1,34 @@
 package com.tetsujin.tt;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
+import static com.tetsujin.tt.notification.NotificationHandler.notificationHelper;
 
 public class ActivityNotification extends AppCompatActivity {
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
-
-        ListView lv = (ListView)findViewById(R.id.Aynotification_listview);
-
-        String[] testdata = new String[]
-                {
-                        "台風接近による休講について",
-                        "11月3日の授業について",
-                        "10月28日開催のかまた祭延期について",
-                };
-        ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, testdata);
-        lv.setAdapter(aa);
+        
+        Intent intent = getIntent();
+        //表示するお知らせを特定する値を取得
+        String key = intent.getStringExtra("key");
+        //お知らせを取得
+        String[] result = notificationHelper.GetRecord(key);
+        
+        //お知らせを表示
+        TextView sendDatetv = (TextView)findViewById(R.id.AyNotification_senddate_textview);
+        TextView sendertv = (TextView)findViewById(R.id.AyNotification_sender_textview);
+        TextView titletv = (TextView)findViewById(R.id.AyNotification_title_textview);
+        TextView messagetv = (TextView)findViewById(R.id.AyNotification_message_textview);
+        
+        sendDatetv.setText(result[0]);
+        sendertv.setText(result[1]);
+        titletv.setText(result[2]);
+        messagetv.setText(result[3]);
     }
 }

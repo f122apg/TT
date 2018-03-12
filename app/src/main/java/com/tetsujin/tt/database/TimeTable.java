@@ -22,15 +22,15 @@ public class TimeTable implements Parcelable
     //テーブル名
     final static String TABLE_NAME = "TimeTable";
     //テーブルの列名
-    final static String COLUMN_TIMETABLEID = "TimeTableID";
-    final static String COLUMN_LESSONCODE = "lessonCode";
-    final static String COLUMN_LESSONNAME = "lessonName";
-    final static String COLUMN_WEEKDAYNUMBER = "weekDayNumber";
-    final static String COLUMN_STARTTIME = "startTime";
-    final static String COLUMN_ENDTIME = "endTime";
-    final static String COLUMN_CLASSROOMNAME = "classroomName";
-    final static String COLUMN_TEACHERNAME = "teacherName";
-    final static String COLUMN_DESCRIPTION = "description";
+    public final static String COLUMN_TIMETABLEID = "TimeTableID";
+    public final static String COLUMN_LESSONCODE = "lessonCode";
+    public final static String COLUMN_LESSONNAME = "lessonName";
+    public final static String COLUMN_WEEKDAYNUMBER = "weekDayNumber";
+    public final static String COLUMN_STARTTIME = "startTime";
+    public final static String COLUMN_ENDTIME = "endTime";
+    public final static String COLUMN_CLASSROOMNAME = "classroomName";
+    public final static String COLUMN_TEACHERNAME = "teacherName";
+    public final static String COLUMN_DESCRIPTION = "description";
 
     //テーブルを作成するクエリ
     final static String CREATE_TABLE_QUERY = "CREATE TABLE " + TABLE_NAME + "(" +

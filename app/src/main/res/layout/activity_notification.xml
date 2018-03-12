@@ -1,14 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.tetsujin.tt.ActivityNotification">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.tetsujin.tt.ActivityNotification">
 
-    <ListView
-        android:id="@+id/Aynotification_listview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="受信日時："
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/AyNotification_senddate_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="〇〇"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="送信者："
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/AyNotification_sender_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="〇〇"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="タイトル："
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/AyNotification_title_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="〇〇"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="内容："
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/AyNotification_message_textview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="〇〇〇〇〇〇〇〇〇〇〇〇\n〇〇〇〇〇〇〇〇〇〇〇〇"
+            android:textSize="20sp"/>
+    </LinearLayout>
 
 </LinearLayout>

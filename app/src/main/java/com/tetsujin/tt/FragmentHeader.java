@@ -1,6 +1,7 @@
 package com.tetsujin.tt;
 
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
         v.findViewById(R.id.FrgHeader_main_button).setOnClickListener(this);
         v.findViewById(R.id.FrgHeader_week_button).setOnClickListener(this);
         v.findViewById(R.id.FrgHeader_month_button).setOnClickListener(this);
+        v.findViewById(R.id.FrgHeader_notification_button).setOnClickListener(this);
 
 //        v.findViewById(R.id.debug_dbcreate_button).setVisibility(View.INVISIBLE);
 //        v.findViewById(R.id.debug_dbrm_button).setVisibility(View.INVISIBLE);
@@ -142,6 +144,13 @@ public class FragmentHeader extends Fragment implements View.OnClickListener
                 if(!state.equal(stateList.MONTH))
                 {
                     fragment = new FragmentMonth();
+                }
+                break;
+            case R.id.FrgHeader_notification_button:
+                if(!state.equal(stateList.NOTIFICATION))
+                {
+                    Intent intent = new Intent(activityMain, ActivityNotificationList.class);
+                    startActivity(intent);
                 }
                 break;
         }
